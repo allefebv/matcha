@@ -16,7 +16,7 @@ function App() {
                 setUser={setUser}
             />
             <Body router={router}/>
-            <Footer />
+            {/*<Footer />*/}
         </div>
     );
 }

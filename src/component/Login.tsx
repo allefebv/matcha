@@ -5,6 +5,7 @@ import React from "react";
 interface Props {
     user: null;
     setUser: React.Dispatch<React.SetStateAction<null>>;
+    size: { width: number; height: number };
 }
 
 // CSS
@@ -16,9 +17,9 @@ const styleInput: React.CSSProperties = {
     border: "solid",
     borderWidth: 2,
     borderRadius: 10,
-    borderColor:"#F2EDE9",
+    borderColor: "#F2EDE9",
     backgroundColor: "#F2EDE9",
-    outline:"none",
+    outline: "none",
     fontSize: 18,
     fontWeight: "bold",
     textIndent: 5,
@@ -32,8 +33,8 @@ const styleButton: React.CSSProperties = {
     border: "solid",
     borderWidth: 2,
     borderRadius: 10,
-    borderColor:"#F2EDE9",
-    outline:"none",
+    borderColor: "#F2EDE9",
+    outline: "none",
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "Arial",
@@ -44,10 +45,14 @@ const styleButton: React.CSSProperties = {
 // Render
 
 export const Login = (props: Props) => {
-    return (
+    return props.size.width >= 750 ? (
         <div>
             <input style={styleInput} type="text" placeholder={"Login"} />
             <input style={styleInput} type="text" placeholder={"Password"} />
+            <button style={styleButton}>Sign in</button>
+        </div>
+    ) : (
+        <div>
             <button style={styleButton}>Sign in</button>
         </div>
     );

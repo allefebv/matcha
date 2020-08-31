@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { FormSignUp } from "./formSignUp";
 
 // Props / Const
 
@@ -28,7 +29,7 @@ const styleButton: React.CSSProperties = {
     border: "none",
     borderRadius: 10,
     backgroundColor: "#0D0D0D",
-    outline:"none",
+    outline: "none",
     color: "#f2ede9",
     fontSize: 18,
     fontWeight: "bold",
@@ -39,10 +40,14 @@ const styleButton: React.CSSProperties = {
 // Render
 
 export const SignUp = () => {
-    return (
+    const [formSignUp, setFormSignUp] = useState(false);
+
+    return !formSignUp ? (
         <div style={styleSignUp}>
             <div style={styleText}>You are not sign up?</div>
-            <button style={styleButton}>Sign up</button>
+            <button style={styleButton} onClick={() => setFormSignUp(true)}>
+                Click here
+            </button>
         </div>
-    );
+    ) : <FormSignUp/>;
 };
