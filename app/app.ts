@@ -1,9 +1,9 @@
 import { appRoutes } from './appRouter';
 import express from 'express';
 import bodyParser from 'body-parser';
-import appSettings from './appSettings';
-import mysql from 'mysql';
+import { createConnection } from 'mysql';
 
+export let dataBase = null;
 let app: express.Application | null = null;
 
 function initMiddelware() {
@@ -15,18 +15,17 @@ function initMiddelware() {
 	);
 }
 
-function initMySql() {
-	const client = mysql.createConnection({
+function initMysql() {
+	dataBase = createConnection({
 		host: 'fj199397-001.dbaas.ovh.net',
 		port: 35833,
 		user: 'jfleury',
 		database: 'matcha',
 		password: 'Matcha1234',
 	});
-
-	client.connect(function (err) {
-		if (err) {
-			throw err;
+	dataBase.connect((error) => {
+		if (error) {
+			throw error;
 		}
 		console.log('\x1b[33m' + 'mysql connected' + '\x1b[0m');
 	});
@@ -35,11 +34,10 @@ function initMySql() {
 function main() {
 	app = express();
 	initMiddelware();
-	initMySql();
+	initMysql();
 	appRoutes(app);
 
 	const port = 3001;
-
 	console.log('http://localhost:' + port);
 	console.log('http://127.0.0.1:' + port);
 	app.listen(port);

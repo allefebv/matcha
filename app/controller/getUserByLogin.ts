@@ -1,9 +1,19 @@
 import { Request, Response } from 'express';
-import { dbUserByLogin } from '../model/repositories/userRepository';
-import appSettings from '../appSettings';
+import {
+	userByUsername,
+	userRegister,
+} from '../model/repositories/userRepository';
+import bodyParser from 'body-parser';
 
-export async function getUserByLogin(req: Request, res: Response) {
-	const user = await dbUserByLogin('jfleury');
-	res.setHeader('Content-Type', 'text/plain');
-	res.send(user);
+export async function getUserByUsername(req: Request, res: Response) {
+	const username = req.query.username;
+	console.log(username);
+	const user = await userByUsername(username as string);
+	res.setHeader('Content-Type', 'application/json');
+	res.json(user);
+}
+
+export async function postUserRegister(req: Request, res: Response) {
+	const user = await userRegister(req.body);
+	user ? res.json(user) : res.status(400).send('Bad Request');
 }
