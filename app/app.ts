@@ -1,7 +1,7 @@
-import { appRoutes } from "./appRouter";
-import express from "express";
-import bodyParser from "body-parser";
-import appSettings from "./appSettings";
+import { appRoutes } from './appRouter';
+import express from 'express';
+import bodyParser from 'body-parser';
+import appSettings from './appSettings';
 
 // Init app
 const app = express();
@@ -16,7 +16,7 @@ app.use(
 
 //mongoDb
 export let db = null;
-const MongoClient = require("mongodb").MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 
 MongoClient.connect(
 	appSettings.mongoDb.url,
@@ -25,7 +25,7 @@ MongoClient.connect(
 		if (error) {
 			throw error;
 		}
-		db = client.db("Matcha");
+		db = client.db('Matcha');
 	}
 );
 
@@ -35,6 +35,6 @@ appRoutes(app);
 // Port
 const port = 3001;
 
-console.log("http://localhost:" + port);
-console.log("http://127.0.0.1:" + port);
+console.log('http://localhost:' + port);
+console.log('http://127.0.0.1:' + port);
 app.listen(port);
