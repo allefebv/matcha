@@ -18,5 +18,8 @@
 		"express": "^4.17.1",
 		"mysql": "^2.18.1",
 		"typescript": "^4.0.2"
+	},
+	"devDependencies": {
+		"prettier": "2.1.1"
 	}
 }
