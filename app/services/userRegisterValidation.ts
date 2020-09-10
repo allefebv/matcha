@@ -6,50 +6,48 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/09 18:09:04 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/10 16:51:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { newUser } from '../model/entities/userType';
-import { selectUserByUsername } from '../model/repositories/selectUserByUsername';
+import { getUser } from '../model/userRepositories';
 
-interface userErrorValidation {
+interface Validation {
 	username: string | null;
 	password: string | null;
 	email: string | null;
 }
 
-function validationUsername(newUserAlreadyExist, validation: userErrorValidation, body: newUser) {
-	if (newUserAlreadyExist) {
-		validation.username = 'Username already exsist';
+function validationPassword(validation: Validation, password: string) {
+	const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+
+	if (passwordRegex.test(password)) {
+		validation.password = null;
 	} else {
-		validation.username = body.username.length > 3 ? null : 'Username invalid';
+		validation.password = 'Invalid password';
 	}
 }
 
-function validationPassword(validation: userErrorValidation, body: newUser) {
-	const passwordRegex = new RegExp('/(?=.[A-Z])(?=.[a-z])(?=.d)(?=.[@?!*]).{8,}/');
-	validation.password = passwordRegex.test(body.password) ? null : 'Password invalid';
-}
-
-function validationEmail(validation: userErrorValidation, body: newUser) {
+function validationEmail(validation: Validation, email: string) {
 	const emailRegex = new RegExp(
 		"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
 	);
-	validation.email = emailRegex.test(body.email) ? null : 'Email invalid';
+	validation.email = emailRegex.test(email) ? null : 'Email invalid';
 }
 
-export async function userRegisterValidation(body: newUser) {
-	const newUserAlreadyExist = await selectUserByUsername(body.username);
-	const validation: userErrorValidation = {
+export async function userRegisterValidation(username: string, password: string, email: string) {
+	const newUserAlreadyExist = await getUser(username);
+	const validation: Validation = {
 		username: null,
 		password: null,
 		email: null,
 	};
 
-	validationUsername(newUserAlreadyExist, validation, body);
-	validationPassword(validation, body);
-	validationEmail(validation, body);
+	if (typeof newUserAlreadyExist !== 'number') {
+		validation.username = 'Username exsist or invalid';
+	}
+	validationPassword(validation, password);
+	validationEmail(validation, email);
 	for (const [key, value] of Object.entries(validation)) {
 		if (value !== null) {
 			return validation;
