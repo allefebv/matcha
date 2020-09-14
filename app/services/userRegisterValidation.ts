@@ -6,11 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/10 16:51:01 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/14 14:49:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { getUser } from '../model/userRepositories';
+import { getUserByUsername, getUserByEmail } from '../model/userRepositories';
 
 interface Validation {
 	username: string | null;
@@ -28,22 +28,27 @@ function validationPassword(validation: Validation, password: string) {
 	}
 }
 
-function validationEmail(validation: Validation, email: string) {
-	const emailRegex = new RegExp(
-		"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-	);
-	validation.email = emailRegex.test(email) ? null : 'Email invalid';
+async function validationEmail(validation: Validation, email: string) {
+	const newUserEmailExist = await getUserByEmail(email);
+	if (typeof newUserEmailExist !== 'number') {
+		validation.username = 'Email already exists';
+	} else {
+		const emailRegex = new RegExp(
+			"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+		);
+		validation.email = emailRegex.test(email) ? null : 'Email invalid';
+	}
 }
 
 export async function userRegisterValidation(username: string, password: string, email: string) {
-	const newUserAlreadyExist = await getUser(username);
+	const newUserLoginExist = await getUserByUsername(username);
 	const validation: Validation = {
 		username: null,
 		password: null,
 		email: null,
 	};
 
-	if (typeof newUserAlreadyExist !== 'number') {
+	if (typeof newUserLoginExist !== 'number') {
 		validation.username = 'Username exsist or invalid';
 	}
 	validationPassword(validation, password);

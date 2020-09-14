@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   userType.ts                                        :+:      :+:    :+:   */
+/*   jwt.ts                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/09 13:55:41 by jfleury          ###   ########.fr       */
+/*   Created: 2020/09/11 11:21:05 by jfleury           #+#    #+#             */
+/*   Updated: 2020/09/14 18:32:25 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-export interface user {
-	id: number;
-	username: string;
-	email: string;
-	password: string;
-	registrationDate: Date;
-	activated: boolean;
-	activationKey: string;
-}
+import jwt from 'jsonwebtoken';
+import { user } from '../types/types';
 
-export interface newUser {
-	username: string;
-	email: string;
-	password: string;
+export const JWT_SIGN_SECRET = 'p4msh40n39f7nf037rhg0sa24gt90374gohdgwh3i8';
+
+export function generateTokenForUser(user: user) {
+	return jwt.sign(
+		{
+			id: user.id,
+			username: user.username,
+		},
+		JWT_SIGN_SECRET,
+		{
+			expiresIn: '1h',
+		}
+	);
 }
