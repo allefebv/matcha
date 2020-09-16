@@ -1,0 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   likeRepositories.ts                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:19:24 by jfleury           #+#    #+#             */
+/*   Updated: 2020/09/16 18:20:03 by jfleury          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import { dataBase } from '../app';
+import { like } from '../types/types';
+
+export function addLikedProfile(profileLikedId: number, profileHasBeenLikedId: number): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `INSERT INTO likeProfile (
+			profileLikesId,
+			profileHasBeenLikedId
+		) VALUES (
+			${profileLikedId},
+			${profileHasBeenLikedId}
+		)`;
+		dataBase.query(sql, (error: string, result: like[]) => {
+			if (error) {
+				console.log(error);
+				reject(false);
+			}
+			resolve(true);
+		});
+	});
+}
+
+export function getUserHasBeenLikedById(id: number): Promise<like[] | null> {
+	return new Promise((resolve, reject) => {
+		const sql = `SELECT * FROM likeProfile WHERE profileLikesId = ${id}`;
+		dataBase.query(sql, (error: string, result: like[]) => {
+			if (error) {
+				console.log(error);
+				reject(null);
+			}
+			resolve(result.length ? result : null);
+		});
+	});
+}

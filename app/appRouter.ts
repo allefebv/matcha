@@ -6,39 +6,38 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/14 17:49:59 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/16 18:04:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 import {
-	getUserController,
-	getUserByUsernameController,
-	getUserByEmailController,
-	getAllUserController,
 	addUserController,
 	loginUserController,
 	deleteUserController,
-	addProfileController,
 	activateUserController,
 } from './controller/userController';
-import { addTableProfile, dropTable, addTableUser } from './model/handleDataBase';
+import {
+	addProfileController,
+	getProfileController,
+	getAllProfileController,
+	getProfileByUsernameController,
+} from './controller/profileController';
+import { getUserLikeController, addlikedProfileController } from './controller/likeController';
 
 export function appRoutes(app) {
-	app.get('/user/getUser', (req: Request, res: Response) => getUserController(req, res));
-	app.get('/user/getUserByUsername', (req: Request, res: Response) => getUserByUsernameController(req, res));
-	app.get('/user/getUserByEmail', (req: Request, res: Response) => getUserByEmailController(req, res));
-	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
 	app.post('/user/addUser', (req: Request, res: Response) => addUserController(req, res));
-	app.post('/user/addProfile', (req: Request, res: Response) => addProfileController(req, res));
 	app.post('/user/loginUser', (req: Request, res: Response) => loginUserController(req, res));
+	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
 	app.post('/user/deleteUser', (req: Request, res: Response) => deleteUserController(req, res));
 
-	/* ******************************** DEV ************************************ */
+	app.get('/profile/getProfile', (req: Request, res: Response) => getProfileController(req, res));
+	app.get('/profile/getAllProfile', (req: Request, res: Response) => getAllProfileController(req, res));
+	app.get('/profile/getProfileByUsername', (req: Request, res: Response) => getProfileByUsernameController(req, res));
+	app.post('/profile/addProfile', (req: Request, res: Response) => addProfileController(req, res));
 
-	app.get('/user/getAllUser', (req: Request, res: Response) => getAllUserController(req, res));
-
-	/* ******************************* ERROR *********************************** */
+	app.post('/like/addLikedProfile', (req: Request, res: Response) => addlikedProfileController(req, res));
+	app.post('/like/getUserLike', (req: Request, res: Response) => getUserLikeController(req, res));
 
 	app.use((req: Request, res: Response) => {
 		res.setHeader('Content-Type', 'text/plain');
