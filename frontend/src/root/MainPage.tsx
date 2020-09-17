@@ -4,6 +4,7 @@ import { SliderSimple } from "../component/SliderSimple";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { SliderDouble } from "../component/SliderDouble";
 
 const styleMainPage: React.CSSProperties = {
 	display: "flex",
@@ -87,7 +88,7 @@ export const MainPage = (props: Props) => {
 						</Button>
 					</div>
 					<div style={stylePlaceHolderComboFilterSort}>
-						<Button theme="primary">Tag Sort</Button>
+						<SliderDouble min={0} max={20000} step={1} />
 						<Button theme="primary">
 							Tag
 							<FontAwesomeIcon icon={faChevronUp} />

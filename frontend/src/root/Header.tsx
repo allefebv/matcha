@@ -1,10 +1,9 @@
 import React from "react";
 import { Button } from "../component/Button";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faBell } from '@fortawesome/free-solid-svg-icons'
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const styleHeader: React.CSSProperties = {
 	display: "flex",
@@ -14,7 +13,7 @@ const styleHeader: React.CSSProperties = {
 	width: "100vw",
 	height: "8vh",
 	backgroundColor: "transparent",
-	zIndex: 2
+	zIndex: 2,
 };
 
 const styleNavStart: React.CSSProperties = {

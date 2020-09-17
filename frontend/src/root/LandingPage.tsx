@@ -21,7 +21,7 @@ const styleImg: React.CSSProperties = {
 	left: 0,
 	width: "100vw",
 	height: "100vh",
-	zIndex: 0,
+	zIndex: -1,
 	objectFit: "none",
 };
 
@@ -37,7 +37,7 @@ const stylePlaceHolder: React.CSSProperties = {
 interface Props {}
 
 export class LandingPage extends React.Component<Props> {
-	bg = require("../images/background.jpg");
+	bg = require("../images/background2.jpg");
 	render() {
 		const isMobile = window.innerWidth < 480;
 		return (
@@ -49,11 +49,11 @@ export class LandingPage extends React.Component<Props> {
 						<Button theme="big">Sign up</Button>
 					</div>
 				)}
-				<ModalToggler>
-					<Form title="ForgotPassword" submitValue="ForgotPassword">
-						<ForgotPasswordForm />
+				{/* <ModalToggler>
+					<Form title="Sign In" submitValue="Sign In">
+						<SigninForm />
 					</Form>
-				</ModalToggler>
+				</ModalToggler> */}
 			</div>
 		);
 	}

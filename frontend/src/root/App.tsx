@@ -4,24 +4,26 @@ import { Footer } from "./Footer";
 import { LandingPage } from "./LandingPage";
 import { MainPage } from "./MainPage";
 import { FormInput } from "../component/FormInput"
+import { SliderDouble } from "../component/SliderDouble";
 
 const styleApp: React.CSSProperties = {
 	display: "flex",
 	flexDirection: "column",
 	height: "100vh",
 	width: "100vw",
-	backgroundColor: "black",
-	zIndex: -1,
+	background: "radial-gradient(circle, transparent, rgba(0,0,0,0.6)50%, rgba(0,0,0,1) 100%)",
+	zIndex: 0,
 }
 
 export class App extends React.Component {
 	render() {
 		return (
 			<div style={styleApp}>
-				<Header />
+				{/* <Header /> */}
 				{/* <LandingPage /> */}
-				<MainPage />
-				<Footer />
+				{/* <MainPage />
+				<Footer /> */}
+				<SliderDouble min={0} max={1000} step={1}/>
 			</div>
 		);
 	}

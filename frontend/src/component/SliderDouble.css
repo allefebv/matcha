@@ -1,0 +1,14 @@
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 2vh;
+    height: 2vh;
+    background-color: brown;
+    border: 0, none;
+    border-radius: 50%;
+    pointer-events: all;
+}
+
+.hover {
+    box-shadow: 0 0 0 1vh rgba(236,64,122, 0.2);
+}
