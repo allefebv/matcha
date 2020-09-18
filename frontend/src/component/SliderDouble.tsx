@@ -14,7 +14,7 @@ const styleInputLeft: React.CSSProperties = {
 	zIndex: 2,
 	WebkitAppearance: "none",
 	pointerEvents: "none",
-	// opacity: 0,
+	opacity: 0,
 };
 
 const styleInputRight: React.CSSProperties = {
@@ -24,7 +24,7 @@ const styleInputRight: React.CSSProperties = {
 	zIndex: 2,
 	WebkitAppearance: "none",
 	pointerEvents: "none",
-	// opacity: 0,
+	opacity: 0,
 };
 
 const styleSlider: React.CSSProperties = {
@@ -47,58 +47,96 @@ const styleTrack: React.CSSProperties = {
 	borderRadius: "10%",
 };
 
+const styleHover: React.CSSProperties = {
+	boxShadow: "0 0 0 10px rgba(236,64,122, 0.2)",
+};
+
+const styleClick: React.CSSProperties = {
+	boxShadow: "0 0 0 15px rgba(236,64,122, 0.4)",
+};
+
 export const SliderDouble = (props: Props) => {
 	const [valueLeft, setValueLeft] = useState(props.min);
 	const [valueRight, setValueRight] = useState(props.max);
+	const [isHoveredRight, setValueIsHoveredRight] = useState(false);
+	const [isClickedRight, setValueIsClickedRight] = useState(false);
+	const [isHoveredLeft, setValueIsHoveredLeft] = useState(false);
+	const [isClickedLeft, setValueIsClickedLeft] = useState(false);
 
 	function computeLeft() {
-		console.log("left : ", valueLeft)
 		return ((valueLeft - props.min) / (props.max - props.min)) * 100;
 	}
 
 	function computeRight() {
-		console.log("right : ", valueRight)
 		return 100 - ((valueRight - props.min) / (props.max - props.min)) * 100;
 	}
 
 	function handleChangeLeft(event: React.ChangeEvent<HTMLInputElement>) {
-		valueLeft + 9 < valueRight && setValueLeft(parseInt(event.currentTarget.value));
+		valueRight > parseInt(event.currentTarget.value) &&
+			setValueLeft(parseInt(event.currentTarget.value));
 	}
 
 	function handleChangeRight(event: React.ChangeEvent<HTMLInputElement>) {
-		valueRight - 10 > valueLeft && setValueRight(parseInt(event.currentTarget.value));
+		valueLeft < parseInt(event.currentTarget.value) &&
+			setValueRight(parseInt(event.currentTarget.value));
 	}
 
-	function handleMouseEnter(event: React.MouseEvent) {
-		event.currentTarget.classList.add("hover");
+	function handleMouseEnterRight(event: React.MouseEvent) {
+		setValueIsHoveredRight(true);
 	}
 
-	function handleMouseLeave(event: React.MouseEvent) {
-		event.currentTarget.classList.remove("hover");
+	function handleMouseLeaveRight(event: React.MouseEvent) {
+		setValueIsHoveredRight(false);
+	}
+
+	function handleMouseDownRight(event: React.MouseEvent) {
+		setValueIsClickedRight(true);
+	}
+
+	function handleMouseUpRight(event: React.MouseEvent) {
+		setValueIsClickedRight(false);
+	}
+
+	function handleMouseEnterLeft(event: React.MouseEvent) {
+		setValueIsHoveredLeft(true);
+	}
+
+	function handleMouseLeaveLeft(event: React.MouseEvent) {
+		setValueIsHoveredLeft(false);
+	}
+
+	function handleMouseDownLeft(event: React.MouseEvent) {
+		setValueIsClickedLeft(true);
+	}
+
+	function handleMouseUpLeft(event: React.MouseEvent) {
+		setValueIsClickedLeft(false);
 	}
 
 	const styleThumbLeft: React.CSSProperties = {
 		position: "absolute",
 		top: "50%",
 		zIndex: 2,
-		width: "max(1vw, 1vh)",
-		height: "max(1vw, 1vh)",
+		width: "16px",
+		height: "16px",
 		backgroundColor: "#b4004e",
 		borderRadius: "50%",
-		transform: "translate(-20%, -50%)",
 		left: `${computeLeft()}%`,
+		transform: `translate(-${computeLeft()}%, -50%)`,
+		transition: "box-shadow .3s"
 	};
 
 	const styleThumbRight: React.CSSProperties = {
 		position: "absolute",
 		top: "50%",
 		zIndex: 2,
-		width: "max(1vw, 1vh)",
-		height: "max(1vw, 1vh)",
+		width: "16px",
+		height: "16px",
 		backgroundColor: "#b4004e",
 		borderRadius: "50%",
-		transform: "translate(30%, -50%)",
+		transform: `translate(${computeRight()}%, -50%)`,
 		right: `${computeRight()}%`,
+		transition: "box-shadow .3s"
 	};
 
 	const styleRange: React.CSSProperties = {
@@ -119,14 +157,20 @@ export const SliderDouble = (props: Props) => {
 			<div style={styleTrack}></div>
 			<div style={styleRange}></div>
 			<div
-				style={styleThumbLeft}
-				onMouseEnter={handleMouseEnter}
-				onMouseLeave={handleMouseLeave}
+				style={Object.assign(
+					{},
+					styleThumbLeft,
+					isHoveredLeft && styleHover,
+					isClickedLeft && styleClick
+				)}
 			></div>
 			<div
-				style={styleThumbRight}
-				onMouseEnter={handleMouseEnter}
-				onMouseLeave={handleMouseLeave}
+				style={Object.assign(
+					{},
+					styleThumbRight,
+					isHoveredRight && styleHover,
+					isClickedRight && styleClick
+				)}
 			></div>
 
 			<input
@@ -137,7 +181,12 @@ export const SliderDouble = (props: Props) => {
 				step={props.step}
 				value={valueLeft}
 				onChange={handleChangeLeft}
+				onMouseEnter={handleMouseEnterLeft}
+				onMouseLeave={handleMouseLeaveLeft}
+				onMouseDown={handleMouseDownLeft}
+				onMouseUp={handleMouseUpLeft}
 			/>
+
 			<input
 				style={styleInputRight}
 				type="range"
@@ -146,6 +195,10 @@ export const SliderDouble = (props: Props) => {
 				step={props.step}
 				value={valueRight}
 				onChange={handleChangeRight}
+				onMouseEnter={handleMouseEnterRight}
+				onMouseLeave={handleMouseLeaveRight}
+				onMouseDown={handleMouseDownRight}
+				onMouseUp={handleMouseUpRight}
 			/>
 		</div>
 	);

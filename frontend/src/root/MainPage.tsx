@@ -1,10 +1,12 @@
 import React from "react";
 import { Button } from "../component/Button";
-import { SliderSimple } from "../component/SliderSimple";
+import { SliderDouble } from "../component/SliderDouble";
+import { CategoryFilterSort } from "../component/CategoryFilterSort";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { SliderDouble } from "../component/SliderDouble";
+import { Autocomplete } from "@material-ui/lab";
+import { TextField } from "@material-ui/core";
 
 const styleMainPage: React.CSSProperties = {
 	display: "flex",
@@ -17,7 +19,6 @@ const stylePlaceHolderCategories: React.CSSProperties = {
 	flexDirection: "column",
 	backgroundColor: "greenyellow",
 	justifyContent: "center",
-	// alignItems: "center",
 };
 
 const stylePlaceHolderMain: React.CSSProperties = {
@@ -63,38 +64,28 @@ export const MainPage = (props: Props) => {
 			</div>
 			<div style={stylePlaceHolderMain}>
 				<div style={stylePlaceHolderFiltersSorts}>
-					<div style={stylePlaceHolderComboFilterSort}>
-					<Button theme="primary">Age Filter</Button>
-						<Button theme="primary">
-							Age
-							<FontAwesomeIcon icon={faChevronUp} />
-							<FontAwesomeIcon icon={faChevronDown} />
-						</Button>
-					</div>
-					<div style={stylePlaceHolderComboFilterSort}>
-						<SliderSimple min={0} max={20000} step={1} />
-						<Button theme="primary">
-							Location
-							<FontAwesomeIcon icon={faChevronUp} />
-							<FontAwesomeIcon icon={faChevronDown} />
-						</Button>
-					</div>
-					<div style={stylePlaceHolderComboFilterSort}>
-						<SliderSimple min={0} max={20000} step={1} />
-						<Button theme="primary">
-							Popularity
-							<FontAwesomeIcon icon={faChevronUp} />
-							<FontAwesomeIcon icon={faChevronDown} />
-						</Button>
-					</div>
-					<div style={stylePlaceHolderComboFilterSort}>
+					<CategoryFilterSort label="Age">
+						<SliderDouble min={18} max={100} step={1} />
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Location">
 						<SliderDouble min={0} max={20000} step={1} />
-						<Button theme="primary">
-							Tag
-							<FontAwesomeIcon icon={faChevronUp} />
-							<FontAwesomeIcon icon={faChevronDown} />
-						</Button>
-					</div>
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Popularity">
+						<SliderDouble min={0} max={40000} step={1} />
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Tags">
+						<Autocomplete
+							multiple
+							options={["John", "Lennon", "Bitch"]}
+							getOptionLabel={(option) => option}
+							filterSelectedOptions
+							renderInput={(params) => (
+								<TextField
+									{...params}
+								/>
+							)}
+						/>
+					</CategoryFilterSort>
 				</div>
 				<div style={stylePlaceHolderCards}></div>
 			</div>

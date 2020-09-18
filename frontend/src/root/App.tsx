@@ -19,11 +19,10 @@ export class App extends React.Component {
 	render() {
 		return (
 			<div style={styleApp}>
-				{/* <Header /> */}
+				<Header />
 				{/* <LandingPage /> */}
-				{/* <MainPage />
-				<Footer /> */}
-				<SliderDouble min={0} max={1000} step={1}/>
+				<MainPage />
+				<Footer />
 			</div>
 		);
 	}
