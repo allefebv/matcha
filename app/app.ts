@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/14 17:48:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/21 17:15:22 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ function initMysql() {
 		if (error) {
 			throw error;
 		}
-		console.log('\x1b[33m' + 'mysql connected' + '\x1b[0m');
+		console.log('\x1b[33m' + 'Database connected\n' + '\x1b[0m');
 	});
 }
 

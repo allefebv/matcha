@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 11:08:04 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/21 17:13:54 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,21 @@ import { Request, Response } from 'express';
 import { addProfile, getAllProfile, getProfileByUserId, getProfileByUsername } from '../model/profileRepositories';
 import { jwtVerify } from '../services/jwt';
 import { addProfileValidation } from '../services/addProfileValidation';
-import { getTagProfile } from '../model/tagRepositories';
+import { getTagById, getTagProfile } from '../model/tagRepositories';
 
 export async function getProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const profile = await getProfileByUserId(jwt.decoded.id);
-		const tag = await getTagProfile(jwt.decoded.id);
+		const tagProfileList = await getTagProfile(jwt.decoded.id);
+		const tagList = await Promise.all(
+			tagProfileList.map(async (item) => {
+				const tag = await getTagById(item.tagId);
+				return tag.tag;
+			})
+		);
 		if (profile) {
-			res.status(200).json({ profile: profile, tag: tag });
+			res.status(200).json({ profile: profile, tag: tagList });
 		} else {
 			res.status(400).send("Profile doesn't exsist");
 		}
