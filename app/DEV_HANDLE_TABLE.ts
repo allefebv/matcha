@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/16 18:12:52 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/18 15:21:10 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ function initMysql() {
 	});
 }
 
-export function addTableUser() {
+export async function addTableUser() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE user (
 			id					INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			email				TEXT NOT NULL,
 			password			TEXT NOT NULL,
-			registrationDate	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			registrationDate	TEXT NOT NULL,
 			activated			BOOLEAN DEFAULT 0 NOT NULL,
 			activationKey		CHAR(32) NOT NULL
 		)`;
@@ -48,26 +48,25 @@ export function addTableUser() {
 	});
 }
 
-export function addTableProfile() {
+export async function addTableProfile() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE profile (
 			userId							INTEGER NOT NULL,
 			age								INTEGER NOT NULL,
 			popularityScore					INTEGER DEFAULT 4000 NOT NULL,
-			username	 					VARCHAR(32) NOT NULL,
+			username	 					TEXT NOT NULL,
 			firstname						TEXT NOT NULL,
 			lastname						TEXT NOT NULL,
 			genre							TEXT NOT NULL,
 			sexualOrientation				TEXT,
 			location						TEXT,
 			bio								TEXT,
-			tag								TEXT,
 			img0							TEXT,
 			img1							TEXT,
 			img2							TEXT,
 			img3							TEXT,
 			img4							TEXT,
-			FOREIGN KEY (userId) 			REFERENCES user(id)
+			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
@@ -82,10 +81,9 @@ export function addTableLike() {
 		const sql = `CREATE TABLE likeProfile (
 			profileLikesId							INTEGER NOT NULL,
 			profileHasBeenLikedId					INTEGER NOT NULL,
-			FOREIGN KEY (profileLikesId) 			REFERENCES profile(userId),
-			FOREIGN KEY (profileHasBeenLikedId) 	REFERENCES profile(userId)
+			FOREIGN KEY (profileLikesId) 			REFERENCES profile(userId) ON DELETE CASCADE,
+			FOREIGN KEY (profileHasBeenLikedId) 	REFERENCES profile(userId) ON DELETE CASCADE
 		)`;
-		console.log(sql);
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
 			console.log('Table likeProfile created');
@@ -94,7 +92,55 @@ export function addTableLike() {
 	});
 }
 
-export function dropTable(nameTable: string) {
+export async function addTableNotification() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE notificationProfile (
+			profileNotifedId						INTEGER NOT NULL,
+			notifierProfileId						INTEGER NOT NULL,
+			date									TEXT NOT NULL,
+			notification							TEXT NOT NULL,
+			FOREIGN KEY (profileNotifedId) 			REFERENCES profile(userId) ON DELETE CASCADE,
+			FOREIGN KEY (notifierProfileId) 		REFERENCES profile(userId) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log('Table notificationProfile created');
+			resolve();
+		});
+	});
+}
+
+export async function addTableTag() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE tag (
+			id					INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+			tag					TEXT NOT NULL
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log('Table tag created');
+			resolve();
+		});
+	});
+}
+
+export async function addTableTagProfile() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE tagProfile (
+			tagId							INTEGER NOT NULL,
+			profileId						INTEGER NOT NULL,
+			FOREIGN KEY (tagId) 			REFERENCES tag(id) ON DELETE CASCADE,
+			FOREIGN KEY (profileId) 		REFERENCES profile(userId) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log('Table tagProfile created');
+			resolve();
+		});
+	});
+}
+
+export async function dropTable(nameTable: string) {
 	return new Promise((resolve) => {
 		const sql = `DROP TABLE ${nameTable}`;
 		dataBase.query(sql, (error: string, result) => {
@@ -104,9 +150,14 @@ export function dropTable(nameTable: string) {
 		});
 	});
 }
-
-function main() {
+async function main() {
 	initMysql();
-	addTableLike();
+
+	//await addTableUser();
+	//await addTableProfile();
+	//await addTableLike();
+	//await addTableNotification();
+	//await addTableTag();
+	//await addTableTagProfile();
 }
 main();

@@ -1,4 +1,3 @@
-import { Response } from 'express';
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,11 +6,12 @@ import { Response } from 'express';
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/16 12:34:18 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/17 15:53:49 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { getUserById, getUserByEmail } from '../model/userRepositories';
+import { Response } from 'express';
+import { getUserByEmail } from '../model/userRepositories';
 
 interface Validation {
 	password: string | null;

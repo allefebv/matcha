@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/16 14:45:47 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/18 18:34:58 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@ export interface user {
 	registrationDate: Date;
 	activated: boolean;
 	activationKey: string;
-}
-
-export interface newUser {
-	email: string;
-	password: string;
 }
 
 export interface profile {
@@ -45,6 +40,23 @@ export interface profile {
 }
 
 export interface like {
-	userLikesId: number;
-	userHasBeenLikeId: number;
+	profileLikesId: number;
+	profileHasBeenLikedId: number;
+}
+
+export interface notification {
+	profileNotifedId: number;
+	notifierProfileId: number;
+	date: number;
+	notification: string;
+}
+
+export interface tag {
+	id: number;
+	tag: string;
+}
+
+export interface tagProfile {
+	idProfile: number;
+	idTag: number;
 }

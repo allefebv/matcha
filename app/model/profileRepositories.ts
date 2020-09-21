@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:26:42 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/16 18:10:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/21 11:31:20 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ export function getProfileByUsername(username: string): Promise<profile | null> 
 				console.log(error);
 				resolve(null);
 			}
-			console.log('-> result = ', result);
 			resolve(result.length ? result[0] : null);
 		});
 	});

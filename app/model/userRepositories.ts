@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:07:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/16 17:02:48 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/18 14:16:20 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ export function getUserByEmail(email: string): Promise<user | null> {
 
 export function addUser(email: string, password: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+		const date = Date.now();
 		const activationKey = generateActivationKey();
 		const sql = `INSERT INTO user (
 			email,
