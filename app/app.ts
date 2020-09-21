@@ -1,40 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   app.ts                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
+/*   Updated: 2020/09/21 17:15:22 by jfleury          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import { appRoutes } from './appRouter';
 import express from 'express';
 import bodyParser from 'body-parser';
-import appSettings from './appSettings';
+import { createConnection } from 'mysql';
 
-// Init app
-const app = express();
+export let dataBase = null;
+let app: express.Application | null = null;
 
-// Body parser
-app.use(bodyParser.json());
-app.use(
-	bodyParser.urlencoded({
-		extended: true,
-	})
-);
+function initMiddelware() {
+	app.use(bodyParser.json());
+	app.use(
+		bodyParser.urlencoded({
+			extended: true,
+		})
+	);
+}
 
-//mongoDb
-export let db = null;
-const MongoClient = require('mongodb').MongoClient;
-
-MongoClient.connect(
-	appSettings.mongoDb.url,
-	{ useUnifiedTopology: true },
-	(error, client) => {
+function initMysql() {
+	dataBase = createConnection({
+		host: 'fj199397-001.dbaas.ovh.net',
+		port: 35833,
+		user: 'jfleury',
+		database: 'matcha',
+		password: 'Matcha1234',
+	});
+	dataBase.connect((error) => {
 		if (error) {
 			throw error;
 		}
-		db = client.db('Matcha');
-	}
-);
+		console.log('\x1b[33m' + 'Database connected\n' + '\x1b[0m');
+	});
+}
 
-// App routes
-appRoutes(app);
+function main() {
+	app = express();
+	initMiddelware();
+	initMysql();
+	appRoutes(app);
 
-// Port
-const port = 3001;
+	const port = 3001;
+	console.log('http://localhost:' + port);
+	console.log('http://127.0.0.1:' + port);
+	app.listen(port);
+}
 
-console.log('http://localhost:' + port);
-console.log('http://127.0.0.1:' + port);
-app.listen(port);
+main();
