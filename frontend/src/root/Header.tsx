@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
-import { BrowserRouter, Switch, Route, Link, Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const styleHeader: React.CSSProperties = {
 	display: 'flex',
@@ -35,7 +35,9 @@ const withReduxProps = connect((state: any) => ({
 	login: state.user.userLogin,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
-type Props = {} & ReduxProps;
+type Props = {
+	accountHandler?: (type: React.MouseEvent) => void;
+} & ReduxProps;
 
 class HeaderComponent extends React.Component<Props> {
 	handleButtonTestRedux = () => {
@@ -70,10 +72,10 @@ class HeaderComponent extends React.Component<Props> {
 				</div>
 				{isDesktop && (
 					<div style={styleNavEnd}>
-						{false && (
+						{true && (
 							<React.Fragment>
-								<Button theme="primary">Sign in</Button>
-								<Button theme="primary">Sign up</Button>
+								<Button theme="primary" onClick={this.props.accountHandler}>Sign in</Button>
+								<Button theme="primary" onClick={this.props.accountHandler}>Sign up</Button>
 							</React.Fragment>
 						)}
 						{true && (

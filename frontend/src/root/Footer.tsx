@@ -1,9 +1,4 @@
 import React from "react";
-import { Button } from "../component/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const styleFooter: React.CSSProperties = {
 	display: "flex",

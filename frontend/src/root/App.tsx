@@ -1,11 +1,9 @@
 import React from "react";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
 import { LandingPage } from "./LandingPage";
 import { MainPage } from "./MainPage";
 import { BrowserRouter, Switch, Route, Link, Router } from "react-router-dom";
-import { createStore } from 'redux';
-import { rootReducer } from '../store/rootReducer';
+import { createStore } from "redux";
+import { rootReducer } from "../store/rootReducer";
 
 const styleApp: React.CSSProperties = {
 	display: "flex",
@@ -22,12 +20,10 @@ export class App extends React.Component {
 		return (
 			<div style={styleApp}>
 				<BrowserRouter>
-					<Header />
 					<Switch>
 						<Route exact path="/" component={MainPage} />
 						<Route exact path="/landing" component={LandingPage} />
 					</Switch>
-					<Footer />
 				</BrowserRouter>
 			</div>
 		);
