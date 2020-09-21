@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   appRouter.ts                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 11:03:25 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/21 18:29:17 by senz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ import { addNotificationController, getNotificationController } from './controll
 import { addTagProfileController } from './controller/tagController';
 
 export function appRoutes(app) {
+ 
 	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
 	app.post('/user/addUser', (req: Request, res: Response) => addUserController(req, res));
 	app.post('/user/loginUser', (req: Request, res: Response) => loginUserController(req, res));
