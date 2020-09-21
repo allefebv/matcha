@@ -1,41 +1,66 @@
-import React from "react";
-import { Button } from "../component/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import { Button } from '../component/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { connect, ConnectedProps } from 'react-redux';
+import { actionUser_userLogin } from '../store/user/action';
 
 const styleHeader: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "row",
-	alignItems: "center",
-	justifyContent: "space-between",
-	width: "100vw",
-	height: "8vh",
-	backgroundColor: "transparent",
+	display: 'flex',
+	flexDirection: 'row',
+	alignItems: 'center',
+	justifyContent: 'space-between',
+	width: '100vw',
+	height: '8vh',
+	backgroundColor: 'transparent',
 	zIndex: 2,
 };
 
 const styleNavStart: React.CSSProperties = {
-	display: "flex",
-	justifyContent: "flex-end",
-	margin: "2vh",
+	display: 'flex',
+	justifyContent: 'flex-end',
+	margin: '2vh',
 };
 
 const styleNavEnd: React.CSSProperties = {
-	display: "flex",
-	justifyContent: "flex-end",
+	display: 'flex',
+	justifyContent: 'flex-end',
 };
 
-interface Props {}
+const withReduxProps = connect((state: any) => ({
+	//TODO: REDUX
+	login: state.user.userLogin,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
-export class Header extends React.Component<Props> {
+class HeaderComponent extends React.Component<Props> {
+	handleButtonTestRedux = () => {
+		//TODO: Function test
+		{
+			this.props.dispatch(
+				actionUser_userLogin({
+					id: 1,
+					email: 'test@test.fr',
+					password: '1234',
+					registrationDate: Date.now(),
+					activated: false,
+					activationKey: 'test',
+				})
+			);
+		}
+	};
+
 	render() {
 		const isDesktop = window.innerWidth > 480;
 		return (
 			<div style={styleHeader}>
 				<div style={styleNavStart}>
 					<Button theme="logo"></Button>
+					<text style={{ color: 'red' }}></text>
+					<button onClick={this.handleButtonTestRedux}>button test Redux</button> {/* TODO: Button test */}
 				</div>
 				{isDesktop && (
 					<div style={styleNavEnd}>
@@ -64,3 +89,5 @@ export class Header extends React.Component<Props> {
 		);
 	}
 }
+
+export const Header = withReduxProps(HeaderComponent);
