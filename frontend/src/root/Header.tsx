@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button } from '../component/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { actionUser_userLogin } from '../store/user/action';
+import { Button } from "../component/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter, Switch, Route, Link, Router } from "react-router-dom";
 
 const styleHeader: React.CSSProperties = {
 	display: 'flex',
@@ -58,7 +59,12 @@ class HeaderComponent extends React.Component<Props> {
 		return (
 			<div style={styleHeader}>
 				<div style={styleNavStart}>
-					<Button theme="logo"></Button>
+					<Link to={"/"}>
+						<Button theme="logo"></Button>
+					</Link>
+					<Link to={"/landing"}>
+						<Button theme="logo"></Button>
+					</Link>
 					<text style={{ color: 'red' }}></text>
 					<button onClick={this.handleButtonTestRedux}>button test Redux</button> {/* TODO: Button test */}
 				</div>
