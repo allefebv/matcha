@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   app.ts                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 17:15:22 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/21 18:28:57 by senz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@ import { appRoutes } from './appRouter';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { createConnection } from 'mysql';
+import cors from 'cors'
+
 
 export let dataBase = null;
 let app: express.Application | null = null;
 
 function initMiddelware() {
+	app.use(cors())
 	app.use(bodyParser.json());
 	app.use(
 		bodyParser.urlencoded({

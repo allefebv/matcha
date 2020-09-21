@@ -7,16 +7,32 @@ interface Props {}
 
 export const SigninForm = (props: Props) => {
 	function handleSignIn() {
+		let details = [
+			["email", "jeremy0@fleury.blue"],
+			["password", "@Matcha1234"],
+		];
+	
+		let formBody: any = [];
+		details.map(function (value) {
+			console.log("doing")
+			formBody.push(
+				encodeURIComponent(value[0]) + "=" + encodeURIComponent(value[1])
+			);
+		});
+		console.log("ended")
+		formBody = formBody.join("&");
+
 		fetch("http://localhost:3001/user/loginUser", {
 			method: "POST",
-			mode: "cors",
-			body: JSON.stringify({
-				email: "jeremy0@fleury.blue",
-				password: "@Matcha1234",
-			}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+			},
+			body: formBody,
 		})
-		.then()
-		.catch()
+			.then()
+			.catch();
+
+		
 	}
 
 	return (

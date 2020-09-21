@@ -25,7 +25,7 @@ export const Form = (props: Props) => {
 	return (
 		<React.Fragment>
 			<h2>{props.title}</h2>
-			<form style={styleForm}>
+			<form style={styleForm} onSubmit={handleSubmit}>
 				{props.children}
 			</form>
 		</React.Fragment>
