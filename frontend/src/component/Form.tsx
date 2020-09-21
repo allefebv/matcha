@@ -18,13 +18,13 @@ interface Props {
 }
 
 export const Form = (props: Props) => {
-	// function handleFormClick(e: MouseEvent) {
-	//     e.stopPropagation();
-	// }
+	function handleFormClick(e: MouseEvent) {
+	    e.stopPropagation();
+	}
 
-	// function handleSubmit(e: FormEvent) {
-	// 	e.preventDefault();
-	// };
+	function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+	};
 
 	return (
 		<React.Fragment>

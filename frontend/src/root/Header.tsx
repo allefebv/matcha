@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter, Switch, Route, Link, Router } from "react-router-dom";
 
 const styleHeader: React.CSSProperties = {
 	display: "flex",
@@ -35,7 +36,12 @@ export class Header extends React.Component<Props> {
 		return (
 			<div style={styleHeader}>
 				<div style={styleNavStart}>
-					<Button theme="logo"></Button>
+					<Link to={"/"}>
+						<Button theme="logo"></Button>
+					</Link>
+					<Link to={"/landing"}>
+						<Button theme="logo"></Button>
+					</Link>
 				</div>
 				{isDesktop && (
 					<div style={styleNavEnd}>

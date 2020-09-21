@@ -49,11 +49,11 @@ export class LandingPage extends React.Component<Props> {
 						<Button theme="big">Sign up</Button>
 					</div>
 				)}
-				{/* <ModalToggler>
+				<ModalToggler>
 					<Form title="Sign In" submitValue="Sign In">
 						<SigninForm />
 					</Form>
-				</ModalToggler> */}
+				</ModalToggler>
 			</div>
 		);
 	}
