@@ -30,6 +30,7 @@ export const CategoryFilterSort = (props: Props) => {
 					setSelected(!selected);
 				}}
 			>
+				{props.label}
             </ToggleButton>
 		</div>
 	);
