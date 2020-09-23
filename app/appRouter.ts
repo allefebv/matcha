@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   appRouter.ts                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 18:29:17 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/23 13:35:42 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ import {
 	loginUserController,
 	deleteUserController,
 	activateUserController,
+	changePasswordController,
+	resetPasswordController,
 } from './controller/userController';
 import {
 	addProfileController,
 	getProfileController,
 	getAllProfileController,
 	getProfileByUsernameController,
+	updateProfileController,
 } from './controller/profileController';
 import {
 	addlikedProfileController,
@@ -32,9 +35,10 @@ import { addNotificationController, getNotificationController } from './controll
 import { addTagProfileController } from './controller/tagController';
 
 export function appRoutes(app) {
- 
 	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
 	app.post('/user/addUser', (req: Request, res: Response) => addUserController(req, res));
+	app.post('/user/changePassword', (req: Request, res: Response) => changePasswordController(req, res));
+	app.post('/user/resetPassword', (req: Request, res: Response) => resetPasswordController(req, res));
 	app.post('/user/loginUser', (req: Request, res: Response) => loginUserController(req, res));
 	app.post('/user/deleteUser', (req: Request, res: Response) => deleteUserController(req, res));
 
@@ -42,6 +46,7 @@ export function appRoutes(app) {
 	app.get('/profile/getAllProfile', (req: Request, res: Response) => getAllProfileController(req, res));
 	app.get('/profile/getProfileByUsername', (req: Request, res: Response) => getProfileByUsernameController(req, res));
 	app.post('/profile/addProfile', (req: Request, res: Response) => addProfileController(req, res));
+	app.post('/profile/updateProfile', (req: Request, res: Response) => updateProfileController(req, res));
 
 	app.get('/like/getProfileLike', (req: Request, res: Response) => getProfileLikeController(req, res));
 	app.get('/like/getProfileMatch', (req: Request, res: Response) => getProfileMatchController(req, res));

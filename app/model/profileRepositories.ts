@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:26:42 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 11:31:20 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/23 13:30:23 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,28 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.location}',
 			'${profile.bio}'
 		)`;
+		dataBase.query(sql, async (error: string) => {
+			if (error) {
+				console.log(error);
+				resolve(false);
+			}
+			resolve(true);
+		});
+	});
+}
+
+export function updateProfile(profile: profile, userId: number): Promise<boolean> {
+	return new Promise((resolve) => {
+		const sql = `UPDATE profile SET
+			age = ${profile.age},
+			username = '${profile.username}',
+			firstname = '${profile.firstname}',
+			lastname= '${profile.lastname}',
+			genre = '${profile.genre}',
+			sexualOrientation = '${profile.sexualOrientation}',
+			location = '${profile.location}',
+			bio = '${profile.bio}'
+		WHERE userId = ${userId}`;
 		dataBase.query(sql, async (error: string) => {
 			if (error) {
 				console.log(error);
