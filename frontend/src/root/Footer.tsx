@@ -6,7 +6,7 @@ const styleFooter: React.CSSProperties = {
 	justifyContent: "center",
 	width: "100vw",
 	height: "6vh",
-	alignSelf: "flex-end",
+	justifySelf: "flex-end",
 	color: "white",
 	zIndex: 2,
 };

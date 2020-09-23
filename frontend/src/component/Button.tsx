@@ -1,4 +1,4 @@
-import React, { MouseEvent, FormEvent } from "react";
+import React from "react";
 
 const styleButtonPrimary: React.CSSProperties = {
 	justifyContent: "center",

@@ -2,18 +2,25 @@ import React from "react";
 import { Button } from "../component/Button";
 import { SliderDouble } from "../component/SliderDouble";
 import { CategoryFilterSort } from "../component/CategoryFilterSort";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { Autocomplete } from "@material-ui/lab";
-import { TextField } from "@material-ui/core";
+import { Card, Grid, TextField } from "@material-ui/core";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { ProfileCard } from "../component/ProfileCard";
 
-const styleMainPage: React.CSSProperties = {
+const stylePage: React.CSSProperties = {
 	display: "flex",
-	flexGrow: 1,
-	backgroundColor: "grey",
+	flexDirection: "column",
+	height: "100vh",
+	width: "100vw",
+	backgroundColor: "black",
+};
+
+const styleContent: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	backgroundColor: "black",
+	flex: 1,
 };
 
 const stylePlaceHolderCategories: React.CSSProperties = {
@@ -38,29 +45,22 @@ const stylePlaceHolderFiltersSorts: React.CSSProperties = {
 	alignItems: "center",
 };
 
-const stylePlaceHolderCards: React.CSSProperties = {
+const stylePlaceHolderCardsGrid: React.CSSProperties = {
 	display: "flex",
 	flexDirection: "row",
-	backgroundColor: "indianred",
-	flexGrow: 1,
-};
-
-const stylePlaceHolderComboFilterSort: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	backgroundColor: "ivory",
+	backgroundColor: "grey",
 	justifyContent: "center",
 	alignItems: "center",
-	border: "1vw",
+	flex: 1,
 };
 
 interface Props {}
 
 export const MainPage = (props: Props) => {
 	return (
-		<React.Fragment>
+		<div style={stylePage}>
 			<Header />
-			<div style={styleMainPage}>
+			<div style={styleContent}>
 				<div style={stylePlaceHolderCategories}>
 					<Button theme="primary">Matches</Button>
 					<Button theme="primary">Selection</Button>
@@ -87,10 +87,34 @@ export const MainPage = (props: Props) => {
 							/>
 						</CategoryFilterSort>
 					</div>
-					<div style={stylePlaceHolderCards}></div>
+					<div style={stylePlaceHolderCardsGrid}>
+						<Grid container>
+							<Grid item xs={1}></Grid>
+							<Grid
+								container
+								item
+								alignContent="center"
+								alignItems="center"
+								justify="center"
+								spacing={3}
+								xs={10}
+							>
+								<Grid item xs={4}>
+									<ProfileCard />
+								</Grid>
+								<Grid item xs={4}>
+									<ProfileCard />
+								</Grid>
+								<Grid item xs={4}>
+									<ProfileCard />
+								</Grid>
+							</Grid>
+							<Grid item xs={1}></Grid>
+						</Grid>
+					</div>
 				</div>
 			</div>
 			<Footer />
-		</React.Fragment>
+		</div>
 	);
 };

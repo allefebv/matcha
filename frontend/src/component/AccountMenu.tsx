@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_login } from "../store/user/action";
+import { actionUser_signin } from "../store/user/action";
 import { Button } from "./Button";
 import { Link } from "react-router-dom";
 import { Menu, MenuItem } from "@material-ui/core";
@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.login.isLoggedIn,
+	loggedIn: state.user.signin.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -26,7 +26,7 @@ const AccountMenuComponent = (props: Props) => {
 
 	function handleLogout() {
 		handleClose();
-		props.dispatch(actionUser_login(false));
+		props.dispatch(actionUser_signin(false));
 	}
 
 	return (

@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   reducer.ts                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/22 18:05:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/23 11:41:52 by senz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { combineReducers } from 'redux';
-import { actionUser_login } from './action';
-import { user } from '../../types/types';
+import { actionUser_signin } from './action';
 import { getType } from 'typesafe-actions';
 
 const initialState = {
 	isLoggedIn: false
 }
 
-function login(state = initialState, action: { type: string; payload: string }) {
+function signin(state = initialState, action: { type: string; payload: string }) {
 	switch (action.type) {
-		case getType(actionUser_login):
+		case getType(actionUser_signin):
 			return {
 				...state,
 				isLoggedIn: action.payload};
@@ -31,5 +30,5 @@ function login(state = initialState, action: { type: string; payload: string }) 
 }
 
 export const userReducer = combineReducers({
-	login,
+	signin,
 });
