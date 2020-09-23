@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 13:35:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/23 16:07:49 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ import {
 } from './controller/profileController';
 import {
 	addlikedProfileController,
+	deletelikedProfileController,
 	getProfileLikeController,
 	getProfileMatchController,
 } from './controller/likeController';
@@ -51,6 +52,7 @@ export function appRoutes(app) {
 	app.get('/like/getProfileLike', (req: Request, res: Response) => getProfileLikeController(req, res));
 	app.get('/like/getProfileMatch', (req: Request, res: Response) => getProfileMatchController(req, res));
 	app.post('/like/addLikedProfile', (req: Request, res: Response) => addlikedProfileController(req, res));
+	app.post('/like/deleteLikedProfile', (req: Request, res: Response) => deletelikedProfileController(req, res));
 
 	app.get('/notification/getNotification', (req: Request, res: Response) => getNotificationController(req, res));
 	app.post('/notification/addNotification', (req: Request, res: Response) => addNotificationController(req, res));
