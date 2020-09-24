@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 14:52:55 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 11:37:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ export async function getProfileController(req: Request, res: Response) {
 		);
 		if (profile) {
 			res.status(200).json({ profile: profile, tag: tagList });
-		} else {
-			res.status(400).send("Profile doesn't exsist");
+			return;
 		}
 	}
+	res.status(400).send('An error occured');
 }
 
 export async function getProfileByUsernameController(req: Request, res: Response) {
@@ -47,10 +47,10 @@ export async function getProfileByUsernameController(req: Request, res: Response
 		const profile = await getProfileByUsername(req.query.username as string);
 		if (profile) {
 			res.status(200).json(profile);
-		} else {
-			res.status(400).send("Profile doesn't exsist");
+			return;
 		}
 	}
+	res.status(400).send('An error occured');
 }
 
 export async function getAllProfileController(req: Request, res: Response) {
@@ -62,7 +62,7 @@ export async function getAllProfileController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('Profile list is empty');
+	res.status(400).send('An error occured');
 }
 
 export async function addProfileController(req: Request, res: Response) {

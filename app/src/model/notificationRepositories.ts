@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/18 14:24:40 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:52:55 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { dataBase } from '../app';
-import { notification } from '../types/types';
+import { notification } from '../../types/types';
 
 export function addNotification(
 	profileNotifedId: number,

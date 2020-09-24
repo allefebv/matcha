@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:26:42 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 13:30:23 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:51:27 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { dataBase } from '../app';
-import { profile } from '../types/types';
+import { profile } from '../../types/types';
 
 export function getProfileByUserId(id: number): Promise<profile | null> {
 	return new Promise((resolve) => {

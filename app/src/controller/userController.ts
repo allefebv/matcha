@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:08:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 14:19:57 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:52:44 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ export async function loginUserController(req: Request, res: Response) {
 		});
 		return;
 	}
-	res.status(400).json({ error: 'credentials invalid' });
+	res.status(400).send('An error occured');
 }
 
 export async function changePasswordController(req: Request, res: Response) {

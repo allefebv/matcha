@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:03:39 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 11:42:58 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:51:11 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import nodemailer from 'nodemailer';
-import { user } from '../types/types';
+import { user } from '../../types/types';
 
 const transporter = nodemailer.createTransport({
 	host: 'smtp.gmail.com',

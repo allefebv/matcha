@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 15:07:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 11:28:07 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:49:07 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { dataBase } from '../app';
-import { user } from '../types/types';
+import { user } from '../../types/types';
 import { generateActivationKey } from '../services/generateString';
 
 export function getUserById(id: number): Promise<user | null> {
