@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   addUserValidation.ts                               :+:      :+:    :+:   */
+/*   userValidation.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 13:35:44 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/24 13:41:54 by senz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ async function validationEmail(validation: Validation, email: string) {
 		validation.email = 'Email already exists';
 	} else {
 		const emailRegex = new RegExp(
-			"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 		);
 		validation.email = emailRegex.test(email) ? null : 'Email invalid';
 	}

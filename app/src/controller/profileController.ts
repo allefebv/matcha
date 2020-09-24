@@ -6,14 +6,20 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 17:13:54 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 11:37:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
-import { addProfile, getAllProfile, getProfileByUserId, getProfileByUsername } from '../model/profileRepositories';
+import {
+	addProfile,
+	getAllProfile,
+	getProfileByUserId,
+	getProfileByUsername,
+	updateProfile,
+} from '../model/profileRepositories';
 import { jwtVerify } from '../services/jwt';
-import { addProfileValidation } from '../services/addProfileValidation';
+import { addProfileValidation, updateProfileValidation } from '../services/profileValidation';
 import { getTagById, getTagProfile } from '../model/tagRepositories';
 
 export async function getProfileController(req: Request, res: Response) {
@@ -29,10 +35,10 @@ export async function getProfileController(req: Request, res: Response) {
 		);
 		if (profile) {
 			res.status(200).json({ profile: profile, tag: tagList });
-		} else {
-			res.status(400).send("Profile doesn't exsist");
+			return;
 		}
 	}
+	res.status(400).send('An error occured');
 }
 
 export async function getProfileByUsernameController(req: Request, res: Response) {
@@ -41,10 +47,10 @@ export async function getProfileByUsernameController(req: Request, res: Response
 		const profile = await getProfileByUsername(req.query.username as string);
 		if (profile) {
 			res.status(200).json(profile);
-		} else {
-			res.status(400).send("Profile doesn't exsist");
+			return;
 		}
 	}
+	res.status(400).send('An error occured');
 }
 
 export async function getAllProfileController(req: Request, res: Response) {
@@ -56,7 +62,7 @@ export async function getAllProfileController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('Profile list is empty');
+	res.status(400).send('An error occured');
 }
 
 export async function addProfileController(req: Request, res: Response) {
@@ -65,14 +71,35 @@ export async function addProfileController(req: Request, res: Response) {
 		req.body.age,
 		req.body.username,
 		req.body.genre,
-		req.body.sexualOrientation,
-		res
+		req.body.sexualOrientation
 	);
 	if (jwt && jwt.isLogin && !validation) {
 		const result = await addProfile(req.body, jwt.decoded.id);
 		if (result) {
 			res.status(200).send('Profile has been created');
 			return;
+		}
+	}
+	res.status(400).send({ message: 'An error occured', error: validation });
+}
+
+export async function updateProfileController(req: Request, res: Response) {
+	const jwt = await jwtVerify(req.headers.token, res);
+	let validation = null;
+	if (jwt && jwt.isLogin) {
+		validation = await updateProfileValidation(
+			req.body.age,
+			req.body.username,
+			req.body.genre,
+			req.body.sexualOrientation,
+			jwt.decoded.id
+		);
+		if (!validation) {
+			const result = await updateProfile(req.body, jwt.decoded.id);
+			if (result) {
+				res.status(200).send('Profile has been update');
+				return;
+			}
 		}
 	}
 	res.status(400).send({ message: 'An error occured', error: validation });

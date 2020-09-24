@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 16:04:36 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 17:12:59 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:51:41 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { dataBase } from '../app';
-import { tag, tagProfile } from '../types/types';
+import { tag, tagProfile } from '../../types/types';
 
 export function getTag(tag: string): Promise<tag | null> {
 	return new Promise((resolve, reject) => {

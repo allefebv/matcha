@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 13:19:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/17 12:59:14 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:52:19 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { dataBase } from '../app';
-import { like } from '../types/types';
+import { like } from '../../types/types';
 
 export function addLikedProfile(profileLikedId: number, profileHasBeenLikedId: number): Promise<boolean> {
 	return new Promise((resolve, reject) => {
@@ -22,6 +22,19 @@ export function addLikedProfile(profileLikedId: number, profileHasBeenLikedId: n
 			${profileLikedId},
 			${profileHasBeenLikedId}
 		)`;
+		dataBase.query(sql, (error: string, result: like[]) => {
+			if (error) {
+				console.log(error);
+				reject(false);
+			}
+			resolve(true);
+		});
+	});
+}
+
+export function deleteLikedProfile(profileLikedId: number, profileHasBeenLikedId: number): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `DELETE FROM likeProfile WHERE profileLikesId = ${profileLikedId} AND profileHasBeenLikedId = ${profileHasBeenLikedId}`;
 		dataBase.query(sql, (error: string, result: like[]) => {
 			if (error) {
 				console.log(error);
