@@ -13,7 +13,7 @@ import { Response } from 'express';
 
 import jwt from 'jsonwebtoken';
 import { resolve } from 'path';
-import { user } from '../types/types';
+import { user } from '../../types/types';
 
 export const JWT_SIGN_SECRET = 'p4msh40n39f7nf037rhg0sa24gt90374gohdgwh3i8';
 

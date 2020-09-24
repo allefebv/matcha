@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/18 14:44:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:52:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,23 @@ export async function addNotificationController(req: Request, res: Response) {
 	}
 	res.status(400).send('An error occured');
 }
-
+/*
+export async function deleteNotificationController(req: Request, res: Response) {
+	const jwt = await jwtVerify(req.headers.token, res);
+	if (jwt && jwt.isLogin) {
+		const deleteNotification = await deleteNotification(
+			profileNotified.userId,
+			jwt.decoded.id,
+			req.body.notification
+		);
+		if (notification) {
+			res.status(200).send('Notification add');
+			return;
+		}
+	}
+	res.status(400).send('An error occured');
+}
+*/
 export async function getNotificationController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 

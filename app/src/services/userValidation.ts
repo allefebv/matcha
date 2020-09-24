@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   addUserValidation.ts                               :+:      :+:    :+:   */
+/*   userValidation.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/17 15:53:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 13:35:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ interface Validation {
 }
 
 function validationPassword(validation: Validation, password: string) {
-	const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+	const passwordRegex = new RegExp(/(?=.[A-Z])(?=.[a-z])(?=.*\d).{8,}/);
 
 	if (passwordRegex.test(password)) {
 		validation.password = null;
@@ -34,7 +34,7 @@ async function validationEmail(validation: Validation, email: string) {
 		validation.email = 'Email already exists';
 	} else {
 		const emailRegex = new RegExp(
-			"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 		);
 		validation.email = emailRegex.test(email) ? null : 'Email invalid';
 	}
