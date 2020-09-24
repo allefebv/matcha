@@ -6,90 +6,44 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/17 15:50:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 14:52:05 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 16:20:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Response } from 'express';
-import { getProfileByUserId, getProfileByUsername } from '../model/profileRepositories';
+import { profile } from '../../types/types';
 
-interface Validation {
-	age: string | null;
-	username: string | null;
-	genre: string | null;
-	sexualOrientation: string | null;
-}
-
-async function usernameValidation(username: string, id?: number) {
-	const profile = await getProfileByUsername(username);
-	if (profile && id === profile.userId && username === profile.username) {
-		return null;
+const usernameValidation = (userId: number, username: string, profile: profile): string => {
+	if (username.length > 16) {
+		return 'Username is too long';
 	}
-	if (profile || username.length > 16) {
-		return 'the username already exists or is too long';
+	if (profile && profile.id !== userId) {
+		return 'Username already exsist';
 	}
 	return null;
-}
+};
 
-export async function addProfileValidation(
-	age: number,
-	username: string,
-	genre: string,
-	sexualOrientation: string
-): Promise<Validation | null> {
-	const validation = {
-		age: null,
-		username: null,
-		genre: null,
-		sexualOrientation: null,
-	};
+const ageValidation = (age: number) => (age < 18 ? 'Age under 18' : null);
 
-	validation.age = age > 17 ? null : 'User must be over 18 years old';
-	validation.username = await usernameValidation(username);
-	validation.genre = genre === 'man' || genre === 'woman' ? null : "Genre doesn't exsist select: man or woman";
-	validation.sexualOrientation =
-		sexualOrientation === 'heterosexual' ||
-		sexualOrientation === 'gay' ||
-		sexualOrientation === 'lesbian' ||
-		sexualOrientation === 'bisexual'
-			? null
-			: "Sexual orientation doesn't exsist select: heterosexual, gay, lesbian or bisexual";
-	for (const [key, value] of Object.entries(validation)) {
-		if (value !== null) {
-			return validation;
-		}
+const genreValidation = (genre: string) => (genre === 'man' || genre === 'women' ? null : 'Genre invalid');
+
+const sexualOrientationValidation = (sexualOrientation: string) => {
+	const genreList = ['homosexual', 'lesbian', 'bisexual', 'heterosexual'];
+	const result = genreList.filter((item) => item === sexualOrientation);
+	return result.length === 1 ? null : `Sexual orientation; ${sexualOrientation} doen't exsist`;
+};
+
+export const profileValidation = async (body: profile, res: Response, id: number, profile: profile) => {
+	let result: string[] = [];
+
+	result.push(usernameValidation(id, body.username, profile));
+	result.push(ageValidation(body.age));
+	result.push(genreValidation(body.genre));
+	result.push(sexualOrientationValidation(body.sexualOrientation));
+	result = result.filter((item) => item);
+	if (result.length) {
+		res.status(400).send(result);
+		return false;
 	}
-	return null;
-}
-
-export async function updateProfileValidation(
-	age: number,
-	username: string,
-	genre: string,
-	sexualOrientation: string,
-	id: number
-): Promise<Validation | null> {
-	const validation = {
-		age: null,
-		username: null,
-		genre: null,
-		sexualOrientation: null,
-	};
-
-	validation.age = age > 17 ? null : 'User must be over 18 years old';
-	validation.username = await usernameValidation(username, id);
-	validation.genre = genre === 'man' || genre === 'woman' ? null : "Genre doesn't exsist select: man or woman";
-	validation.sexualOrientation =
-		sexualOrientation === 'heterosexual' ||
-		sexualOrientation === 'gay' ||
-		sexualOrientation === 'lesbian' ||
-		sexualOrientation === 'bisexual'
-			? null
-			: "Sexual orientation doesn't exsist select: heterosexual, gay, lesbian or bisexual";
-	for (const [key, value] of Object.entries(validation)) {
-		if (value !== null) {
-			return validation;
-		}
-	}
-	return null;
-}
+	return true;
+};
