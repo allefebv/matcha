@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:19:10 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:27:00 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { user } from "../types/types";
+
 import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
-import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 
 type Props = {};
 
@@ -48,7 +49,6 @@ export function SignUpDialog(props: Props) {
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		handleClose();
 	}
 
 	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
@@ -93,12 +93,16 @@ export function SignUpDialog(props: Props) {
 			password: password,
 		};
 
-		fetchApi<{ user: Object; token: string }>(
+		fetchApi<{ user: user; token: string }>(
 			constants.URL + constants.URI_SIGNUP,
 			constants.POST_METHOD,
 			details
 		).then(({ user, token }) => {
-			console.log("signedUp");
+			handleClose();
+		}).catch(error => {
+			setEmailError(true);
+			setPasswordError(true);
+			setPasswordConfirmError(true);
 		});
 	};
 
@@ -120,6 +124,7 @@ export function SignUpDialog(props: Props) {
 							margin="dense"
 							label="Email Address"
 							type="email"
+							variant="filled"
 							fullWidth
 							value={email}
 							onChange={handleEmail}
@@ -131,6 +136,7 @@ export function SignUpDialog(props: Props) {
 							margin="dense"
 							label="Password"
 							type="password"
+							variant="filled"
 							fullWidth
 							value={password}
 							onChange={handlePassword}
@@ -141,6 +147,7 @@ export function SignUpDialog(props: Props) {
 							margin="dense"
 							label="Confirm Password"
 							type="password"
+							variant="filled"
 							fullWidth
 							value={passwordConfirm}
 							onChange={handlePasswordConfirm}

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:19:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:24:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ import { actionUser_signin } from "../store/user/action";
 
 import { useHistory } from "react-router-dom";
 
+import { user } from "../types/types"
+
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
 }));
@@ -38,6 +40,7 @@ function SignInDialogComponent(props: Props) {
 	let [email, setEmail] = React.useState<string | null>("");
 	let [emailError, setEmailError] = React.useState(false);
 	const [password, setPassword] = React.useState<string | null>("");
+	let [passwordError, setPasswordError] = React.useState(false);
 
 	const history = useHistory();
 
@@ -52,7 +55,6 @@ function SignInDialogComponent(props: Props) {
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		handleClose();
 	}
 
 	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
@@ -71,20 +73,24 @@ function SignInDialogComponent(props: Props) {
 	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
 		setPassword(e.currentTarget.value);
 	}
-
+	
 	const handleSignIn = () => {
 		let details = {
 			email: email,
 			password: password,
 		};
 
-		fetchApi<{ user: Object; token: string }>(
+		fetchApi<{ user: user, token: string }>(
 			constants.URL + constants.URI_SIGNIN,
 			constants.POST_METHOD,
 			details
 		).then(({ user, token }) => {
 			props.dispatch(actionUser_signin(token));
 			history.push(constants.SEARCH_ROUTE);
+			handleClose()
+		}).catch((error) => {
+			setEmailError(true)
+			setPasswordError(true)
 		});
 	};
 
@@ -106,6 +112,7 @@ function SignInDialogComponent(props: Props) {
 							margin="dense"
 							label="Email Address"
 							type="email"
+							variant="filled"
 							fullWidth
 							value={email}
 							onChange={handleEmail}
@@ -117,8 +124,11 @@ function SignInDialogComponent(props: Props) {
 							margin="dense"
 							label="Password"
 							type="password"
+							variant="filled"
 							fullWidth
 							value={password}
+							error={passwordError}
+							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
 							onChange={handlePassword}
 						/>
 					</DialogContent>

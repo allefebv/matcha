@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 14:37:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ class HeaderComponent extends React.Component<Props> {
 				</div>
 				{isDesktop && (
 					<div style={styleNavEnd}>
-						{this.props.loggedIn && (
+						{!this.props.loggedIn && (
 							<React.Fragment>
 								<SignInDialog />
 								<SignUpDialog />
 							</React.Fragment>
 						)}
-						{!this.props.loggedIn && (
+						{this.props.loggedIn && (
 							<React.Fragment>
 								<IconButton>
 									<NotificationsIcon color="primary" />

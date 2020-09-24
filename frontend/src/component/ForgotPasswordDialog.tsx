@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:44 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:14:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ function ForgotPasswordDialogComponent(props: Props) {
 							margin="dense"
 							label="Email Address"
 							type="email"
+							variant="filled"
 							fullWidth
 						/>
 					</DialogContent>

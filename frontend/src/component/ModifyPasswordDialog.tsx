@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:26:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:14:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ export function ModifyPasswordDialog(props: Props) {
 							margin="dense"
 							label="Password"
 							type="password"
+							variant="filled"
 							fullWidth
 							value={password}
 							onChange={handlePassword}
@@ -108,6 +109,7 @@ export function ModifyPasswordDialog(props: Props) {
 							margin="dense"
 							label="Confirm Password"
 							type="password"
+							variant="filled"
 							fullWidth
 							value={passwordConfirm}
 							onChange={handlePasswordConfirm}

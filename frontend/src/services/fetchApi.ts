@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:05:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,34 @@ export function fetchApi<T>(
 		return fetch(url, {
 			method: method,
 			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded;charset=UTF-8",
+				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
 			},
 			body: bodyString,
 		})
-			.then((response) => response.json())
-			.catch((response) => {
-				throw new Error(response.statusText);
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(response.statusText);
+				}
+				return response.json();
+			})
+			.catch((error) => {
+				throw new Error("Network error: " + error.message);
 			});
 	} else {
 		return fetch(url, {
 			method: method,
 			headers: {
-				"Content-Type":
-					"application/x-www-form-urlencoded;charset=UTF-8",
+				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
 			},
 		})
-			.then((response) => response.json())
-			.catch((response) => {
-				throw new Error(response.statusText);
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(response.statusText);
+				}
+				return response.json();
+			})
+			.catch((error) => {
+				throw new Error("Network error: " + error.message);
 			});
 	}
 }

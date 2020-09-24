@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/09/24 14:31:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:15:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ export const AccountSettingsPage = () => {
 				margin="dense"
 				label="Email Address"
 				type="email"
+				variant="filled"
 				fullWidth
 				value={email}
 				onChange={handleEmail}

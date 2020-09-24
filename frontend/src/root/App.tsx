@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:09 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 14:36:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ export class AppComponent extends React.Component<Props> {
 		return (
 			<BrowserRouter>
 				<Switch>
-					<Route exact path={constants.LANDING_ROUTE} component={AccountSettingsPage} />
+					<Route exact path={constants.LANDING_ROUTE} component={LandingPage} />
 					<PrivateRoute
 						path={constants.SEARCH_ROUTE}
 						isLogged={this.props.loggedIn}
