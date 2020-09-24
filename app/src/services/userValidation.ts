@@ -3,56 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   userValidation.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 13:41:54 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/24 14:35:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Response } from 'express';
 import { getUserByEmail } from '../model/userRepositories';
 
-interface Validation {
-	password: string | null;
-	email: string | null;
-}
+const validationPassword = (password: string): Promise<string | null> =>
+	new Promise((resolve) => {
+		const passwordRegex = new RegExp(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/);
+		if (!passwordRegex.test(password)) {
+			resolve('Password invalid');
+		}
+		resolve(null);
+	});
 
-function validationPassword(validation: Validation, password: string) {
-	const passwordRegex = new RegExp(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/);
-
-	if (passwordRegex.test(password)) {
-		validation.password = null;
-	} else {
-		validation.password = 'Invalid password';
-	}
-}
-
-async function validationEmail(validation: Validation, email: string) {
-	const newUserEmailExist = await getUserByEmail(email);
-	if (typeof newUserEmailExist !== 'number') {
-		validation.email = 'Email already exists';
-	} else {
+const validationEmail = (email: string): Promise<string | null> =>
+	new Promise(async (resolve) => {
+		const newUserEmailExist = await getUserByEmail(email);
 		const emailRegex = new RegExp(
 			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 		);
-		validation.email = emailRegex.test(email) ? null : 'Email invalid';
-	}
-}
-
-export async function addUserValidation(email: string, password: string, res: Response) {
-	const validation: Validation = {
-		password: null,
-		email: null,
-	};
-
-	validationPassword(validation, password);
-	validationEmail(validation, email);
-	for (const [key, value] of Object.entries(validation)) {
-		if (value !== null) {
-			res.status(400).json(validation);
-			return validation;
+		if (newUserEmailExist) {
+			resolve('Email already exsist');
 		}
+		if (!emailRegex.test(email)) {
+			resolve('Email invalid');
+		}
+		resolve(null);
+	});
+
+export const addUserValidation = async (email: string, password: string, res: Response): Promise<boolean> => {
+	const passwordValidation = await validationPassword(password);
+	const emailValidation = await validationEmail(email);
+
+	if (passwordValidation || emailValidation) {
+		res.status(400).json({ email: emailValidation, password: passwordValidation });
+		return false;
 	}
-	return validation;
-}
+	return true;
+};
