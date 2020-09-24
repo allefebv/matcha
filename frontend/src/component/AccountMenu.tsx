@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   AccountMenu.tsx                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:18:07 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_signin } from "../store/user/action";
 import { IconButton } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Menu, MenuItem } from "@material-ui/core";
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -31,7 +43,12 @@ const AccountMenuComponent = (props: Props) => {
 	return (
 		<div>
 			<IconButton>
-				<KeyboardArrowDownIcon color="primary" />
+				<KeyboardArrowDownIcon
+					aria-controls="simple-menu"
+					aria-haspopup="true"
+					onClick={handleClick}
+					color="primary"
+				/>
 			</IconButton>
 			<Menu
 				id="simple-menu"

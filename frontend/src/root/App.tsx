@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   App.tsx                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:18:09 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 import { LandingPage } from "./LandingPage";
 import { MainPage } from "./MainPage";
@@ -18,7 +30,7 @@ export class AppComponent extends React.Component<Props> {
 		return (
 			<BrowserRouter>
 				<Switch>
-					<Route exact path={constants.LANDING_ROUTE} component={LandingPage} />
+					<Route exact path={constants.LANDING_ROUTE} component={AccountSettingsPage} />
 					<PrivateRoute
 						path={constants.SEARCH_ROUTE}
 						isLogged={this.props.loggedIn}

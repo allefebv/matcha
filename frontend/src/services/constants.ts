@@ -1,6 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   constants.ts                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:23:54 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 export const URL = "http://localhost:3001";
 export const URI_SIGNIN = "/user/loginUser";
 export const URI_SIGNUP = "/user/addUser";
+export const URI_MODIFY_EMAIL = "";
+export const URI_MODIFY_PASSWORD = "";
 
 export const POST_METHOD = "POST";
 

@@ -1,15 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Header.tsx                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:18:13 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 import { Button } from "../component/Button";
 import { AccountMenu } from "../component/AccountMenu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import PersonIcon from '@material-ui/icons/Notifications';
+import PersonIcon from '@material-ui/icons/Person';
 
 import { SignInDialog } from "../component/SignInDialog";
 import { SignUpDialog } from "../component/SignUpDialog";
@@ -58,13 +67,13 @@ class HeaderComponent extends React.Component<Props> {
 				</div>
 				{isDesktop && (
 					<div style={styleNavEnd}>
-						{!this.props.loggedIn && (
+						{this.props.loggedIn && (
 							<React.Fragment>
 								<SignInDialog />
 								<SignUpDialog />
 							</React.Fragment>
 						)}
-						{this.props.loggedIn && (
+						{!this.props.loggedIn && (
 							<React.Fragment>
 								<IconButton>
 									<NotificationsIcon color="primary" />

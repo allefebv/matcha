@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SignUpDialog.tsx                                   :+:      :+:    :+:   */
+/*   ModifyPasswordDialog.tsx                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:19:10 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/24 14:26:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
-import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 
 type Props = {};
 
-export function SignUpDialog(props: Props) {
+export function ModifyPasswordDialog(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [email, setEmail] = useState<string | null>("");
-	let [emailError, setEmailError] = useState(false);
 	let [password, setPassword] = useState<string | null>("");
 	let [passwordError, setPasswordError] = useState(false);
 	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
@@ -43,27 +40,11 @@ export function SignUpDialog(props: Props) {
 		setPasswordConfirm("");
 		setPasswordError(false);
 		setPasswordConfirmError(false);
-		setEmailError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		handleClose();
-	}
-
-	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
-		setEmail(e.currentTarget.value);
-		isEmailValid(e.currentTarget.value) && setEmailError(false);
-	}
-
-	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
-		setEmailError(!isEmailValid(email));
-	}
-
-	function isEmailValid(email: string | null) {
-		return typeof email === "string" && email.match(constants.REGEX_EMAIL)
-			? true
-			: false;
 	}
 
 	async function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
@@ -87,25 +68,23 @@ export function SignUpDialog(props: Props) {
 		return password === passwordConfirm;
 	}
 
-	const handleSignUp = () => {
+	const handleModifyPassword = () => {
 		let details = {
-			email: email,
 			password: password,
 		};
 
 		fetchApi<{ user: Object; token: string }>(
-			constants.URL + constants.URI_SIGNUP,
+			constants.URL + constants.URI_MODIFY_PASSWORD,
 			constants.POST_METHOD,
 			details
 		).then(({ user, token }) => {
-			console.log("signedUp");
 		});
 	};
 
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Sign up
+				Modify Password
 			</Button>
 			<Dialog
 				open={open}
@@ -113,20 +92,8 @@ export function SignUpDialog(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Sign up</DialogTitle>
+					<DialogTitle id="form-dialog-title">Modify Password</DialogTitle>
 					<DialogContent>
-						<TextField
-							autoFocus
-							margin="dense"
-							label="Email Address"
-							type="email"
-							fullWidth
-							value={email}
-							onChange={handleEmail}
-							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
-							onBlur={handleBlurEmail}
-						/>
 						<TextField
 							margin="dense"
 							label="Password"
@@ -154,8 +121,8 @@ export function SignUpDialog(props: Props) {
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<Button onClick={handleSignUp} type="submit" color="primary">
-							Sign up
+						<Button onClick={handleModifyPassword} type="submit" color="primary">
+							Confirm
 						</Button>
 					</DialogActions>
 				</form>
