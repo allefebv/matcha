@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:08:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:52:44 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 14:27:41 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ export async function addUserController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send({ message: 'an error occurred', detail: userValidation });
 }
 
 export async function loginUserController(req: Request, res: Response) {
