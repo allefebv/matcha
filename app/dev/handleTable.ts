@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/18 15:21:10 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 12:43:38 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,12 @@ export function addTableLike() {
 export async function addTableNotification() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE notificationProfile (
+			id										INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			profileNotifedId						INTEGER NOT NULL,
 			notifierProfileId						INTEGER NOT NULL,
 			date									TEXT NOT NULL,
 			notification							TEXT NOT NULL,
+			isRead									INTEGER DEFAULT 0 NOT NULL,
 			FOREIGN KEY (profileNotifedId) 			REFERENCES profile(userId) ON DELETE CASCADE,
 			FOREIGN KEY (notifierProfileId) 		REFERENCES profile(userId) ON DELETE CASCADE
 		)`;
@@ -152,7 +154,7 @@ export async function dropTable(nameTable: string) {
 }
 async function main() {
 	initMysql();
-
+	//dropTable('notificationProfile');
 	//await addTableUser();
 	//await addTableProfile();
 	//await addTableLike();

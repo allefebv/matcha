@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   app.ts                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 18:28:57 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/24 13:02:28 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { appRoutes } from './appRouter';
+import { router } from './router';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { createConnection } from 'mysql';
-import cors from 'cors'
-
+import cors from 'cors';
 
 export let dataBase = null;
 let app: express.Application | null = null;
 
 function initMiddelware() {
-	app.use(cors())
+	app.use(cors());
 	app.use(bodyParser.json());
 	app.use(
 		bodyParser.urlencoded({
@@ -30,7 +29,7 @@ function initMiddelware() {
 	);
 }
 
-function initMysql() {
+function initDatabase() {
 	dataBase = createConnection({
 		host: 'fj199397-001.dbaas.ovh.net',
 		port: 35833,
@@ -49,8 +48,8 @@ function initMysql() {
 function main() {
 	app = express();
 	initMiddelware();
-	initMysql();
-	appRoutes(app);
+	initDatabase();
+	router(app);
 
 	const port = 3001;
 	console.log('http://localhost:' + port);
