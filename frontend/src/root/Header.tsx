@@ -7,6 +7,10 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 
+import IconButton from '@material-ui/core/IconButton';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PersonIcon from '@material-ui/icons/Notifications';
+
 import { SignInDialog } from "../component/SignInDialog";
 import { SignUpDialog } from "../component/SignUpDialog";
 
@@ -62,12 +66,12 @@ class HeaderComponent extends React.Component<Props> {
 						)}
 						{this.props.loggedIn && (
 							<React.Fragment>
-								<Button theme="circle">
-									<FontAwesomeIcon icon={faBell} />
-								</Button>
-								<Button theme="circle">
-									<FontAwesomeIcon icon={faUser} />
-								</Button>
+								<IconButton>
+									<NotificationsIcon color="primary" />
+								</IconButton>
+								<IconButton>
+									<PersonIcon color="primary" />
+								</IconButton>
 								<AccountMenu></AccountMenu>
 							</React.Fragment>
 						)}

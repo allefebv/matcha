@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,10 +10,16 @@ import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 
-type Props = {}
+type Props = {};
 
 export function SignUpDialog(props: Props) {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
+	let [email, setEmail] = useState<string | null>("");
+	let [emailError, setEmailError] = useState(false);
+	let [password, setPassword] = useState<string | null>("");
+	let [passwordError, setPasswordError] = useState(false);
+	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
+	let [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -21,6 +27,11 @@ export function SignUpDialog(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
+		setPassword("");
+		setPasswordConfirm("");
+		setPasswordError(false);
+		setPasswordConfirmError(false);
+		setEmailError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -28,10 +39,46 @@ export function SignUpDialog(props: Props) {
 		handleClose();
 	}
 
+	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
+		setEmail(e.currentTarget.value);
+		isEmailValid(e.currentTarget.value) && setEmailError(false);
+	}
+
+	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
+		setEmailError(!isEmailValid(email));
+	}
+
+	function isEmailValid(email: string | null) {
+		return typeof email === "string" && email.match(constants.REGEX_EMAIL)
+			? true
+			: false;
+	}
+
+	async function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
+		setPassword(e.currentTarget.value);
+		setPasswordError(!isPasswordValid(e.currentTarget.value));
+	}
+
+	function handlePasswordConfirm(e: React.ChangeEvent<HTMLInputElement>) {
+		setPasswordConfirm(e.currentTarget.value);
+		setPasswordConfirmError(!arePasswordsIdentical(e.currentTarget.value));
+	}
+
+	function isPasswordValid(password: string | null) {
+		return typeof password === "string" &&
+			password.match(constants.REGEX_PASSWORD)
+			? true
+			: false;
+	}
+
+	function arePasswordsIdentical(passwordConfirm: string | null) {
+		return password === passwordConfirm;
+	}
+
 	const handleSignUp = () => {
 		let details = {
-			email: "jeremy0@fleury.blueee",
-            password: "@Matcha1234",
+			email: email,
+			password: password,
 		};
 
 		fetchApi<{ user: Object; token: string }>(
@@ -39,7 +86,7 @@ export function SignUpDialog(props: Props) {
 			constants.POST_METHOD,
 			details
 		).then(({ user, token }) => {
-			console.log("signedUp")
+			console.log("signedUp");
 		});
 	};
 
@@ -62,25 +109,39 @@ export function SignUpDialog(props: Props) {
 							label="Email Address"
 							type="email"
 							fullWidth
+							value={email}
+							onChange={handleEmail}
+							error={emailError}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							onBlur={handleBlurEmail}
 						/>
 						<TextField
 							margin="dense"
 							label="Password"
 							type="password"
 							fullWidth
+							value={password}
+							onChange={handlePassword}
+							error={passwordError}
+							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
 						/>
 						<TextField
 							margin="dense"
 							label="Confirm Password"
 							type="password"
 							fullWidth
+							value={passwordConfirm}
+							onChange={handlePasswordConfirm}
+							error={passwordConfirmError}
+							helperText={
+								passwordConfirmError && constants.PASSWORD_CONFIRM_HELPER_ERROR
+							}
 						/>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<ForgotPasswordDialog />
 						<Button onClick={handleSignUp} type="submit" color="primary">
 							Sign up
 						</Button>

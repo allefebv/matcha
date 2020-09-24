@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_signin } from "../store/user/action";
-import { Button } from "./Button";
+import { IconButton } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Menu, MenuItem } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -31,14 +30,9 @@ const AccountMenuComponent = (props: Props) => {
 
 	return (
 		<div>
-			<Button
-				theme="circle"
-				aria-controls="simple-menu"
-				aria-haspopup="true"
-				onClick={handleClick}
-			>
-				<FontAwesomeIcon icon={faChevronDown} />
-			</Button>
+			<IconButton>
+				<KeyboardArrowDownIcon color="primary" />
+			</IconButton>
 			<Menu
 				id="simple-menu"
 				anchorEl={anchorEl}

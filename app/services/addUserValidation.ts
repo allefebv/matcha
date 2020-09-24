@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   addUserValidation.ts                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/17 15:53:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 13:35:44 by senz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ interface Validation {
 }
 
 function validationPassword(validation: Validation, password: string) {
-	const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+	const passwordRegex = new RegExp(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/);
 
 	if (passwordRegex.test(password)) {
 		validation.password = null;

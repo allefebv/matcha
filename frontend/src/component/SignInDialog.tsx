@@ -35,6 +35,7 @@ function SignInDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
+		setPassword(null);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -44,14 +45,14 @@ function SignInDialogComponent(props: Props) {
 
 	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
 		setEmail(e.currentTarget.value);
-		(isEmailValid() && setEmailError(false))
+		(isEmailValid(e.currentTarget.value) && setEmailError(false))
 	}
 
-	function handleBlurEmail(event: React.FocusEvent<HTMLInputElement>) {
-		setEmailError(!isEmailValid())
+	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
+		email !== "" && setEmailError(!isEmailValid(email))
 	}
 
-	function isEmailValid() {
+	function isEmailValid(email: string | null) {
 		return (typeof email === "string" && email.match(constants.REGEX_EMAIL)) ? true : false;
 	}
 
