@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 14:26:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/24 16:47:28 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ const validationPassword = (password: string): Promise<string | null> =>
 	new Promise((resolve) => {
 		const passwordRegex = new RegExp(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/);
 		if (!passwordRegex.test(password)) {
-			resolve('Password invalid');
+			resolve('PASSWORD_INVALID');
 		}
 		resolve(null);
 	});
@@ -29,20 +29,22 @@ const validationEmail = (email: string): Promise<string | null> =>
 			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 		);
 		if (newUserEmailExist) {
-			resolve('Email already exsist');
+			resolve('EMAIL_EXSIST');
 		}
 		if (!emailRegex.test(email)) {
-			resolve('Email invalid');
+			resolve('EMAIL_INVALID');
 		}
 		resolve(null);
 	});
 
 export const addUserValidation = async (email: string, password: string, res: Response): Promise<boolean> => {
-	const passwordValidation = await validationPassword(password);
-	const emailValidation = await validationEmail(email);
+	const passwordValidation = validationPassword(password);
+	const emailValidation = validationEmail(email);
 
-	if (passwordValidation || emailValidation) {
-		res.status(400).json({ email: emailValidation, password: passwordValidation });
+	let result: string[] = await Promise.all([passwordValidation, emailValidation]);
+	result = result.filter((item) => item);
+	if (result.length) {
+		res.status(400).send(result);
 		return false;
 	}
 	return true;
