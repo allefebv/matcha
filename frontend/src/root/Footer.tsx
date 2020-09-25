@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Footer.tsx                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:23 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/25 12:00:31 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 
 const styleFooter: React.CSSProperties = {
@@ -6,9 +18,9 @@ const styleFooter: React.CSSProperties = {
 	justifyContent: "center",
 	width: "100vw",
 	height: "6vh",
-	alignSelf: "flex-end",
+	justifySelf: "flex-end",
 	color: "white",
-	zIndex: 2,
+	zIndex: 10,
 };
 
 interface Props {}

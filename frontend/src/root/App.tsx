@@ -1,31 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   App.tsx                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/25 12:37:35 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 import { LandingPage } from "./LandingPage";
 import { MainPage } from "./MainPage";
-import { BrowserRouter, Switch, Route, Link, Router } from "react-router-dom";
-import { createStore } from "redux";
-import { rootReducer } from "../store/rootReducer";
+import { AccountSettingsPage } from "./AccountSettingsPage";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { connect, ConnectedProps } from "react-redux";
+import { PrivateRoute } from "../component/PrivateRoute";
+import * as constants from "../services/constants";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { FilledInput } from "@material-ui/core";
+
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.signin.isLoggedIn,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
 const styleApp: React.CSSProperties = {
 	display: "flex",
 	flexDirection: "column",
 	height: "100vh",
 	width: "100vw",
-	background:
-		"radial-gradient(circle, transparent, rgba(0,0,0,0.6)50%, rgba(0,0,0,1) 100%)",
-	zIndex: 0,
+	alignItems: "center",
+	justifyContent: "center",
+	backgroundColor: "black",
+	zIndex: -1
 };
 
-export class App extends React.Component {
+const styleContent: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	justifyContent: "center",
+	flexGrow: 1,
+	flexBasis: "fill",
+	width: "100%"
+};
+
+export class AppComponent extends React.Component<Props> {
 	render() {
 		return (
 			<div style={styleApp}>
 				<BrowserRouter>
-					<Switch>
-						<Route exact path="/" component={MainPage} />
-						<Route exact path="/landing" component={LandingPage} />
-					</Switch>
+					<Header />
+					<div style={styleContent}>
+						<Switch>
+							<Route
+								exact
+								path={constants.LANDING_ROUTE}
+								component={LandingPage}
+							/>
+							<PrivateRoute
+								path={constants.SEARCH_ROUTE}
+								isLogged={this.props.loggedIn}
+								component={MainPage}
+							/>
+							<PrivateRoute
+								path={constants.ACCOUNT_SETTINGS_ROUTE}
+								isLogged={this.props.loggedIn}
+								component={AccountSettingsPage}
+							/>
+						</Switch>
+					</div>
+					<Footer />
 				</BrowserRouter>
 			</div>
 		);
 	}
 }
+
+export const App = withReduxProps(AppComponent);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CategoryFilterSort.tsx                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:42 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:18:42 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React, { useState } from "react";
 import { ToggleButton } from "@material-ui/lab";
 
@@ -30,6 +42,7 @@ export const CategoryFilterSort = (props: Props) => {
 					setSelected(!selected);
 				}}
 			>
+				{props.label}
             </ToggleButton>
 		</div>
 	);

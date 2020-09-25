@@ -1,20 +1,29 @@
-import React, { useState } from "react";
-import { Button } from "../component/Button";
-import { ModalToggler } from "../component/ModalToggler";
-import { Form } from "../component/Form";
-import { SigninForm } from "../component/SigninForm";
-import { SignupForm } from "../component/SignupForm";
-import { ForgotPasswordForm } from "../component/ForgotPasswordForm";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   LandingPage.tsx                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/25 12:00:18 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import React from "react";
+import { SignInDialog } from "../component/SignInDialog";
 
 const styleLanding: React.CSSProperties = {
+	position: "absolute",
+	top: 0,
+	left: 0,
 	display: "flex",
-	flexDirection: "row",
-	alignItems: "flex-end",
-	justifyContent: "center",
+	flexDirection: "column",
 	width: "100vw",
-	height: "90vh",
+	height: "100vh",
+	background:
+		"radial-gradient(circle, transparent, rgba(0,0,0,0.6)50%, rgba(0,0,0,1) 100%)",
+	zIndex: 1,
 };
 
 const styleImg: React.CSSProperties = {
@@ -22,9 +31,15 @@ const styleImg: React.CSSProperties = {
 	top: 0,
 	left: 0,
 	width: "100vw",
-	height: "100vh",
-	zIndex: -1,
+	maxHeight: "100vh",
+	minHeight: "100vh",
+	zIndex: 0,
 	objectFit: "none",
+	userSelect: "none",
+	WebkitUserSelect: "none",
+	MozUserSelect: "none",
+	KhtmlUserSelect: "none",
+	msUserSelect: "none",
 };
 
 const stylePlaceHolder: React.CSSProperties = {
@@ -42,41 +57,16 @@ export const LandingPage = (props: Props) => {
 	const bg = require("../images/background2.jpg");
 	const isMobile = window.innerWidth < 480;
 
-	const [formName, setFormName] = useState("");
-	const [toggleModal, setToggleModal] = useState(false);
-
-	function handleButtonClick(e: React.MouseEvent) {
-		setFormName("Sign In");
-		setToggleModal(true);
-		console.log(toggleModal);
-	}
-
-	function modalClose() {
-		setToggleModal(false);
-	}
-
 	return (
 		<React.Fragment>
-			<Header accountHandler={handleButtonClick}/>
+			<img src={bg} style={styleImg}></img>
 			<div style={styleLanding}>
-				<img src={bg} style={styleImg}></img>
 				{isMobile && (
 					<div style={stylePlaceHolder}>
-						<Button theme="big" onClick={handleButtonClick}>
-							Sign in
-						</Button>
-						<Button theme="big" onClick={handleButtonClick}>
-							Sign up
-						</Button>
+						<SignInDialog />
 					</div>
 				)}
-				<ModalToggler isModalActive={toggleModal} modalClose={modalClose}>
-					<Form title="Sign In" submitValue="Sign In">
-						<SigninForm />
-					</Form>
-				</ModalToggler>
 			</div>
-			<Footer />
 		</React.Fragment>
 	);
 };

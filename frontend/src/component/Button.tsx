@@ -1,4 +1,16 @@
-import React, { MouseEvent, FormEvent } from "react";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Button.tsx                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/24 14:18:39 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/24 14:18:39 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import React from "react";
 
 const styleButtonPrimary: React.CSSProperties = {
 	justifyContent: "center",
