@@ -6,31 +6,24 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 12:00:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import React from "react";
 import { SignInDialog } from "../component/SignInDialog";
 
 const styleLanding: React.CSSProperties = {
+	position: "absolute",
+	top: 0,
+	left: 0,
 	display: "flex",
 	flexDirection: "column",
-	height: "100vh",
 	width: "100vw",
+	height: "100vh",
 	background:
 		"radial-gradient(circle, transparent, rgba(0,0,0,0.6)50%, rgba(0,0,0,1) 100%)",
-	zIndex: 0,
-};
-
-const styleContent: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "row",
-	alignItems: "flex-end",
-	justifyContent: "center",
-	flex: 1
+	zIndex: 1,
 };
 
 const styleImg: React.CSSProperties = {
@@ -38,8 +31,9 @@ const styleImg: React.CSSProperties = {
 	top: 0,
 	left: 0,
 	width: "100vw",
-	height: "100vh",
-	zIndex: -1,
+	maxHeight: "100vh",
+	minHeight: "100vh",
+	zIndex: 0,
 	objectFit: "none",
 	userSelect: "none",
 	WebkitUserSelect: "none",
@@ -63,33 +57,15 @@ export const LandingPage = (props: Props) => {
 	const bg = require("../images/background2.jpg");
 	const isMobile = window.innerWidth < 480;
 
-	const [formName, setFormName] = useState<{ formName: null | string }>({
-		formName: null,
-	});
-	const [toggleModal, setToggleModal] = useState(false);
-
-	function handleButtonClick(e: React.MouseEvent) {
-		setFormName({ formName: e.currentTarget.textContent });
-		setToggleModal(true);
-	}
-
-	function modalClose() {
-		setToggleModal(false);
-	}
-
 	return (
 		<React.Fragment>
+			<img src={bg} style={styleImg}></img>
 			<div style={styleLanding}>
-				<Header accountHandler={handleButtonClick} />
-				<div style={styleContent}>
-					<img src={bg} style={styleImg}></img>
-					{isMobile && (
-						<div style={stylePlaceHolder}>
-							<SignInDialog />
-						</div>
-					)}
-				</div>
-				<Footer />
+				{isMobile && (
+					<div style={stylePlaceHolder}>
+						<SignInDialog />
+					</div>
+				)}
 			</div>
 		</React.Fragment>
 	);

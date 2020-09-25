@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 16:14:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 12:25:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ export function ModifyPasswordDialog(props: Props) {
 					<DialogContent>
 						<TextField
 							margin="dense"
-							label="Password"
+							label="New password"
 							type="password"
 							variant="filled"
 							fullWidth
@@ -107,7 +107,7 @@ export function ModifyPasswordDialog(props: Props) {
 						/>
 						<TextField
 							margin="dense"
-							label="Confirm Password"
+							label="Confirm new password"
 							type="password"
 							variant="filled"
 							fullWidth

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:37:21 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 12:00:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ const styleHeader: React.CSSProperties = {
 	width: "100vw",
 	height: "8vh",
 	backgroundColor: "transparent",
-	zIndex: 2,
+	zIndex: 10,
 };
 
 const styleNavStart: React.CSSProperties = {
@@ -51,9 +51,7 @@ const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
-type Props = {
-	accountHandler?: (type: React.MouseEvent) => void;
-} & ReduxProps;
+type Props = {} & ReduxProps;
 
 class HeaderComponent extends React.Component<Props> {
 	render() {

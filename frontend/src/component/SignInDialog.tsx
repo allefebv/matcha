@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 16:24:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 11:11:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ import { actionUser_signin } from "../store/user/action";
 
 import { useHistory } from "react-router-dom";
 
-import { user } from "../types/types"
+import { user } from "../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -59,39 +59,44 @@ function SignInDialogComponent(props: Props) {
 
 	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
 		setEmail(e.currentTarget.value);
-		(isEmailValid(e.currentTarget.value) && setEmailError(false))
+		isEmailValid(e.currentTarget.value) && setEmailError(false);
 	}
 
 	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
-		email !== "" && setEmailError(!isEmailValid(email))
+		email !== "" && setEmailError(!isEmailValid(email));
 	}
 
 	function isEmailValid(email: string | null) {
-		return (typeof email === "string" && email.match(constants.REGEX_EMAIL)) ? true : false;
+		return typeof email === "string" && email.match(constants.REGEX_EMAIL)
+			? true
+			: false;
 	}
 
 	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
 		setPassword(e.currentTarget.value);
 	}
-	
+
 	const handleSignIn = () => {
 		let details = {
 			email: email,
 			password: password,
 		};
 
-		fetchApi<{ user: user, token: string }>(
+		fetchApi<{ user: user; token: string }>(
 			constants.URL + constants.URI_SIGNIN,
 			constants.POST_METHOD,
 			details
-		).then(({ user, token }) => {
-			props.dispatch(actionUser_signin(token));
-			history.push(constants.SEARCH_ROUTE);
-			handleClose()
-		}).catch((error) => {
-			setEmailError(true)
-			setPasswordError(true)
-		});
+		)
+			.then(({ user, token }) => {
+				props.dispatch(actionUser_signin(token));
+				history.push(constants.SEARCH_ROUTE);
+				handleClose();
+			})
+			.catch((error) => {
+				console.log(error);
+				setEmailError(true);
+				setPasswordError(true);
+			});
 	};
 
 	return (
@@ -137,7 +142,12 @@ function SignInDialogComponent(props: Props) {
 							Cancel
 						</Button>
 						<ForgotPasswordDialog />
-						<Button onClick={handleSignIn} type="submit" color="primary">
+						<Button
+							disabled={!isEmailValid(email) || password === ""}
+							onClick={handleSignIn}
+							type="submit"
+							color="primary"
+						>
 							Sign in
 						</Button>
 					</DialogActions>

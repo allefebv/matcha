@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:23 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 12:00:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ const styleFooter: React.CSSProperties = {
 	height: "6vh",
 	justifySelf: "flex-end",
 	color: "white",
-	zIndex: 2,
+	zIndex: 10,
 };
 
 interface Props {}

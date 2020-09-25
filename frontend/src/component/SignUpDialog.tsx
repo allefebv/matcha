@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 16:27:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 11:13:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,9 @@ export function SignUpDialog(props: Props) {
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<Button onClick={handleSignUp} type="submit" color="primary">
+						<Button
+						disabled={!isEmailValid(email) || !isPasswordValid(password) || !arePasswordsIdentical(passwordConfirm)} 
+						onClick={handleSignUp} type="submit" color="primary">
 							Sign up
 						</Button>
 					</DialogActions>

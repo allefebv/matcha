@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 11:55:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,16 @@ import { Button } from "../component/Button";
 import { SliderDouble } from "../component/SliderDouble";
 import { CategoryFilterSort } from "../component/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
-import { Card, Grid, TextField } from "@material-ui/core";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import { Grid, TextField } from "@material-ui/core";
 import { ProfileCard } from "../component/ProfileCard";
 
-const stylePage: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	height: "100vh",
-	width: "100vw",
-	backgroundColor: "black",
-};
-
-const styleContent: React.CSSProperties = {
+const styleMain: React.CSSProperties = {
 	display: "flex",
 	flexDirection: "row",
+	justifyContent: "center",
 	backgroundColor: "black",
-	flex: 1,
+	width: "100%",
+	height: "100%"
 };
 
 const stylePlaceHolderCategories: React.CSSProperties = {
@@ -70,9 +62,8 @@ interface Props {}
 
 export const MainPage = (props: Props) => {
 	return (
-		<div style={stylePage}>
-			<Header />
-			<div style={styleContent}>
+		<React.Fragment>
+			<div style={styleMain}>
 				<div style={stylePlaceHolderCategories}>
 					<Button theme="primary">Matches</Button>
 					<Button theme="primary">Selection</Button>
@@ -126,7 +117,6 @@ export const MainPage = (props: Props) => {
 					</div>
 				</div>
 			</div>
-			<Footer />
-		</div>
+		</React.Fragment>
 	);
 };
