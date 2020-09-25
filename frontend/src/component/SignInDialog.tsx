@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 11:11:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 16:15:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,18 @@ function SignInDialogComponent(props: Props) {
 
 		fetchApi<{ user: user; token: string }>(
 			constants.URL + constants.URI_SIGNIN,
-			constants.POST_METHOD,
-			details
+			{
+				method: constants.POST_METHOD,
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+				},
+				body: details,
+			}
 		)
 			.then(({ user, token }) => {
-				props.dispatch(actionUser_signin(token));
-				history.push(constants.SEARCH_ROUTE);
+				props.dispatch(actionUser_signin({ user, token }));
 				handleClose();
+				history.push(constants.SEARCH_ROUTE);
 			})
 			.catch((error) => {
 				console.log(error);

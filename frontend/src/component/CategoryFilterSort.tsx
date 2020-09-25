@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:42 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 16:00:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ const stylePlaceHolderComboFilterSort: React.CSSProperties = {
 	justifyContent: "center",
 	alignItems: "center",
     border: "1vw",
-    width: "10vw"
 };
 
 export const CategoryFilterSort = (props: Props) => {

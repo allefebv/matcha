@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   action.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 11:42:33 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/25 14:40:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { user } from "../../types/types";
 import { createAction } from 'typesafe-actions';
 
-export const actionUser_signin = createAction('USER.USERSIGNIN')<string | boolean>();
+export const actionUser_signin = createAction('USER.USERSIGNIN')<{ user: user | null; token: string | null }>();

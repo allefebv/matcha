@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   DeleteAccountDialog.tsx                            :+:      :+:    :+:   */
+/*   ModifyEmailDialog.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 16:39:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 21:08:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-function DeleteAccountDialogComponent(props: Props) {
+function ModifyEmailDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
+	const [email, setEmail] = useState(props.user.email);
+	const [emailError, setEmailError] = useState(false);
 	let [password, setPassword] = useState<string | null>("");
 
 	const handleClickOpen = () => {
@@ -39,6 +41,7 @@ function DeleteAccountDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
+		setPassword("");
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -46,30 +49,44 @@ function DeleteAccountDialogComponent(props: Props) {
 		handleClose();
 	}
 
+	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
+		setEmail(e.currentTarget.value);
+		setEmailError(!isEmailValid(e.currentTarget.value));
+	}
+
+	function isEmailValid(email: string | null) {
+		return typeof email === "string" && email.match(constants.REGEX_EMAIL);
+	}
+
 	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
 		setPassword(e.currentTarget.value);
 	}
 
-	const handleDeleteAccount = () => {
-		fetchApi<{ user: Object; token: string }>(
-			constants.URL + constants.URI_DELETE_ACCOUNT,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-					Authorization: props.loggedIn,
-				},
-				credentials: "include",
-			}
-		)
+	const handleChangeEmail = () => {
+		let details = {
+			email: email,
+			password: password,
+		};
+
+		fetchApi(constants.URL + constants.URI_UPDATE_EMAIL, {
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+				Authorization: props.loggedIn,
+			},
+			body: details,
+			credentials: "include",
+		})
 			.then(() => {})
-			.catch((error) => {});
+			.catch((error) => {
+				setEmailError(true);
+			});
 	};
 
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Delete Account
+				Modify Email
 			</Button>
 			<Dialog
 				open={open}
@@ -77,9 +94,20 @@ function DeleteAccountDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
+					<DialogTitle id="form-dialog-title">Modify Email</DialogTitle>
 					<DialogContent>
-					<TextField
+						<TextField
+							margin="dense"
+							label="Email Address"
+							type="email"
+							variant="filled"
+							fullWidth
+							value={email}
+							onChange={handleEmail}
+							error={emailError}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+						/>
+						<TextField
 							margin="dense"
 							label="Password"
 							type="password"
@@ -94,12 +122,12 @@ function DeleteAccountDialogComponent(props: Props) {
 							Cancel
 						</Button>
 						<Button
-							onClick={handleDeleteAccount}
+							onClick={handleChangeEmail}
 							type="submit"
 							color="primary"
-							disabled={password === ""}
+							disabled={!isEmailValid(email) || props.user.email === email}
 						>
-							DELETE MY ACCOUNT
+							Modify Email
 						</Button>
 					</DialogActions>
 				</form>
@@ -108,4 +136,4 @@ function DeleteAccountDialogComponent(props: Props) {
 	);
 }
 
-export const DeleteAccountDialog = withReduxProps(DeleteAccountDialogComponent);
+export const ModifyEmailDialog = withReduxProps(ModifyEmailDialogComponent);

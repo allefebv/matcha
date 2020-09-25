@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 12:37:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 20:43:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ import { PrivateRoute } from "../component/PrivateRoute";
 import * as constants from "../services/constants";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { FilledInput } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
+import { UserProfilePage } from "./UserProfilePage";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -29,38 +30,25 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const styleApp: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	height: "100vh",
-	width: "100vw",
-	alignItems: "center",
-	justifyContent: "center",
 	backgroundColor: "black",
-	zIndex: -1
-};
-
-const styleContent: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	justifyContent: "center",
-	flexGrow: 1,
-	flexBasis: "fill",
-	width: "100%"
+	zIndex: -1,
+	height: "100vh",
 };
 
 export class AppComponent extends React.Component<Props> {
 	render() {
 		return (
-			<div style={styleApp}>
-				<BrowserRouter>
-					<Header />
-					<div style={styleContent}>
+			<BrowserRouter>
+				<Grid container alignContent="stretch" justify="center" alignItems="center" style={styleApp}>
+					<Grid item container xs={12} style={{height: "6%", zIndex:10}} justify="space-between">
+						<Header />
+					</Grid>
+					<Grid item container xs={12} style={{height: "90%"}} justify="center" alignItems="center">
 						<Switch>
 							<Route
 								exact
 								path={constants.LANDING_ROUTE}
-								component={LandingPage}
+								component={this.props.loggedIn ? MainPage : LandingPage}
 							/>
 							<PrivateRoute
 								path={constants.SEARCH_ROUTE}
@@ -72,11 +60,18 @@ export class AppComponent extends React.Component<Props> {
 								isLogged={this.props.loggedIn}
 								component={AccountSettingsPage}
 							/>
+							<PrivateRoute
+								path={constants.USER_PROFILE_ROUTE}
+								isLogged={this.props.loggedIn}
+								component={UserProfilePage}
+							/>
 						</Switch>
-					</div>
-					<Footer />
-				</BrowserRouter>
-			</div>
+					</Grid>
+					<Grid item container xs={12} style={{height: "4%"}} justify="center" alignItems="center">
+						<Footer />
+					</Grid>
+				</Grid>
+			</BrowserRouter>
 		);
 	}
 }

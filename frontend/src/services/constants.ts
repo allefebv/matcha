@@ -6,22 +6,23 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 12:36:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 11:16:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 export const URL = "http://localhost:3001";
 export const URI_SIGNIN = "/user/loginUser";
 export const URI_SIGNUP = "/user/addUser";
-export const URI_MODIFY_EMAIL = "";
+export const URI_UPDATE_EMAIL = "";
 export const URI_MODIFY_PASSWORD = "";
-export const URI_DELETE_ACCOUNT = "";
+export const URI_DELETE_ACCOUNT = "/user/deleteUser";
 
 export const POST_METHOD = "POST";
 
 export const LANDING_ROUTE = "/";
 export const SEARCH_ROUTE = "/search";
 export const ACCOUNT_SETTINGS_ROUTE = "/account-settings";
+export const USER_PROFILE_ROUTE = "/my-profile";
 
 export const EMAIL_HELPER_ERROR = "Invalid Email";
 export const PASSWORD_HELPER_ERROR =

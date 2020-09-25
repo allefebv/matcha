@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 12:25:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 16:08:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,18 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { connect, ConnectedProps } from "react-redux";
 import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
 
-type Props = {};
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.signin.isLoggedIn,
+	user: state.user.signin.user,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
-export function ModifyPasswordDialog(props: Props) {
+function ModifyPasswordDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	let [password, setPassword] = useState<string | null>("");
 	let [passwordError, setPasswordError] = useState(false);
@@ -75,8 +81,15 @@ export function ModifyPasswordDialog(props: Props) {
 
 		fetchApi<{ user: Object; token: string }>(
 			constants.URL + constants.URI_MODIFY_PASSWORD,
-			constants.POST_METHOD,
-			details
+			{
+				method: constants.POST_METHOD,
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+					Authorization: props.loggedIn,
+				},
+				credentials: "include",
+				body: details
+			}
 		).then(({ user, token }) => {
 		});
 	};
@@ -132,3 +145,5 @@ export function ModifyPasswordDialog(props: Props) {
 		</div>
 	);
 }
+
+export const ModifyPasswordDialog = withReduxProps(ModifyPasswordDialogComponent)

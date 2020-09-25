@@ -6,46 +6,21 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 12:00:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 21:19:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
-import { Button } from "../component/Button";
+import { Button, Grid } from "@material-ui/core";
 import { AccountMenu } from "../component/AccountMenu";
 import { Link } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
-
-import IconButton from '@material-ui/core/IconButton';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import PersonIcon from '@material-ui/icons/Person';
-
+import IconButton from "@material-ui/core/IconButton";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import PersonIcon from "@material-ui/icons/Person";
 import { SignInDialog } from "../component/SignInDialog";
 import { SignUpDialog } from "../component/SignUpDialog";
-
-import * as constants from "../services/constants"
-
-const styleHeader: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "row",
-	alignItems: "center",
-	justifyContent: "space-between",
-	width: "100vw",
-	height: "8vh",
-	backgroundColor: "transparent",
-	zIndex: 10,
-};
-
-const styleNavStart: React.CSSProperties = {
-	display: "flex",
-	justifyContent: "flex-end",
-	margin: "2vh",
-};
-
-const styleNavEnd: React.CSSProperties = {
-	display: "flex",
-	justifyContent: "flex-end",
-};
+import * as constants from "../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -57,18 +32,30 @@ class HeaderComponent extends React.Component<Props> {
 	render() {
 		const isDesktop = window.innerWidth > 480;
 		return (
-			<div style={styleHeader}>
-				<div style={styleNavStart}>
-					<Link to={this.props.loggedIn ? constants.SEARCH_ROUTE : constants.LANDING_ROUTE}>
-						<Button theme="logo"></Button>
+			<React.Fragment>
+				<Grid item xs={2}>
+					<Link
+						to={
+							this.props.loggedIn
+								? constants.SEARCH_ROUTE
+								: constants.LANDING_ROUTE
+						}
+					>
+						<Button>
+							<img src={require("../images/logo_white.png")} style={{maxHeight: `max(7vh, 3vw)`}} />
+						</Button>
 					</Link>
-				</div>
+				</Grid>
 				{isDesktop && (
-					<div style={styleNavEnd}>
+					<Grid item container xs={2} justify="flex-end" alignItems="center">
 						{!this.props.loggedIn && (
 							<React.Fragment>
-								<SignInDialog />
-								<SignUpDialog />
+								<Grid item>
+									<SignInDialog />
+								</Grid>
+								<Grid item>
+									<SignUpDialog />
+								</Grid>
 							</React.Fragment>
 						)}
 						{this.props.loggedIn && (
@@ -76,15 +63,21 @@ class HeaderComponent extends React.Component<Props> {
 								<IconButton>
 									<NotificationsIcon color="primary" />
 								</IconButton>
-								<IconButton>
-									<PersonIcon color="primary" />
-								</IconButton>
+								<Link
+									to={"/my-profile"}
+									style={{ color: "inherit", textDecoration: "inherit" }}
+								>
+									<IconButton>
+										<PersonIcon color="primary" />
+									</IconButton>
+								</Link>
+
 								<AccountMenu></AccountMenu>
 							</React.Fragment>
 						)}
-					</div>
+					</Grid>
 				)}
-			</div>
+			</React.Fragment>
 		);
 	}
 }
