@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:26:42 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:51:27 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 14:19:26 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,12 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			genre,
 			sexualOrientation,
 			location,
-			bio
+			bio,
+			img0,
+			img1,
+			img2,
+			img3,
+			img4
 		) VALUES (
 			${userId},
 			${profile.age},
@@ -73,7 +78,12 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.genre}',
 			'${profile.sexualOrientation}',
 			'${profile.location}',
-			'${profile.bio}'
+			'${profile.bio}',
+			'${profile.img0}',
+			'${profile.img1}',
+			'${profile.img2}',
+			'${profile.img3}',
+			'${profile.img4}'
 		)`;
 		dataBase.query(sql, async (error: string) => {
 			if (error) {
