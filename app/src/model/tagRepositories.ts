@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 16:04:36 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:51:41 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 17:08:46 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,19 @@ export function addTagProfile(profileId: number, tagId: number): Promise<tagProf
 				reject(null);
 			}
 			resolve(result);
+		});
+	});
+}
+
+export function deleteTagProfile(tagId: number, profileId: number): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `DELETE FROM tagProfile WHERE tagId = ${tagId} AND profileId = ${profileId}`;
+		dataBase.query(sql, (error: string, result: tagProfile) => {
+			if (error) {
+				console.log(error);
+				reject(false);
+			}
+			resolve(true);
 		});
 	});
 }

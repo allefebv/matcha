@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 11:22:14 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 17:27:00 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ import {
 	getProfileMatchController,
 } from './controller/likeController';
 import { addNotificationController, getNotificationController } from './controller/notificationController';
-import { addTagProfileController } from './controller/tagController';
+import { addTagProfileController, deleteTagProfileController } from './controller/tagController';
+import { addViewController } from './controller/viewController';
 
 function userRouter(app: Application) {
 	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
@@ -68,8 +69,13 @@ function notificationRouter(app: Application) {
 	app.post('/notification/addNotification', (req: Request, res: Response) => addNotificationController(req, res));
 }
 
-function tagRouter(app) {
+function tagRouter(app: Application) {
 	app.post('/tag/addTagProfile', (req: Request, res: Response) => addTagProfileController(req, res));
+	app.post('/tag/deleteTagProfile', (req: Request, res: Response) => deleteTagProfileController(req, res));
+}
+
+function viewRouter(app: Application) {
+	app.post('/view/addView', (req: Request, res: Response) => addViewController(req, res));
 }
 
 export function router(app: Application) {
@@ -78,6 +84,7 @@ export function router(app: Application) {
 	likeRouter(app);
 	notificationRouter(app);
 	tagRouter(app);
+	viewRouter(app);
 
 	app.use((req: Request, res: Response) => {
 		res.setHeader('Content-Type', 'text/plain');

@@ -1,4 +1,3 @@
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,7 +6,7 @@ import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/28 11:39:54 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 13:26:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 15:32:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   DEV_HANDLE_TABLE.ts                                :+:      :+:    :+:   */
+/*   handleTable.ts                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:43:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 17:15:11 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,22 @@ export async function addTableTagProfile() {
 	});
 }
 
+export async function addTableViewProfile() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE viewProfile (
+			profileSeenId						INTEGER NOT NULL,
+			viewerProfileId						INTEGER NOT NULL,
+			FOREIGN KEY (profileSeenId) 		REFERENCES profile(userId) ON DELETE CASCADE,
+			FOREIGN KEY (viewerProfileId) 		REFERENCES profile(userId) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log('Table viewProfile created');
+			resolve();
+		});
+	});
+}
+
 export async function dropTable(nameTable: string) {
 	return new Promise((resolve) => {
 		const sql = `DROP TABLE ${nameTable}`;
@@ -161,5 +177,6 @@ async function main() {
 	//await addTableNotification();
 	//await addTableTag();
 	//await addTableTagProfile();
+	await addTableViewProfile();
 }
 main();
