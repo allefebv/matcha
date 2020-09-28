@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:08:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 15:18:24 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 11:35:14 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ import {
 	activateUser,
 	getUserByEmail,
 	changePassword,
+	changeEmail,
 } from '../model/userRepositories';
 import { addUserValidation } from '../services/userValidation';
 import { generateTokenForUser, jwtVerify } from '../services/jwt';
-import { activatedUserMailer, newPasswordMailer } from '../services/mailer';
+import { activatedUserMailer, newEmailMailer, newPasswordMailer } from '../services/mailer';
 
 export async function addUserController(req: Request, res: Response) {
 	let { email, password } = req.body;
@@ -49,7 +50,7 @@ export async function addUserController(req: Request, res: Response) {
 			);
 			return;
 		}
-		res.status(400).send('An error occured');
+		res.status(400).send('ERROR_OCCURED');
 	}
 }
 
@@ -69,7 +70,7 @@ export async function loginUserController(req: Request, res: Response) {
 		});
 		return;
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send('ERROR_OCCURED');
 }
 
 export async function changePasswordController(req: Request, res: Response) {
@@ -86,7 +87,34 @@ export async function changePasswordController(req: Request, res: Response) {
 			}
 		}
 	}
-	res.status(400).send('an error occurred');
+	res.status(400).send('ERROR_OCCURED');
+}
+
+export async function changeEmailController(req: Request, res: Response) {
+	const jwt = await jwtVerify(req.headers.token, res);
+	if (jwt && jwt.isLogin) {
+		const password = crypto.createHash('sha512').update(req.body.password).digest('hex');
+		const user = await getUserById(jwt.decoded.id);
+		if (user.password === password) {
+			newEmailMailer(
+				user.email,
+				`http://localhost:3001/user/activateNewEmail?email=${req.body.newEmail}&id=${user.id}`
+			);
+			res.status(200).send('Email send to new email');
+			return;
+		}
+	}
+	res.status(400).send('ERROR_OCCURED');
+}
+
+export async function activateNewEmailController(req: Request, res: Response) {
+	const userId = parseInt(req.query.id as string);
+	const result = await changeEmail(userId, req.query.email as string);
+	if (result) {
+		res.status(200).send('Email as change');
+		return;
+	}
+	res.status(400).send('ERROR_OCCURED');
 }
 
 export async function resetPasswordController(req: Request, res: Response) {
@@ -101,7 +129,7 @@ export async function resetPasswordController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('an error occured');
+	res.status(400).send('ERROR_OCCURED');
 }
 
 export async function activateUserController(req: Request, res: Response) {
@@ -114,17 +142,23 @@ export async function activateUserController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('an error occurred');
+	res.status(400).send('ERROR_OCCURED');
 }
 
 export async function deleteUserController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const deleteResult = await deleteUser(jwt.decoded.id);
-		if (deleteResult) {
-			res.status(200).send('User as deleted');
-			return;
+		const user = await getUserById(jwt.decoded.id);
+		const password = crypto.createHash('sha512').update(req.body.password).digest('hex');
+		if (password === user.password) {
+			const deleteResult = await deleteUser(jwt.decoded.id);
+			if (deleteResult) {
+				res.status(200).send('User as deleted');
+				return;
+			}
+		} else {
+			res.status(400).send('PASSWORD_INVALID');
 		}
 	}
-	res.status(400).send('an error occurred');
+	res.status(400).send('ERROR_OCCURED');
 }

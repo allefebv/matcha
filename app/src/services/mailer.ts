@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:03:39 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:51:11 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 11:18:35 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,13 @@ export async function newPasswordMailer(user: user, password: string) {
 		to: user.email,
 		subject: 'Matcha: Reset password',
 		text: `Hello,\nYour new password is: ${password}\n`,
+	});
+}
+
+export async function newEmailMailer(email: string, link: string) {
+	transporter.sendMail({
+		to: email,
+		subject: 'Matcha: Activate your new email',
+		text: `Hello,\nTo activate your new email click here ${link}\n`,
 	});
 }

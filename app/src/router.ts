@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:58:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/28 11:22:14 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ import {
 	activateUserController,
 	changePasswordController,
 	resetPasswordController,
+	changeEmailController,
+	activateNewEmailController,
 } from './controller/userController';
 import {
 	addProfileController,
@@ -37,11 +39,13 @@ import { addTagProfileController } from './controller/tagController';
 
 function userRouter(app: Application) {
 	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
+	app.get('/user/activateNewEmail', (req: Request, res: Response) => activateNewEmailController(req, res));
 	app.post('/user/addUser', (req: Request, res: Response) => addUserController(req, res));
 	app.post('/user/changePassword', (req: Request, res: Response) => changePasswordController(req, res));
 	app.post('/user/resetPassword', (req: Request, res: Response) => resetPasswordController(req, res));
 	app.post('/user/loginUser', (req: Request, res: Response) => loginUserController(req, res));
 	app.post('/user/deleteUser', (req: Request, res: Response) => deleteUserController(req, res));
+	app.post('/user/changeEmail', (req: Request, res: Response) => changeEmailController(req, res));
 }
 
 function profileRouter(app: Application) {
