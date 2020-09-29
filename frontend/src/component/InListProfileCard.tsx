@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ForgotPasswordForm.tsx                             :+:      :+:    :+:   */
+/*   InListProfileCard.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/24 14:18:47 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:47 by allefebv         ###   ########.fr       */
+/*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/28 11:47:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
-import { FormInput } from "./FormInput";
-import { Button } from "./Button";
+import { Avatar, Card } from "@material-ui/core";
 
-interface Props {
+const styleCard: React.CSSProperties = {
+	display: "flex",
+	height: "8vh",
+	width: "100%"
 }
 
-export const ForgotPasswordForm = (props: Props) => {
+export function InListProfileCard() {
 	return (
-		<React.Fragment>
-			<FormInput placeholder="email" />
-			<Button theme="primary" type="submit">Reset Password</Button>
-		</React.Fragment>
+		<Card style={styleCard}>
+			<Avatar
+				src={require("../images/example_girl.jpg")}
+			></Avatar>
+		</Card>
 	);
-};
+}

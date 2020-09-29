@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:19:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 15:12:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ import ShareIcon from "@material-ui/icons/Share";
 
 const useStyles = makeStyles({
 	root: {
-		maxWidth: 345,
 	},
 	media: {
         height: 0,

@@ -3,27 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   reducer.ts                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: senz <senz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/23 11:41:52 by senz             ###   ########.fr       */
+/*   Updated: 2020/09/28 19:42:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { combineReducers } from 'redux';
-import { actionUser_signin } from './action';
-import { getType } from 'typesafe-actions';
+import { AnyAction, combineReducers } from "redux";
+import { actionUser_signin } from "./action";
+import { getType } from "typesafe-actions";
 
 const initialState = {
-	isLoggedIn: false
-}
+	isLoggedIn: false,
+	user: null,
+};
 
-function signin(state = initialState, action: { type: string; payload: string }) {
+function signin(
+	state = initialState,
+	action: AnyAction //TODO: Check avec Jeremy si ok
+	//action: { type: string; payload: { user: user | null; token: string | null } }
+) {
 	switch (action.type) {
 		case getType(actionUser_signin):
 			return {
 				...state,
-				isLoggedIn: action.payload};
+				isLoggedIn: action.payload.token,
+				user: action.payload.user,
+			};
 		default:
 			return state;
 	}

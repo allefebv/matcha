@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 11:13:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/25 16:38:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ export function SignUpDialog(props: Props) {
 			: false;
 	}
 
-	async function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
+	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
 		setPassword(e.currentTarget.value);
 		setPasswordError(!isPasswordValid(e.currentTarget.value));
 	}
@@ -95,15 +95,22 @@ export function SignUpDialog(props: Props) {
 
 		fetchApi<{ user: user; token: string }>(
 			constants.URL + constants.URI_SIGNUP,
-			constants.POST_METHOD,
-			details
-		).then(({ user, token }) => {
-			handleClose();
-		}).catch(error => {
-			setEmailError(true);
-			setPasswordError(true);
-			setPasswordConfirmError(true);
-		});
+			{
+				method: constants.POST_METHOD,
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+				},
+				body: details,
+			}
+		)
+			.then(({ user, token }) => {
+				handleClose();
+			})
+			.catch((error) => {
+				setEmailError(true);
+				setPasswordError(true);
+				setPasswordConfirmError(true);
+			});
 	};
 
 	return (
@@ -162,8 +169,15 @@ export function SignUpDialog(props: Props) {
 							Cancel
 						</Button>
 						<Button
-						disabled={!isEmailValid(email) || !isPasswordValid(password) || !arePasswordsIdentical(passwordConfirm)} 
-						onClick={handleSignUp} type="submit" color="primary">
+							disabled={
+								!isEmailValid(email) ||
+								!isPasswordValid(password) ||
+								!arePasswordsIdentical(passwordConfirm)
+							}
+							onClick={handleSignUp}
+							type="submit"
+							color="primary"
+						>
 							Sign up
 						</Button>
 					</DialogActions>

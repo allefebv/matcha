@@ -1,3 +1,4 @@
+import { Grid } from "@material-ui/core";
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,12 +7,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 12:00:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/28 21:20:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 import { SignInDialog } from "../component/SignInDialog";
+import { SignUpDialog } from "../component/SignUpDialog";
 
 const styleLanding: React.CSSProperties = {
 	position: "absolute",
@@ -34,21 +36,12 @@ const styleImg: React.CSSProperties = {
 	maxHeight: "100vh",
 	minHeight: "100vh",
 	zIndex: 0,
-	objectFit: "none",
+	objectFit: "cover",
 	userSelect: "none",
 	WebkitUserSelect: "none",
 	MozUserSelect: "none",
 	KhtmlUserSelect: "none",
 	msUserSelect: "none",
-};
-
-const stylePlaceHolder: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	justifyContent: "center",
-	alignItems: "center",
-	width: "50vw",
-	height: "30vh",
 };
 
 interface Props {}
@@ -60,13 +53,20 @@ export const LandingPage = (props: Props) => {
 	return (
 		<React.Fragment>
 			<img src={bg} style={styleImg}></img>
-			<div style={styleLanding}>
+			<Grid
+				item
+				container
+				justify="center"
+				alignItems="center"
+				style={styleLanding}
+			>
 				{isMobile && (
-					<div style={stylePlaceHolder}>
+					<React.Fragment>
 						<SignInDialog />
-					</div>
+						<SignUpDialog />
+					</React.Fragment>
 				)}
-			</div>
+			</Grid>
 		</React.Fragment>
 	);
 };
