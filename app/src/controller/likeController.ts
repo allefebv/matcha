@@ -6,26 +6,38 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 17:27:07 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:52:07 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:29 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { jwtVerify } from '../services/jwt';
-import { Request, Response } from 'express';
+import {
+	Request,
+	Response
+} from 'express';
+
 import {
 	addLikedProfile,
 	deleteLikedProfile,
 	getProfileMatch,
-	getUserHasBeenLikedById,
+	getUserHasBeenLikedById
 } from '../model/likeRepositories';
-import { getProfileByUserId, getProfileByUsername } from '../model/profileRepositories';
+import {
+	getProfileByUserId,
+	getProfileByUsername
+} from '../model/profileRepositories';
+import { jwtVerify } from '../services/jwt';
 
 export async function addlikedProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
+		const profileHasBeenLiked = await getProfileByUsername(
+			req.body.username
+		);
 		if (profileHasBeenLiked) {
-			const addLike = await addLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
+			const addLike = await addLikedProfile(
+				jwt.decoded.id,
+				profileHasBeenLiked.userId
+			);
 			if (addLike) {
 				res.status(200).json('Liked successful');
 				return;
@@ -35,12 +47,20 @@ export async function addlikedProfileController(req: Request, res: Response) {
 	res.status(400).send('An error occured');
 }
 
-export async function deletelikedProfileController(req: Request, res: Response) {
+export async function deletelikedProfileController(
+	req: Request,
+	res: Response
+) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
+		const profileHasBeenLiked = await getProfileByUsername(
+			req.body.username
+		);
 		if (profileHasBeenLiked) {
-			const deleteLike = await deleteLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
+			const deleteLike = await deleteLikedProfile(
+				jwt.decoded.id,
+				profileHasBeenLiked.userId
+			);
 			if (deleteLike) {
 				res.status(200).json('Delete like successful');
 				return;
@@ -53,9 +73,14 @@ export async function deletelikedProfileController(req: Request, res: Response) 
 export async function likedProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
+		const profileHasBeenLiked = await getProfileByUsername(
+			req.body.username
+		);
 		if (profileHasBeenLiked) {
-			const addLike = await addLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
+			const addLike = await addLikedProfile(
+				jwt.decoded.id,
+				profileHasBeenLiked.userId
+			);
 			if (addLike) {
 				res.status(200).json('Liked successful');
 				return;
@@ -72,7 +97,9 @@ export async function getProfileLikeController(req: Request, res: Response) {
 		const profileList = await Promise.all(
 			listLike &&
 				listLike.map(async (item) => {
-					const profile = await getProfileByUserId(item.profileHasBeenLikedId);
+					const profile = await getProfileByUserId(
+						item.profileHasBeenLikedId
+					);
 					return profile;
 				})
 		);
@@ -93,8 +120,10 @@ export async function getProfileMatchController(req: Request, res: Response) {
 				(item) =>
 					listLike.filter(
 						(item2) =>
-							item.profileLikesId === item2.profileHasBeenLikedId &&
-							item.profileHasBeenLikedId === item2.profileLikesId &&
+							item.profileLikesId ===
+								item2.profileHasBeenLikedId &&
+							item.profileHasBeenLikedId ===
+								item2.profileLikesId &&
 							item.profileLikesId === jwt.decoded.id
 					).length
 			)
@@ -102,7 +131,9 @@ export async function getProfileMatchController(req: Request, res: Response) {
 		const matchListProfile = await Promise.all(
 			matchListId &&
 				matchListId.map(async (item) => {
-					const profileHasBeenLikedId = await getProfileByUserId(item.profileHasBeenLikedId);
+					const profileHasBeenLikedId = await getProfileByUserId(
+						item.profileHasBeenLikedId
+					);
 					return profileHasBeenLikedId;
 				})
 		);

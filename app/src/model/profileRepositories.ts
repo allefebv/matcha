@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:26:42 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 14:19:26 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:53 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { dataBase } from '../app';
 import { profile } from '../../types/types';
+import { dataBase } from '../app';
 
 export function getProfileByUserId(id: number): Promise<profile | null> {
 	return new Promise((resolve) => {
@@ -26,7 +26,9 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 	});
 }
 
-export function getProfileByUsername(username: string): Promise<profile | null> {
+export function getProfileByUsername(
+	username: string
+): Promise<profile | null> {
 	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE username = '${username}'`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
@@ -95,7 +97,10 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 	});
 }
 
-export function updateProfile(profile: profile, userId: number): Promise<boolean> {
+export function updateProfile(
+	profile: profile,
+	userId: number
+): Promise<boolean> {
 	return new Promise((resolve) => {
 		const sql = `UPDATE profile SET
 			age = ${profile.age},

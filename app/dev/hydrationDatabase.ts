@@ -6,17 +6,24 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/28 11:39:54 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 15:32:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:04:44 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { createConnection } from 'mysql';
 import crypto from 'crypto';
-import fetch from 'node-fetch';
-import { profile } from '../types/types';
-import { addUser, getUserByEmail } from '../src/model/userRepositories';
 import fs from 'fs';
-import { addProfile, getProfileByUserId } from '../src/model/profileRepositories';
+import { createConnection } from 'mysql';
+import fetch from 'node-fetch';
+
+import {
+	addProfile,
+	getProfileByUserId
+} from '../src/model/profileRepositories';
+import {
+	addUser,
+	getUserByEmail
+} from '../src/model/userRepositories';
+import { profile } from '../types/types';
 
 let dataBase = null;
 const HOW_MANY_CREATE = 1000;
@@ -65,7 +72,10 @@ const femaleSexualOrientation = ['lesbian', 'bisexual', 'heterosexual'];
 				email: userApi.email,
 				password: userApi.login.password,
 			};
-			const hashPassword = crypto.createHash('sha512').update(userInfo.password).digest('hex');
+			const hashPassword = crypto
+				.createHash('sha512')
+				.update(userInfo.password)
+				.digest('hex');
 			if (userInfo.email && hashPassword) {
 				await addUser(userInfo.email, hashPassword);
 				const user = await getUserByEmail(userInfo.email);
@@ -78,8 +88,18 @@ const femaleSexualOrientation = ['lesbian', 'bisexual', 'heterosexual'];
 						genre: userApi.gender,
 						sexualOrientation:
 							userApi.gender === 'male'
-								? maleSexualOrientation[Math.floor(Math.random() * maleSexualOrientation.length)]
-								: femaleSexualOrientation[Math.floor(Math.random() * femaleSexualOrientation.length)],
+								? maleSexualOrientation[
+										Math.floor(
+											Math.random() *
+												maleSexualOrientation.length
+										)
+								  ]
+								: femaleSexualOrientation[
+										Math.floor(
+											Math.random() *
+												femaleSexualOrientation.length
+										)
+								  ],
 						location: userApi.location.city,
 						username: userApi.login.username,
 						bio:
@@ -91,7 +111,12 @@ const femaleSexualOrientation = ['lesbian', 'bisexual', 'heterosexual'];
 					await addProfile(profileInfo as profile, user.id);
 					const profile = await getProfileByUserId(user.id);
 					if (profile) {
-						const userProfile = { [profile.username]: { user: user, profile: profile } };
+						const userProfile = {
+							[profile.username]: {
+								user: user,
+								profile: profile,
+							},
+						};
 						userList.push(userProfile);
 					}
 				}

@@ -6,14 +6,24 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 16:04:38 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 17:09:56 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:40 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
-import { jwtVerify } from '../services/jwt';
-import { addTag, addTagProfile, deleteTagProfile, getTag, getTagProfile } from '../model/tagRepositories';
+import {
+	Request,
+	Response
+} from 'express';
+
 import { getProfileByUserId } from '../model/profileRepositories';
+import {
+	addTag,
+	addTagProfile,
+	deleteTagProfile,
+	getTag,
+	getTagProfile
+} from '../model/tagRepositories';
+import { jwtVerify } from '../services/jwt';
 
 export async function addTagProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
@@ -48,7 +58,10 @@ export async function deleteTagProfileController(req: Request, res: Response) {
 			await Promise.all(
 				tagProfilelist.map(async (tagProfile) => {
 					if (tagProfile.tagId === tag.id) {
-						isDeletedTagProfile = await deleteTagProfile(tagProfile.tagId, profile.userId);
+						isDeletedTagProfile = await deleteTagProfile(
+							tagProfile.tagId,
+							profile.userId
+						);
 						return;
 					}
 				})

@@ -6,21 +6,28 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 17:48:54 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:37 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
+import {
+	Request,
+	Response
+} from 'express';
+
 import {
 	addProfile,
 	getAllProfile,
 	getProfileByUserId,
 	getProfileByUsername,
-	updateProfile,
+	updateProfile
 } from '../model/profileRepositories';
+import {
+	getTagById,
+	getTagProfile
+} from '../model/tagRepositories';
 import { jwtVerify } from '../services/jwt';
 import { profileValidation } from '../services/profileValidation';
-import { getTagById, getTagProfile } from '../model/tagRepositories';
 
 export async function getProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
@@ -41,10 +48,15 @@ export async function getProfileController(req: Request, res: Response) {
 	res.status(400).send('An error occured');
 }
 
-export async function getProfileByUsernameController(req: Request, res: Response) {
+export async function getProfileByUsernameController(
+	req: Request,
+	res: Response
+) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profile = await getProfileByUsername(req.query.username as string);
+		const profile = await getProfileByUsername(
+			req.query.username as string
+		);
 		if (profile) {
 			res.status(200).json(profile);
 			return;
@@ -74,7 +86,12 @@ export async function addProfileController(req: Request, res: Response) {
 			return;
 		}
 		const profile = await getProfileByUsername(req.body.username);
-		const validation = await profileValidation(req.body, res, jwt.decoded.id, profile);
+		const validation = await profileValidation(
+			req.body,
+			res,
+			jwt.decoded.id,
+			profile
+		);
 		if (validation) {
 			const result = await addProfile(req.body, jwt.decoded.id);
 			if (result) {
@@ -91,7 +108,12 @@ export async function updateProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const profile = await getProfileByUsername(req.body.username);
-		const validation = await profileValidation(req.body, res, jwt.decoded.id, profile);
+		const validation = await profileValidation(
+			req.body,
+			res,
+			jwt.decoded.id,
+			profile
+		);
 		if (validation) {
 			const result = await updateProfile(req.body, jwt.decoded.id);
 			if (result) {

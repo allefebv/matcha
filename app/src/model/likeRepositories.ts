@@ -6,14 +6,17 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 13:19:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 12:52:19 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:48 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { dataBase } from '../app';
 import { like } from '../../types/types';
+import { dataBase } from '../app';
 
-export function addLikedProfile(profileLikedId: number, profileHasBeenLikedId: number): Promise<boolean> {
+export function addLikedProfile(
+	profileLikedId: number,
+	profileHasBeenLikedId: number
+): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO likeProfile (
 			profileLikesId,
@@ -32,7 +35,10 @@ export function addLikedProfile(profileLikedId: number, profileHasBeenLikedId: n
 	});
 }
 
-export function deleteLikedProfile(profileLikedId: number, profileHasBeenLikedId: number): Promise<boolean> {
+export function deleteLikedProfile(
+	profileLikedId: number,
+	profileHasBeenLikedId: number
+): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `DELETE FROM likeProfile WHERE profileLikesId = ${profileLikedId} AND profileHasBeenLikedId = ${profileHasBeenLikedId}`;
 		dataBase.query(sql, (error: string, result: like[]) => {

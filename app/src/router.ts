@@ -6,76 +6,121 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:43 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 17:27:00 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:30:06 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Application, Request, Response } from 'express';
+
 import {
-	addUserController,
-	loginUserController,
-	deleteUserController,
-	activateUserController,
-	changePasswordController,
-	resetPasswordController,
-	changeEmailController,
-	activateNewEmailController,
-} from './controller/userController';
+	addlikedProfileController, deletelikedProfileController,
+	getProfileLikeController, getProfileMatchController
+} from './controller/likeController';
 import {
-	addProfileController,
-	getProfileController,
-	getAllProfileController,
-	getProfileByUsernameController,
-	updateProfileController,
+	addNotificationController, getNotificationController
+} from './controller/notificationController';
+import {
+	addProfileController, getAllProfileController,
+	getProfileByUsernameController, getProfileController,
+	updateProfileController
 } from './controller/profileController';
 import {
-	addlikedProfileController,
-	deletelikedProfileController,
-	getProfileLikeController,
-	getProfileMatchController,
-} from './controller/likeController';
-import { addNotificationController, getNotificationController } from './controller/notificationController';
-import { addTagProfileController, deleteTagProfileController } from './controller/tagController';
-import { addViewController } from './controller/viewController';
+	addTagProfileController, deleteTagProfileController
+} from './controller/tagController';
+import {
+	activateNewEmailController, activateUserController, addUserController,
+	changeEmailController, changePasswordController, deleteUserController,
+	loginUserController, resetPasswordController
+} from './controller/userController';
+import {
+	addViewController, getViewController
+} from './controller/viewController';
 
 function userRouter(app: Application) {
-	app.get('/user/activateUser', (req: Request, res: Response) => activateUserController(req, res));
-	app.get('/user/activateNewEmail', (req: Request, res: Response) => activateNewEmailController(req, res));
-	app.post('/user/addUser', (req: Request, res: Response) => addUserController(req, res));
-	app.post('/user/changePassword', (req: Request, res: Response) => changePasswordController(req, res));
-	app.post('/user/resetPassword', (req: Request, res: Response) => resetPasswordController(req, res));
-	app.post('/user/loginUser', (req: Request, res: Response) => loginUserController(req, res));
-	app.post('/user/deleteUser', (req: Request, res: Response) => deleteUserController(req, res));
-	app.post('/user/changeEmail', (req: Request, res: Response) => changeEmailController(req, res));
+	app.get('/user/activateUser', (req: Request, res: Response) =>
+		activateUserController(req, res)
+	);
+	app.get('/user/activateNewEmail', (req: Request, res: Response) =>
+		activateNewEmailController(req, res)
+	);
+	app.post('/user/addUser', (req: Request, res: Response) =>
+		addUserController(req, res)
+	);
+	app.post('/user/changePassword', (req: Request, res: Response) =>
+		changePasswordController(req, res)
+	);
+	app.post('/user/resetPassword', (req: Request, res: Response) =>
+		resetPasswordController(req, res)
+	);
+	app.post('/user/loginUser', (req: Request, res: Response) =>
+		loginUserController(req, res)
+	);
+	app.post('/user/deleteUser', (req: Request, res: Response) =>
+		deleteUserController(req, res)
+	);
+	app.post('/user/changeEmail', (req: Request, res: Response) =>
+		changeEmailController(req, res)
+	);
 }
 
 function profileRouter(app: Application) {
-	app.get('/profile/getProfile', (req: Request, res: Response) => getProfileController(req, res));
-	app.get('/profile/getAllProfile', (req: Request, res: Response) => getAllProfileController(req, res));
-	app.get('/profile/getProfileByUsername', (req: Request, res: Response) => getProfileByUsernameController(req, res));
-	app.post('/profile/addProfile', (req: Request, res: Response) => addProfileController(req, res));
-	app.post('/profile/updateProfile', (req: Request, res: Response) => updateProfileController(req, res));
+	app.get('/profile/getProfile', (req: Request, res: Response) =>
+		getProfileController(req, res)
+	);
+	app.get('/profile/getAllProfile', (req: Request, res: Response) =>
+		getAllProfileController(req, res)
+	);
+	app.get('/profile/getProfileByUsername', (req: Request, res: Response) =>
+		getProfileByUsernameController(req, res)
+	);
+	app.post('/profile/addProfile', (req: Request, res: Response) =>
+		addProfileController(req, res)
+	);
+	app.post('/profile/updateProfile', (req: Request, res: Response) =>
+		updateProfileController(req, res)
+	);
 }
 
 function likeRouter(app: Application) {
-	app.get('/like/getProfileLike', (req: Request, res: Response) => getProfileLikeController(req, res));
-	app.get('/like/getProfileMatch', (req: Request, res: Response) => getProfileMatchController(req, res));
-	app.post('/like/addLikedProfile', (req: Request, res: Response) => addlikedProfileController(req, res));
-	app.post('/like/deleteLikedProfile', (req: Request, res: Response) => deletelikedProfileController(req, res));
+	app.get('/like/getProfileLike', (req: Request, res: Response) =>
+		getProfileLikeController(req, res)
+	);
+	app.get('/like/getProfileMatch', (req: Request, res: Response) =>
+		getProfileMatchController(req, res)
+	);
+	app.post('/like/addLikedProfile', (req: Request, res: Response) =>
+		addlikedProfileController(req, res)
+	);
+	app.post('/like/deleteLikedProfile', (req: Request, res: Response) =>
+		deletelikedProfileController(req, res)
+	);
 }
 
 function notificationRouter(app: Application) {
-	app.get('/notification/getNotification', (req: Request, res: Response) => getNotificationController(req, res));
-	app.post('/notification/addNotification', (req: Request, res: Response) => addNotificationController(req, res));
+	app.get('/notification/getNotification', (req: Request, res: Response) =>
+		getNotificationController(req, res)
+	);
+	app.post('/notification/addNotification', (req: Request, res: Response) =>
+		addNotificationController(req, res)
+	);
 }
 
 function tagRouter(app: Application) {
-	app.post('/tag/addTagProfile', (req: Request, res: Response) => addTagProfileController(req, res));
-	app.post('/tag/deleteTagProfile', (req: Request, res: Response) => deleteTagProfileController(req, res));
+	app.post('/tag/addTagProfile', (req: Request, res: Response) =>
+		addTagProfileController(req, res)
+	);
+	app.post('/tag/deleteTagProfile', (req: Request, res: Response) =>
+		deleteTagProfileController(req, res)
+	);
 }
 
 function viewRouter(app: Application) {
-	app.post('/view/addView', (req: Request, res: Response) => addViewController(req, res));
+	app.get('/view/getView', (req: Request, res: Response) =>
+		getViewController(req, res)
+	);
+	app.post('/view/addView', (req: Request, res: Response) =>
+		addViewController(req, res)
+	);
 }
 
 export function router(app: Application) {

@@ -6,12 +6,15 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 16:04:36 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 17:08:46 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:03:57 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import {
+	tag,
+	tagProfile
+} from '../../types/types';
 import { dataBase } from '../app';
-import { tag, tagProfile } from '../../types/types';
 
 export function getTag(tag: string): Promise<tag | null> {
 	return new Promise((resolve, reject) => {
@@ -69,7 +72,10 @@ export function addTag(tag: string): Promise<tag | null> {
 	});
 }
 
-export function addTagProfile(profileId: number, tagId: number): Promise<tagProfile | null> {
+export function addTagProfile(
+	profileId: number,
+	tagId: number
+): Promise<tagProfile | null> {
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO tagProfile (
 			tagId,
@@ -88,7 +94,10 @@ export function addTagProfile(profileId: number, tagId: number): Promise<tagProf
 	});
 }
 
-export function deleteTagProfile(tagId: number, profileId: number): Promise<boolean> {
+export function deleteTagProfile(
+	tagId: number,
+	profileId: number
+): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `DELETE FROM tagProfile WHERE tagId = ${tagId} AND profileId = ${profileId}`;
 		dataBase.query(sql, (error: string, result: tagProfile) => {

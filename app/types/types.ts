@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 16:56:54 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:11:15 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,9 @@ export interface tag {
 export interface tagProfile {
 	idProfile: number;
 	tagId: number;
+}
+
+export interface view {
+	profileSeenId: number;
+	viewerProfileId: number;
 }

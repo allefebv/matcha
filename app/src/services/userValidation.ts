@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   userValidation.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/25 12:43:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/29 10:04:15 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Response } from 'express';
+
 import { getUserByEmail } from '../model/userRepositories';
 
 const validationPassword = (password: string): Promise<string | null> =>
@@ -37,11 +38,18 @@ const validationEmail = (email: string): Promise<string | null> =>
 		resolve(null);
 	});
 
-export const addUserValidation = async (email: string, password: string, res: Response): Promise<boolean> => {
+export const addUserValidation = async (
+	email: string,
+	password: string,
+	res: Response
+): Promise<boolean> => {
 	const passwordValidation = validationPassword(password);
 	const emailValidation = validationEmail(email);
 
-	let result: string[] = await Promise.all([passwordValidation, emailValidation]);
+	let result: string[] = await Promise.all([
+		passwordValidation,
+		emailValidation,
+	]);
 	result = result.filter((item) => item);
 	if (result.length) {
 		res.status(400).send(result);

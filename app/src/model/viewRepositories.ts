@@ -1,3 +1,5 @@
+import { view } from 'types/types';
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,15 +8,28 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/28 17:15:46 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 17:53:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:08:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 import { dataBase } from '../app';
-import { user } from '../../types/types';
-import { generateActivationKey } from '../services/generateString';
 
-export async function addView(profileSeenId: number, viewerProfileId: number): Promise<boolean> {
+export async function getView(profileSeenId: number): Promise<view[] | null> {
+	return new Promise((resolve, reject) => {
+		const sql = `SELECT * FROM viewProfile WHERE profileSeenId = ${profileSeenId}`;
+		dataBase.query(sql, (error: string, result: view[]) => {
+			if (error) {
+				console.log(error);
+				reject(null);
+			}
+			resolve(result);
+		});
+	});
+}
+
+export async function addView(
+	profileSeenId: number,
+	viewerProfileId: number
+): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO viewProfile (
 			profileSeenId,

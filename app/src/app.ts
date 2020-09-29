@@ -6,15 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/24 13:02:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:29:07 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { router } from './router';
-import express from 'express';
 import bodyParser from 'body-parser';
-import { createConnection } from 'mysql';
 import cors from 'cors';
+import express from 'express';
+import { createConnection } from 'mysql';
+
+import { router } from './router';
 
 export let dataBase = null;
 let app: express.Application | null = null;

@@ -6,11 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:03:39 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/28 11:18:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 10:04:10 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import nodemailer from 'nodemailer';
+
 import { user } from '../../types/types';
 
 const transporter = nodemailer.createTransport({
