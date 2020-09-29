@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/28 17:15:48 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 14:27:21 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 14:33:12 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ export async function getViewController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const viewList = await getView(jwt.decoded.id);
-		if (viewList && viewList.length) {
+		if (viewList) {
 			res.status(200).json(viewList);
 			return;
 		}
