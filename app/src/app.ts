@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 16:20:08 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:29:07 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 14:30:48 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ export let dataBase = null;
 let app: express.Application | null = null;
 
 function initMiddelware() {
-	app.use(cors());
+	var corsOptions = {
+		origin: 'http://localhost:3000',
+		optionsSuccessStatus: 200,
+	};
+	app.use(cors(corsOptions));
 	app.use(bodyParser.json());
 	app.use(
 		bodyParser.urlencoded({

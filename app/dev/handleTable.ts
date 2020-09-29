@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:04:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/29 13:35:37 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ export async function addTableViewProfile() {
 		const sql = `CREATE TABLE viewProfile (
 			profileSeenId						INTEGER NOT NULL,
 			viewerProfileId						INTEGER NOT NULL,
+			viewDate							TEXT NOT NULL,
 			FOREIGN KEY (profileSeenId) 		REFERENCES profile(userId) ON DELETE CASCADE,
 			FOREIGN KEY (viewerProfileId) 		REFERENCES profile(userId) ON DELETE CASCADE
 		)`;
@@ -170,13 +171,13 @@ export async function dropTable(nameTable: string) {
 }
 async function main() {
 	initMysql();
-	//dropTable('notificationProfile');
+	//dropTable('viewProfile');
 	//await addTableUser();
 	//await addTableProfile();
 	//await addTableLike();
 	//await addTableNotification();
 	//await addTableTag();
 	//await addTableTagProfile();
-	await addTableViewProfile();
+	//await addTableViewProfile();
 }
 main();
