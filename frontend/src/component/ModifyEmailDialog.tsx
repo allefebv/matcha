@@ -6,21 +6,22 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 21:08:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
-import { connect, ConnectedProps } from "react-redux";
-import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
+import { fetchApi } from "../services/fetchApi";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -64,15 +65,15 @@ function ModifyEmailDialogComponent(props: Props) {
 
 	const handleChangeEmail = () => {
 		let details = {
-			email: email,
+			newEmail: email,
 			password: password,
 		};
 
 		fetchApi(constants.URL + constants.URI_UPDATE_EMAIL, {
 			method: constants.POST_METHOD,
 			headers: {
-				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-				Authorization: props.loggedIn,
+				"Content-Type": "application/json",
+				token: props.loggedIn,
 			},
 			body: details,
 			credentials: "include",
@@ -85,7 +86,12 @@ function ModifyEmailDialogComponent(props: Props) {
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				fullWidth
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Modify Email
 			</Button>
 			<Dialog
@@ -125,7 +131,11 @@ function ModifyEmailDialogComponent(props: Props) {
 							onClick={handleChangeEmail}
 							type="submit"
 							color="primary"
-							disabled={!isEmailValid(email) || props.user.email === email}
+							disabled={
+								!isEmailValid(email) ||
+								props.user.email === email ||
+								password === ""
+							}
 						>
 							Modify Email
 						</Button>

@@ -6,32 +6,24 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 16:00:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/30 17:26:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { ToggleButton } from "@material-ui/lab";
+import React, { useState } from 'react';
+
+import { ToggleButton } from '@material-ui/lab';
 
 interface Props {
 	label: string;
 	children?: React.ReactNode;
 }
 
-const stylePlaceHolderComboFilterSort: React.CSSProperties = {
-	display: "flex",
-	flexDirection: "column",
-	backgroundColor: "ivory",
-	justifyContent: "center",
-	alignItems: "center",
-    border: "1vw",
-};
-
 export const CategoryFilterSort = (props: Props) => {
 	const [selected, setSelected] = useState(false);
 
 	return (
-		<div style={stylePlaceHolderComboFilterSort}>
+		<div>
 			<label>{props.label}</label>
 			{props.children}
 			<ToggleButton

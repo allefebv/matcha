@@ -6,21 +6,22 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 16:08:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
-import { connect, ConnectedProps } from "react-redux";
-import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
+import { fetchApi } from "../services/fetchApi";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -31,8 +32,9 @@ type Props = {} & ReduxProps;
 
 function ModifyPasswordDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [password, setPassword] = useState<string | null>("");
-	let [passwordError, setPasswordError] = useState(false);
+	let [currentPassword, setCurrentPassword] = useState<string | null>("");
+	let [newPassword, setNewPassword] = useState<string | null>("");
+	let [newPasswordError, setNewPasswordError] = useState(false);
 	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
 	let [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
@@ -42,9 +44,10 @@ function ModifyPasswordDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
-		setPassword("");
+		setCurrentPassword("");
+		setNewPassword("");
 		setPasswordConfirm("");
-		setPasswordError(false);
+		setNewPasswordError(false);
 		setPasswordConfirmError(false);
 	};
 
@@ -53,9 +56,13 @@ function ModifyPasswordDialogComponent(props: Props) {
 		handleClose();
 	}
 
-	async function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
-		setPassword(e.currentTarget.value);
-		setPasswordError(!isPasswordValid(e.currentTarget.value));
+	function handleCurrentPassword(e: React.ChangeEvent<HTMLInputElement>) {
+		setCurrentPassword(e.currentTarget.value);
+	}
+
+	function handleNewPassword(e: React.ChangeEvent<HTMLInputElement>) {
+		setNewPassword(e.currentTarget.value);
+		setNewPasswordError(!isPasswordValid(e.currentTarget.value));
 	}
 
 	function handlePasswordConfirm(e: React.ChangeEvent<HTMLInputElement>) {
@@ -71,12 +78,13 @@ function ModifyPasswordDialogComponent(props: Props) {
 	}
 
 	function arePasswordsIdentical(passwordConfirm: string | null) {
-		return password === passwordConfirm;
+		return newPassword === passwordConfirm;
 	}
 
 	const handleModifyPassword = () => {
 		let details = {
-			password: password,
+			password: currentPassword,
+			newPassword: newPassword,
 		};
 
 		fetchApi<{ user: Object; token: string }>(
@@ -84,14 +92,13 @@ function ModifyPasswordDialogComponent(props: Props) {
 			{
 				method: constants.POST_METHOD,
 				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-					Authorization: props.loggedIn,
+					"Content-Type": "application/json",
+					token: props.loggedIn,
 				},
 				credentials: "include",
-				body: details
+				body: details,
 			}
-		).then(({ user, token }) => {
-		});
+		).then(({ user, token }) => {});
 	};
 
 	return (
@@ -109,14 +116,23 @@ function ModifyPasswordDialogComponent(props: Props) {
 					<DialogContent>
 						<TextField
 							margin="dense"
+							label="Current password"
+							type="password"
+							variant="filled"
+							fullWidth
+							value={currentPassword}
+							onChange={handleCurrentPassword}
+						/>
+						<TextField
+							margin="dense"
 							label="New password"
 							type="password"
 							variant="filled"
 							fullWidth
-							value={password}
-							onChange={handlePassword}
-							error={passwordError}
-							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							value={newPassword}
+							onChange={handleNewPassword}
+							error={newPasswordError}
+							helperText={newPasswordError && constants.PASSWORD_HELPER_ERROR}
 						/>
 						<TextField
 							margin="dense"
@@ -136,7 +152,11 @@ function ModifyPasswordDialogComponent(props: Props) {
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<Button onClick={handleModifyPassword} type="submit" color="primary">
+						<Button
+							onClick={handleModifyPassword}
+							type="submit"
+							color="primary"
+						>
 							Confirm
 						</Button>
 					</DialogActions>
@@ -146,4 +166,6 @@ function ModifyPasswordDialogComponent(props: Props) {
 	);
 }
 
-export const ModifyPasswordDialog = withReduxProps(ModifyPasswordDialogComponent)
+export const ModifyPasswordDialog = withReduxProps(
+	ModifyPasswordDialogComponent
+);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 20:43:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/01 12:10:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Grid } from "@material-ui/core";
 import { UserProfilePage } from "./UserProfilePage";
+import { ProfileCreationPage } from "./ProfileCreationPage";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -39,16 +40,37 @@ export class AppComponent extends React.Component<Props> {
 	render() {
 		return (
 			<BrowserRouter>
-				<Grid container alignContent="stretch" justify="center" alignItems="center" style={styleApp}>
-					<Grid item container xs={12} style={{height: "6%", zIndex:10}} justify="space-between">
+				<Grid
+					container
+					alignContent="stretch"
+					justify="center"
+					alignItems="center"
+					style={styleApp}
+				>
+					<Grid
+						item
+						container
+						xs={12}
+						style={{ height: "8%", zIndex: 10 }}
+						justify="space-between"
+					>
 						<Header />
 					</Grid>
-					<Grid item container xs={12} style={{height: "90%"}} justify="center" alignItems="center">
+					<Grid
+						item
+						container
+						xs={12}
+						style={{ height: "89%" }}
+						justify="center"
+						alignItems="center"
+					>
 						<Switch>
 							<Route
 								exact
 								path={constants.LANDING_ROUTE}
-								component={this.props.loggedIn ? MainPage : LandingPage}
+								component={
+									this.props.loggedIn ? MainPage : LandingPage
+								}
 							/>
 							<PrivateRoute
 								path={constants.SEARCH_ROUTE}
@@ -65,9 +87,21 @@ export class AppComponent extends React.Component<Props> {
 								isLogged={this.props.loggedIn}
 								component={UserProfilePage}
 							/>
+							<PrivateRoute
+								path={constants.PROFILE_CREATION_ROUTE}
+								isLogged={this.props.loggedIn}
+								component={ProfileCreationPage}
+							/>
 						</Switch>
 					</Grid>
-					<Grid item container xs={12} style={{height: "4%"}} justify="center" alignItems="center">
+					<Grid
+						item
+						container
+						xs={12}
+						style={{ height: "3%" }}
+						justify="center"
+						alignItems="center"
+					>
 						<Footer />
 					</Grid>
 				</Grid>

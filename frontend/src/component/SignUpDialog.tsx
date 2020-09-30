@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 16:38:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ export function SignUpDialog(props: Props) {
 		let details = {
 			email: email,
 			password: password,
+			redirectUrl: "localhost:3000/my-profile",
 		};
 
 		fetchApi<{ user: user; token: string }>(
@@ -98,7 +99,7 @@ export function SignUpDialog(props: Props) {
 			{
 				method: constants.POST_METHOD,
 				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+					"Content-Type": "application/json",
 				},
 				body: details,
 			}

@@ -1,3 +1,4 @@
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -7,13 +8,21 @@ import { App } from "./root/App";
 import * as serviceWorker from "./serviceWorker";
 import { store, persistor } from "./store/store";
 
+const theme = createMuiTheme({
+	palette: {
+		type: "dark"
+	}
+})
+
 ReactDOM.render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<PersistGate loading={null} persistor={persistor}>
-				<App />
-			</PersistGate>
-		</Provider>
+		<ThemeProvider theme={theme}>
+			<Provider store={store}>
+				<PersistGate loading={null} persistor={persistor}>
+					<App />
+				</PersistGate>
+			</Provider>
+		</ThemeProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

@@ -6,17 +6,18 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 14:39:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/30 17:56:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signin } from "../store/user/action";
-import { IconButton } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { Menu, MenuItem } from "@material-ui/core";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+
+import { actionUser_signin } from '../store/user/action';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -42,11 +43,10 @@ const AccountMenuComponent = (props: Props) => {
 
 	return (
 		<div>
-			<IconButton>
+			<IconButton onClick={handleClick}>
 				<KeyboardArrowDownIcon
 					aria-controls="simple-menu"
 					aria-haspopup="true"
-					onClick={handleClick}
 					color="primary"
 				/>
 			</IconButton>

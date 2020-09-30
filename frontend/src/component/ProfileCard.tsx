@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 15:12:58 by allefebv         ###   ########.fr       */
+/*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
+/*   Updated: 2020/09/30 17:59:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 
 const useStyles = makeStyles({
-	root: {
-	},
+	root: {},
 	media: {
-        height: 0,
-        paddingTop: '56%'
+		height: 0,
+		paddingTop: "56%",
 	},
 });
 
 export function ProfileCard() {
-    const classes = useStyles();
+	const classes = useStyles();
 
 	return (
 		<Card className={classes.root}>
 			<CardMedia
-            className={classes.media}
-            image= {require ("../images/example_girl.jpg")} />
+				className={classes.media}
+				image={require("../images/example_girl.jpg")}
+			/>
 			<CardContent>
 				<Typography variant="body2" color="textSecondary" component="p">
 					My name is ruth and I like poneys

@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AccountSettingsPage.tsx                            :+:      :+:    :+:   */
+/*   ProfileCreationPage.tsx                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/09/29 13:20:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/30 17:26:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
-import { ModifyPasswordDialog } from "../component/ModifyPasswordDialog";
-import { DeleteAccountDialog } from "../component/DeleteAccountDialog";
-import { Grid } from "@material-ui/core";
+import React from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { connect, ConnectedProps } from "react-redux";
-import { ModifyEmailDialog } from "../component/ModifyEmailDialog";
+import { Grid } from '@material-ui/core';
+
+import { ProfileCreationStepper } from '../component/ProfileCreationStepper';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -25,7 +24,7 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-const AccountSettingsPageComponent = (props: Props) => {
+const ProfileCreationPageComponent = (props: Props) => {
 	return (
 		<React.Fragment>
 			<Grid
@@ -34,23 +33,13 @@ const AccountSettingsPageComponent = (props: Props) => {
 				xs={8}
 				md={6}
 				lg={3}
-				style={{ height: "100%" }}
-				direction="column"
 				justify="center"
 				alignItems="center"
 			>
-				<Grid item>
-					<ModifyEmailDialog />
-				</Grid>
-				<Grid item>
-					<ModifyPasswordDialog />
-				</Grid>
-				<Grid item>
-					<DeleteAccountDialog />
-				</Grid>
+				<ProfileCreationStepper />
 			</Grid>
 		</React.Fragment>
 	);
 };
 
-export const AccountSettingsPage = withReduxProps(AccountSettingsPageComponent);
+export const ProfileCreationPage = withReduxProps(ProfileCreationPageComponent);
