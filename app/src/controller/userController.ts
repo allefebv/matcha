@@ -6,34 +6,21 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:08:24 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:03:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/09/30 10:25:33 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import crypto from 'crypto';
-import {
-	Request,
-	Response
-} from 'express';
+import { Request, Response } from 'express';
 
 import {
-	activateUser,
-	addUser,
-	changeEmail,
-	changePassword,
-	deleteUser,
-	getUserByEmail,
-	getUserById
+	activateUser, addUser, changeEmail, changePassword, deleteUser,
+	getUserByEmail, getUserById
 } from '../model/userRepositories';
 import { generatePassword } from '../services/generateString';
+import { generateTokenForUser, jwtVerify } from '../services/jwt';
 import {
-	generateTokenForUser,
-	jwtVerify
-} from '../services/jwt';
-import {
-	activatedUserMailer,
-	newEmailMailer,
-	newPasswordMailer
+	activatedUserMailer, newEmailMailer, newPasswordMailer
 } from '../services/mailer';
 import { addUserValidation } from '../services/userValidation';
 
@@ -56,7 +43,7 @@ export async function addUserController(req: Request, res: Response) {
 			});
 			activatedUserMailer(
 				user,
-				`http://localhost:3001/user/activateUser?activationKey=${user.activationKey}&id=${user.id}`
+				`${req.body.url}?activationKey=${user.activationKey}&id=${user.id}`
 			);
 			return;
 		}
@@ -116,7 +103,7 @@ export async function changeEmailController(req: Request, res: Response) {
 		const user = await getUserById(jwt.decoded.id);
 		if (user.password === password) {
 			newEmailMailer(
-				user.email,
+				req.body.newEmail,
 				`http://localhost:3001/user/activateNewEmail?email=${req.body.newEmail}&id=${user.id}`
 			);
 			res.status(200).send('Email send to new email');
