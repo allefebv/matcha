@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   userRepositories.ts                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/10 15:07:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:03:58 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 import { user } from '../../types/types';
 import { dataBase } from '../app';
 import { generateActivationKey } from '../services/generateString';

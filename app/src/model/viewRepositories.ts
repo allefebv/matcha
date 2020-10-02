@@ -1,16 +1,5 @@
 import { view } from 'types/types';
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   viewRepositories.ts                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/28 17:15:46 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:08:21 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 import { dataBase } from '../app';
 
 export async function getView(profileSeenId: number): Promise<view[] | null> {

@@ -1,19 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tagRepositories.ts                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/18 16:04:36 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:03:57 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-import {
-	tag,
-	tagProfile
-} from '../../types/types';
+import { tag, tagProfile } from '../../types/types';
 import { dataBase } from '../app';
 
 export function getTag(tag: string): Promise<tag | null> {

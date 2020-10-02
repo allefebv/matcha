@@ -1,19 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   likeController.ts                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/15 17:27:07 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:03:29 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-import {
-	Request,
-	Response
-} from 'express';
+import { Request, Response } from 'express';
 
 import {
 	addLikedProfile,
@@ -30,21 +15,19 @@ import { jwtVerify } from '../services/jwt';
 export async function addlikedProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(
-			req.body.username
-		);
+		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
 		if (profileHasBeenLiked) {
 			const addLike = await addLikedProfile(
 				jwt.decoded.id,
 				profileHasBeenLiked.userId
 			);
 			if (addLike) {
-				res.status(200).json('Liked successful');
+				res.status(200).json("Liked successful");
 				return;
 			}
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function deletelikedProfileController(
@@ -53,41 +36,37 @@ export async function deletelikedProfileController(
 ) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(
-			req.body.username
-		);
+		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
 		if (profileHasBeenLiked) {
 			const deleteLike = await deleteLikedProfile(
 				jwt.decoded.id,
 				profileHasBeenLiked.userId
 			);
 			if (deleteLike) {
-				res.status(200).json('Delete like successful');
+				res.status(200).json("Delete like successful");
 				return;
 			}
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function likedProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const profileHasBeenLiked = await getProfileByUsername(
-			req.body.username
-		);
+		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
 		if (profileHasBeenLiked) {
 			const addLike = await addLikedProfile(
 				jwt.decoded.id,
 				profileHasBeenLiked.userId
 			);
 			if (addLike) {
-				res.status(200).json('Liked successful');
+				res.status(200).json("Liked successful");
 				return;
 			}
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function getProfileLikeController(req: Request, res: Response) {
@@ -97,9 +76,7 @@ export async function getProfileLikeController(req: Request, res: Response) {
 		const profileList = await Promise.all(
 			listLike &&
 				listLike.map(async (item) => {
-					const profile = await getProfileByUserId(
-						item.profileHasBeenLikedId
-					);
+					const profile = await getProfileByUserId(item.profileHasBeenLikedId);
 					return profile;
 				})
 		);
@@ -108,7 +85,7 @@ export async function getProfileLikeController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function getProfileMatchController(req: Request, res: Response) {
@@ -120,10 +97,8 @@ export async function getProfileMatchController(req: Request, res: Response) {
 				(item) =>
 					listLike.filter(
 						(item2) =>
-							item.profileLikesId ===
-								item2.profileHasBeenLikedId &&
-							item.profileHasBeenLikedId ===
-								item2.profileLikesId &&
+							item.profileLikesId === item2.profileHasBeenLikedId &&
+							item.profileHasBeenLikedId === item2.profileLikesId &&
 							item.profileLikesId === jwt.decoded.id
 					).length
 			)
@@ -142,5 +117,5 @@ export async function getProfileMatchController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   userValidation.ts                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/09 12:07:50 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 10:04:15 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 import { Response } from 'express';
 
 import { getUserByEmail } from '../model/userRepositories';
@@ -18,7 +6,7 @@ const validationPassword = (password: string): Promise<string | null> =>
 	new Promise((resolve) => {
 		const passwordRegex = new RegExp(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/);
 		if (!passwordRegex.test(password)) {
-			resolve('PASSWORD_INVALID');
+			resolve("PASSWORD_INVALID");
 		}
 		resolve(null);
 	});
@@ -30,10 +18,10 @@ const validationEmail = (email: string): Promise<string | null> =>
 			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 		);
 		if (newUserEmailExist) {
-			resolve('EMAIL_EXSIST');
+			resolve("EMAIL_EXSIST");
 		}
 		if (!emailRegex.test(email)) {
-			resolve('EMAIL_INVALID');
+			resolve("EMAIL_INVALID");
 		}
 		resolve(null);
 	});

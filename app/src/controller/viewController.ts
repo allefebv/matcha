@@ -1,20 +1,11 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   viewController.ts                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/28 17:15:48 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 14:33:12 by jfleury          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 import { Request, Response } from 'express';
 
 import { getProfileByUsername } from '../model/profileRepositories';
 import {
-	addView, getView, getViewByViewerProfileId, updateView
+	addView,
+	getView,
+	getViewByViewerProfileId,
+	updateView
 } from '../model/viewRepositories';
 import { jwtVerify } from '../services/jwt';
 
@@ -27,7 +18,7 @@ export async function getViewController(req: Request, res: Response) {
 			return;
 		}
 	}
-	res.status(400).send('ERROR_OCCURED');
+	res.status(400).send("ERROR_OCCURED");
 }
 
 export async function addViewController(req: Request, res: Response) {
@@ -41,17 +32,17 @@ export async function addViewController(req: Request, res: Response) {
 		if (viewExsist) {
 			const isUpdate = await updateView(profileSeen.userId, jwt.decoded.id);
 			if (isUpdate) {
-				res.status(200).send('Update view');
+				res.status(200).send("Update view");
 				return;
 			}
 		}
 		if (profileSeen) {
 			const add = await addView(profileSeen.userId, jwt.decoded.id);
 			if (add) {
-				res.status(200).send('Add view');
+				res.status(200).send("Add view");
 				return;
 			}
 		}
 	}
-	res.status(400).send('ERROR_OCCURED');
+	res.status(400).send("ERROR_OCCURED");
 }
