@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { ModuleResolutionKind } from 'typescript';
 
 import {
 	addProfile,
@@ -8,8 +9,10 @@ import {
 	updateProfile
 } from '../model/profileRepositories';
 import { getTagById, getTagProfile } from '../model/tagRepositories';
-import { jwtVerify, jwtVerifyWithoutResponse } from '../services/jwt';
+import { jwtVerify } from '../services/jwt';
 import { profileValidation } from '../services/profileValidation';
+
+var _ = require("lodash");
 
 export async function getProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
@@ -103,12 +106,5 @@ export async function updateProfileController(req: Request, res: Response) {
 		}
 	} else {
 		res.status(400).send("An error occured");
-	}
-}
-
-export async function handleImageController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		res.status(200).sendFile("/" + req.file.path);
 	}
 }

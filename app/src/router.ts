@@ -1,5 +1,10 @@
-import { Application, Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
+import path from 'path';
 
+import {
+	getImagesController,
+	handleImagesController
+} from './controller/imageController';
 import {
 	addlikedProfileController,
 	deletelikedProfileController,
@@ -15,7 +20,6 @@ import {
 	getAllProfileController,
 	getProfileByUsernameController,
 	getProfileController,
-	handleImageController,
 	updateProfileController
 } from './controller/profileController';
 import {
@@ -36,7 +40,6 @@ import {
 	addViewController,
 	getViewController
 } from './controller/viewController';
-import { jwtVerifyWithoutResponse } from './services/jwt';
 
 function userRouter(app: Application) {
 	app.get("/user/activateUser", (req: Request, res: Response) =>
@@ -80,10 +83,6 @@ function profileRouter(app: Application) {
 	);
 	app.post("/profile/updateProfile", (req: Request, res: Response) =>
 		updateProfileController(req, res)
-	);
-
-	app.post("/profile/handleImage", (req: Request, res: Response) =>
-		handleImageController(req, res)
 	);
 }
 
@@ -129,6 +128,15 @@ function viewRouter(app: Application) {
 	);
 }
 
+function imagesController(app: Application) {
+	app.get("/images/getImages", (req: Request, res: Response) =>
+		getImagesController(req, res)
+	);
+	app.post("/images/handleImages", (req: Request, res: Response) =>
+		handleImagesController(req, res)
+	);
+}
+
 export function router(app: Application) {
 	userRouter(app);
 	profileRouter(app);
@@ -136,7 +144,7 @@ export function router(app: Application) {
 	notificationRouter(app);
 	tagRouter(app);
 	viewRouter(app);
-
+	imagesController(app);
 	app.use((req: Request, res: Response) => {
 		res.setHeader("Content-Type", "text/plain");
 		res.status(404).json({ code: 404, error: "Page not found" });

@@ -19,13 +19,10 @@ function initMiddelware() {
 		origin: "http://localhost:3000",
 		optionsSuccessStatus: 200,
 	};
+	app.use(express.static("public"));
+	app.use(express.static("files"));
 	app.use(cors(corsOptions));
 	app.use(bodyParser.json());
-	app.use(
-		bodyParser.urlencoded({
-			extended: true,
-		})
-	);
 }
 
 function initDatabase() {
