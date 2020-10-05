@@ -1,10 +1,10 @@
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express from 'express';
-import fileUpload from 'express-fileupload';
-import { createConnection } from 'mysql';
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+import fileUpload from "express-fileupload";
+import { createConnection } from "mysql";
 
-import { router } from './router';
+import { router } from "./router";
 
 export let dataBase = null;
 let app: express.Application | null = null;
@@ -18,6 +18,7 @@ function initMiddelware() {
 	var corsOptions = {
 		origin: "http://localhost:3000",
 		optionsSuccessStatus: 200,
+		credentials: true,
 	};
 	app.use(express.static("public"));
 	app.use(express.static("files"));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types.ts                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/21 15:29:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/02 11:36:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,28 @@ export interface user {
 	activationKey: string;
 }
 
-export interface profile {
-	id: number;
-	userId: number;
-	age: number;
-	popularityScore: string;
-	username: string;
-	firstname: string;
-	lastname: string;
-	genre: string;
-	sexualOrientation: string | null;
-	location: string | null;
-	bio: string | null;
-	tag: string | null;
+export interface Iimgs {
 	img0: string | null;
 	img1: string | null;
 	img2: string | null;
 	img3: string | null;
 	img4: string | null;
+}
+
+export interface Iprofile {
+	id?: number;
+	userId?: number;
+	popularityScore?: string;
+	age: number | null;
+	userName: string;
+	firstName: string;
+	lastName: string;
+	gender: string | null;
+	sexualOrientation: string | null;
+	location: string | null;
+	bio: string | null;
+	tagList: string[] | null;
+	imgs: Iimgs;
 }
 
 export interface like {

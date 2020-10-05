@@ -6,57 +6,83 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 14:53:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:36:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
-import { Avatar, Grid } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Grid } from "@material-ui/core";
 import { ProfileCardsScroll } from "../component/ProfileCardsScroll";
+import { fetchApi } from "../services/fetchApi";
+import * as constants from "../services/constants";
+import { connect, ConnectedProps } from "react-redux";
+import { ProfilePictures } from "../component/ProfilePictures";
+import { Iprofile } from "../types/types";
 
-const styleProfile: React.CSSProperties = {
-	backgroundColor: "black",
-	width: "100%",
-};
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.signin.isLoggedIn,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
-const styleMainProfilePic: React.CSSProperties = {
-	width: "min(15vh, 15vw)",
-	height: "min(15vh, 15vw)",
-};
+const UserProfilePageComponent = (props: Props) => {
+	const [profile, setProfile] = useState<Iprofile>({
+		firstName: "",
+		lastName: "",
+		userName: "",
+		location: null,
+		age: null,
+		gender: null,
+		sexualOrientation: null,
+		tagList: null,
+		bio: null,
+		imgs: {
+			img0: null,
+			img1: null,
+			img2: null,
+			img3: null,
+			img4: null,
+		},
+	});
 
-const styleSecondaryProfilePics: React.CSSProperties = {
-	width: "min(12vh, 12vw)",
-	height: "min(12vh, 12vw)",
-};
+	useEffect(() => {
+		function handleProfile() {
+			fetchApi<{ profile: Iprofile }>(
+				constants.URL + constants.URI_GET_PROFILE,
+				{
+					method: constants.POST_METHOD,
+					headers: {
+						"Content-Type": "application/json",
+						token: props.loggedIn,
+					},
+					credentials: "include",
+				}
+			)
+				.then(({ profile }) => {
+					setProfile(profile);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	});
 
-interface Props {}
-
-export const UserProfilePage = (props: Props) => {
 	return (
-		<Grid item container direction="row" style={{height: "100%"}}>
-			<Grid container item xs={9} style={{height: "100%"}}>
-				<Avatar
-					style={styleMainProfilePic}
-					src={require("../images/example_girl.jpg")}
-				></Avatar>
-				<Avatar
-					style={styleSecondaryProfilePics}
-					src={require("../images/example_girl.jpg")}
-				></Avatar>
-				<Avatar
-					style={styleSecondaryProfilePics}
-					src={require("../images/example_girl.jpg")}
-				></Avatar>
-				<Avatar
-					style={styleSecondaryProfilePics}
-					src={require("../images/example_girl.jpg")}
-				></Avatar>
-				<Avatar
-					style={styleSecondaryProfilePics}
-					src={require("../images/example_girl.jpg")}
-				></Avatar>
+		<Grid item container direction="row" style={{ height: "100%" }}>
+			<Grid container item xs={9} style={{ height: "100%" }}>
+				<Grid
+					item
+					container
+					wrap="nowrap"
+					justify="flex-start"
+					xs={12}
+					md={6}
+					style={{ height: "15%" }}
+				>
+					<ProfilePictures setProfile={setProfile} profile={profile} />
+				</Grid>
 			</Grid>
-			<Grid container item xs={3} style={{height: "100%"}} spacing={3}>
+			<Grid container item xs={3} style={{ height: "100%" }} spacing={3}>
 				<Grid item xs={12} style={{ height: "50%" }}>
 					<ProfileCardsScroll />
 				</Grid>
@@ -67,3 +93,5 @@ export const UserProfilePage = (props: Props) => {
 		</Grid>
 	);
 };
+
+export const UserProfilePage = withReduxProps(UserProfilePageComponent);

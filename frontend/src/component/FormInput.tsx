@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:50 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/24 14:18:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/30 17:26:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React from 'react';
 
 const styleInput: React.CSSProperties = {
     display: "flex",

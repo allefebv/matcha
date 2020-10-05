@@ -6,21 +6,22 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 16:39:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:36:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
-import { connect, ConnectedProps } from "react-redux";
-import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
+import { fetchApi } from "../services/fetchApi";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,
@@ -51,14 +52,19 @@ function DeleteAccountDialogComponent(props: Props) {
 	}
 
 	const handleDeleteAccount = () => {
+		let details = {
+			password: password,
+		};
+
 		fetchApi<{ user: Object; token: string }>(
 			constants.URL + constants.URI_DELETE_ACCOUNT,
 			{
 				method: constants.POST_METHOD,
 				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-					Authorization: props.loggedIn,
+					"Content-Type": "application/json",
+					token: props.loggedIn,
 				},
+				body: details,
 				credentials: "include",
 			}
 		)
@@ -79,7 +85,7 @@ function DeleteAccountDialogComponent(props: Props) {
 				<form onSubmit={handleSubmit}>
 					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
 					<DialogContent>
-					<TextField
+						<TextField
 							margin="dense"
 							label="Password"
 							type="password"

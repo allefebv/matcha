@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 21:19:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/09/30 15:22:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class HeaderComponent extends React.Component<Props> {
 		const isDesktop = window.innerWidth > 480;
 		return (
 			<React.Fragment>
-				<Grid item xs={2}>
+				<Grid item xs={2} style={{ height: "100%" }}>
 					<Link
 						to={
 							this.props.loggedIn
@@ -41,9 +41,10 @@ class HeaderComponent extends React.Component<Props> {
 								: constants.LANDING_ROUTE
 						}
 					>
-						<Button>
-							<img src={require("../images/logo_white.png")} style={{maxHeight: `max(7vh, 3vw)`}} />
-						</Button>
+						<img
+							src={require("../images/logo_white.png")}
+							style={{ height: "100%" }}
+						/>
 					</Link>
 				</Grid>
 				{isDesktop && (

@@ -17,7 +17,6 @@ export function ToggleGroup() {
 			value={view}
 			onChange={handleChange}
 			exclusive
-			style={{backgroundColor: "blue"}}
 		>
 			<ToggleButton value="Matches">Matches</ToggleButton>
 			<ToggleButton value="Preselection">Preselection</ToggleButton>

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/25 16:15:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/02 12:23:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ function SignInDialogComponent(props: Props) {
 			{
 				method: constants.POST_METHOD,
 				headers: {
-					"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+					"Content-Type": "application/json",
 				},
 				body: details,
 			}
