@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:23:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:10:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ import { useHistory } from "react-router-dom";
 
 import { user } from "../types/types";
 
-const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
-}));
+const withReduxProps = connect((state: any) => ({}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
@@ -93,12 +91,12 @@ function SignInDialogComponent(props: Props) {
 			}
 		)
 			.then(({ user, token }) => {
+				console.log(user);
 				props.dispatch(actionUser_signin({ user, token }));
 				handleClose();
 				history.push(constants.SEARCH_ROUTE);
 			})
 			.catch((error) => {
-				console.log(error);
 				setEmailError(true);
 				setPasswordError(true);
 			});

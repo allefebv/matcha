@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/09/29 13:20:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:57:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ import { connect, ConnectedProps } from "react-redux";
 import { ModifyEmailDialog } from "../component/ModifyEmailDialog";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
-	user: state.user.signin.user,
+	loggedIn: state.user.isLoggedIn,
+	user: state.user.user,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;

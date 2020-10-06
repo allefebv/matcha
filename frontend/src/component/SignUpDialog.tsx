@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:10:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,14 @@ import { user } from "../types/types";
 import { fetchApi } from "../services/fetchApi";
 import * as constants from "../services/constants";
 
-type Props = {};
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_signup } from "../store/user/action";
 
-export function SignUpDialog(props: Props) {
+const withReduxProps = connect((state: any) => ({}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
+
+function SignUpDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	let [email, setEmail] = useState<string | null>("");
 	let [emailError, setEmailError] = useState(false);
@@ -91,7 +96,7 @@ export function SignUpDialog(props: Props) {
 		let details = {
 			email: email,
 			password: password,
-			redirectUrl: "localhost:3000/my-profile",
+			redirectUrl: constants.FRONT_URL + constants.PROFILE_CREATION_ROUTE,
 		};
 
 		fetchApi<{ user: user; token: string }>(
@@ -105,6 +110,8 @@ export function SignUpDialog(props: Props) {
 			}
 		)
 			.then(({ user, token }) => {
+				console.log(user);
+				props.dispatch(actionUser_signup({ user, token }));
 				handleClose();
 			})
 			.catch((error) => {
@@ -187,3 +194,5 @@ export function SignUpDialog(props: Props) {
 		</div>
 	);
 }
+
+export const SignUpDialog = withReduxProps(SignUpDialogComponent);

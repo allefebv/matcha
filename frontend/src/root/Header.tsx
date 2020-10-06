@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/30 15:22:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:57:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ import { SignUpDialog } from "../component/SignUpDialog";
 import * as constants from "../services/constants";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
+	loggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;

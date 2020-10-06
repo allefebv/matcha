@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:57:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../services/constants";
 import { fetchApi } from "../services/fetchApi";
+import { actionUser_signin } from "../store/user/action";
+import { useHistory } from "react-router-dom";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
-	user: state.user.signin.user,
+	loggedIn: state.user.isLoggedIn,
+	user: state.user.user,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -33,6 +35,7 @@ type Props = {} & ReduxProps;
 function DeleteAccountDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	let [password, setPassword] = useState<string | null>("");
+	const history = useHistory();
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -68,12 +71,15 @@ function DeleteAccountDialogComponent(props: Props) {
 				credentials: "include",
 			}
 		)
-			.then(() => {})
+			.then(() => {
+				props.dispatch(actionUser_signin({ user: null, token: null }));
+				history.push(constants.LANDING_ROUTE);
+			})
 			.catch((error) => {});
 	};
 
 	return (
-		<div>
+		<React.Fragment>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
 				Delete Account
 			</Button>
@@ -86,6 +92,7 @@ function DeleteAccountDialogComponent(props: Props) {
 					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
 					<DialogContent>
 						<TextField
+							autoFocus
 							margin="dense"
 							label="Password"
 							type="password"
@@ -110,7 +117,7 @@ function DeleteAccountDialogComponent(props: Props) {
 					</DialogActions>
 				</form>
 			</Dialog>
-		</div>
+		</React.Fragment>
 	);
 }
 

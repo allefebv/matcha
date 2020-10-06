@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:56:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ import { ProfilePictures } from "../component/ProfilePictures";
 import { Iprofile } from "../types/types";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
+	loggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -30,12 +30,16 @@ const UserProfilePageComponent = (props: Props) => {
 		firstName: "",
 		lastName: "",
 		userName: "",
-		location: null,
-		age: null,
+		birthDay: null,
 		gender: null,
 		sexualOrientation: null,
-		tagList: null,
 		bio: null,
+		location: {
+			geoLocationAuthorization: false,
+			geoLocation: null,
+			usageLocation: null,
+		},
+		tagList: null,
 		imgs: {
 			img0: null,
 			img1: null,

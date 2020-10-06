@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 13:25:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 19:24:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,30 @@ export const URI_GET_PROFILE = "/profile/getProfile";
 export const URI_POST_PICTURES = "/profile/handleImage";
 export const URI_POST_PROFILE = "/profile/addProfile";
 export const URI_POST_TAGS = "/tag/addTagProfile";
+export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
+
+export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
+export const URI_REVERSE_GEOCODING_API =
+	"https://us1.locationiq.com/v1/reverse.php?key=";
+export const PARAMETERS_REVERSE_GEOCODING_API =
+	"&zoom=12&accept-language=fr&normalizeaddress=1&postaladdress=1&statecode=1&format=json";
+
+export const URI_AUTOCOMPLETE_API =
+	"https://api.locationiq.com/v1/autocomplete.php?key=";
+export const PARAMETERS_AUTOCOMPLETE_API =
+	"limit=5&tag=" + encodeURIComponent("place:city,place:town");
 
 export const POST_METHOD = "POST";
+export const GET_METHOD = "GET";
+
+export const FRONT_URL = "localhost:3000";
 
 export const LANDING_ROUTE = "/";
 export const SEARCH_ROUTE = "/search";
 export const ACCOUNT_SETTINGS_ROUTE = "/account-settings";
 export const USER_PROFILE_ROUTE = "/my-profile";
 export const PROFILE_CREATION_ROUTE = "/profile-creation";
+export const ACCOUNT_ACTIVATION_ROUTE = "/account-activation";
 
 export const EMAIL_HELPER_ERROR = "Invalid Email";
 export const PASSWORD_HELPER_ERROR =

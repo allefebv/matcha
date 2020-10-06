@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/01 12:10:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/06 20:57:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ import { Footer } from "./Footer";
 import { Grid } from "@material-ui/core";
 import { UserProfilePage } from "./UserProfilePage";
 import { ProfileCreationPage } from "./ProfileCreationPage";
+import { Router } from "./Router";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
+	loggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -64,35 +65,7 @@ export class AppComponent extends React.Component<Props> {
 						justify="center"
 						alignItems="center"
 					>
-						<Switch>
-							<Route
-								exact
-								path={constants.LANDING_ROUTE}
-								component={
-									this.props.loggedIn ? MainPage : LandingPage
-								}
-							/>
-							<PrivateRoute
-								path={constants.SEARCH_ROUTE}
-								isLogged={this.props.loggedIn}
-								component={MainPage}
-							/>
-							<PrivateRoute
-								path={constants.ACCOUNT_SETTINGS_ROUTE}
-								isLogged={this.props.loggedIn}
-								component={AccountSettingsPage}
-							/>
-							<PrivateRoute
-								path={constants.USER_PROFILE_ROUTE}
-								isLogged={this.props.loggedIn}
-								component={UserProfilePage}
-							/>
-							<PrivateRoute
-								path={constants.PROFILE_CREATION_ROUTE}
-								isLogged={this.props.loggedIn}
-								component={ProfileCreationPage}
-							/>
-						</Switch>
+						<Router />
 					</Grid>
 					<Grid
 						item

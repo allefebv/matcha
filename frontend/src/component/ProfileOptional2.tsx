@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ProfileOptional2.tsx                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/06 17:49:55 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 
-import { Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, makeStyles, TextField, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
 import { Iprofile } from "../types/types";
@@ -14,7 +26,15 @@ interface Props {
 	profile: Iprofile;
 }
 
+const useStyles = makeStyles({
+	label: {
+		color: "white",
+	},
+});
+
 export function ProfileOptional2(props: Props) {
+	const classes = useStyles();
+
 	function handleChangeTags(
 		e: React.ChangeEvent<{}>,
 		value: string | string[],

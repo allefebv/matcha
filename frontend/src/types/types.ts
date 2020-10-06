@@ -6,9 +6,30 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/02 11:36:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/05 19:38:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+export interface Ilocation {
+	geoLocationAuthorization: boolean;
+	geoLocation: Iaddress | null;
+	usageLocation: Iaddress | null;
+}
+
+export interface Iaddress {
+	city: string | null;
+	postCode: string | null;
+	countryCode: string | null;
+	country: string | null;
+	isFromGeolocation: boolean;
+	lat: number;
+	lon: number;
+}
+
+export interface Icoordinates {
+	latitude: number;
+	longitude: number;
+}
 
 export interface user {
 	id: number;
@@ -31,14 +52,14 @@ export interface Iprofile {
 	id?: number;
 	userId?: number;
 	popularityScore?: string;
-	age: number | null;
+	birthDay: Date | null;
 	userName: string;
 	firstName: string;
 	lastName: string;
 	gender: string | null;
 	sexualOrientation: string | null;
-	location: string | null;
 	bio: string | null;
+	location: Ilocation;
 	tagList: string[] | null;
 	imgs: Iimgs;
 }
