@@ -47,10 +47,8 @@ export async function getProfileController(req: Request, res: Response) {
 				}
 			})
 		);
-		if (profile) {
-			res.status(200).json({ profile: profile, tag: listTag });
-			return;
-		}
+		res.status(200).json({ profile: profile, tag: listTag });
+		return;
 	}
 	res.status(400).send("An error occured");
 }
