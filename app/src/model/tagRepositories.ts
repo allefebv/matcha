@@ -27,10 +27,10 @@ export function getTagById(id: number): Promise<tag | null> {
 	});
 }
 
-export function getTagProfile(id: number): Promise<tagProfile[] | null> {
+export function getTagProfile(id: number): Promise<{ tag: string }[] | null> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM tagProfile WHERE profileId = ${id}`;
-		dataBase.query(sql, (error: string, result: tagProfile[]) => {
+		const sql = `SELECT tag.tag FROM tagProfile INNER JOIN tag WHERE tagProfile.profileId = ${id}`;
+		dataBase.query(sql, (error: string, result: { tag: string }[]) => {
 			if (error) {
 				console.log(error);
 				reject(null);
@@ -57,10 +57,7 @@ export function addTag(tag: string): Promise<tag | null> {
 	});
 }
 
-export function addTagProfile(
-	profileId: number,
-	tagId: number
-): Promise<tagProfile | null> {
+export function addTagProfile(profileId: number, tagId: number): Promise<tagProfile | null> {
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO tagProfile (
 			tagId,
@@ -79,10 +76,7 @@ export function addTagProfile(
 	});
 }
 
-export function deleteTagProfile(
-	tagId: number,
-	profileId: number
-): Promise<boolean> {
+export function deleteTagProfile(tagId: number, profileId: number): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `DELETE FROM tagProfile WHERE tagId = ${tagId} AND profileId = ${profileId}`;
 		dataBase.query(sql, (error: string, result: tagProfile) => {

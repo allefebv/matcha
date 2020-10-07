@@ -21,7 +21,6 @@ import { addUserValidation } from '../services/userValidation';
 
 export async function addUserController(req: Request, res: Response) {
 	let { email, password } = req.body;
-
 	const userValidation = await addUserValidation(email, password, res);
 	if (userValidation) {
 		password = crypto.createHash("sha512").update(password).digest("hex");
@@ -36,10 +35,7 @@ export async function addUserController(req: Request, res: Response) {
 				},
 				token: generateTokenForUser(user),
 			});
-			activatedUserMailer(
-				user,
-				`${req.body.url}?activationKey=${user.activationKey}&id=${user.id}`
-			);
+			activatedUserMailer(user, `${req.body.redirectUrl}?activationKey=${user.activationKey}&id=${user.id}`);
 			return;
 		}
 		res.status(400).send("ERROR_OCCURED");
@@ -68,16 +64,10 @@ export async function loginUserController(req: Request, res: Response) {
 export async function changePasswordController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const password = crypto
-			.createHash("sha512")
-			.update(req.body.password)
-			.digest("hex");
+		const password = crypto.createHash("sha512").update(req.body.password).digest("hex");
 		const user = await getUserById(jwt.decoded.id);
 		if (user.password === password) {
-			const newPassword = crypto
-				.createHash("sha512")
-				.update(req.body.newPassword)
-				.digest("hex");
+			const newPassword = crypto.createHash("sha512").update(req.body.newPassword).digest("hex");
 			const result = await changePassword(jwt.decoded.id, newPassword);
 			if (result) {
 				res.status(200).send("Password change");
@@ -91,10 +81,7 @@ export async function changePasswordController(req: Request, res: Response) {
 export async function changeEmailController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
-		const password = crypto
-			.createHash("sha512")
-			.update(req.body.password)
-			.digest("hex");
+		const password = crypto.createHash("sha512").update(req.body.password).digest("hex");
 		const user = await getUserById(jwt.decoded.id);
 		if (user.password === password) {
 			newEmailMailer(
@@ -122,10 +109,7 @@ export async function resetPasswordController(req: Request, res: Response) {
 	const user = await getUserByEmail(req.body.email);
 	if (user) {
 		const newPassword = generatePassword();
-		const newPasswordHash = crypto
-			.createHash("sha512")
-			.update(newPassword)
-			.digest("hex");
+		const newPasswordHash = crypto.createHash("sha512").update(newPassword).digest("hex");
 		const result = await changePassword(user.id, newPasswordHash);
 		if (result) {
 			newPasswordMailer(user, newPassword);
@@ -153,10 +137,7 @@ export async function deleteUserController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const user = await getUserById(jwt.decoded.id);
-		const password = crypto
-			.createHash("sha512")
-			.update(req.body.password)
-			.digest("hex");
+		const password = crypto.createHash("sha512").update(req.body.password).digest("hex");
 		if (password === user.password) {
 			const deleteResult = await deleteUser(jwt.decoded.id);
 			if (deleteResult) {

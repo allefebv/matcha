@@ -16,10 +16,12 @@ export async function addTagProfileController(req: Request, res: Response) {
 	if (jwt && jwt.isLogin) {
 		const tabResult = [];
 		const tagProfileList = await getTagProfile(jwt.decoded.id);
-		const tagList = await Promise.all(
-			tagProfileList.map(async (item) => {
-				const tag = await getTagById(item.tagId);
-				return tag.tag;
+		const tagList: string[] = [];
+		await Promise.all(
+			tagProfileList.map((tag) => {
+				if (!tagList.includes(tag.tag)) {
+					tagList.push(tag.tag);
+				}
 			})
 		);
 		await Promise.all(
@@ -54,17 +56,22 @@ export async function deleteTagProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const tagProfilelist = await getTagProfile(jwt.decoded.id);
+		const tagList: string[] = [];
+		await Promise.all(
+			tagProfilelist.map((tag) => {
+				if (!tagList.includes(tag.tag)) {
+					tagList.push(tag.tag);
+				}
+			})
+		);
 		const profile = await getProfileByUserId(jwt.decoded.id);
 		const tag = await getTag(req.body.tag);
-		if (tagProfilelist && tagProfilelist.length) {
+		if (tagList.length) {
 			let isDeletedTagProfile = false;
 			await Promise.all(
-				tagProfilelist.map(async (tagProfile) => {
-					if (tagProfile.tagId === tag.id) {
-						isDeletedTagProfile = await deleteTagProfile(
-							tagProfile.tagId,
-							profile.userId
-						);
+				tagList.map(async (tagProfile) => {
+					if (tagProfile === tag.tag) {
+						isDeletedTagProfile = await deleteTagProfile(tag.id, profile.userId);
 						return;
 					}
 				})

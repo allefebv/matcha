@@ -17,11 +17,9 @@ export async function handleImagesController(req: Request, res: Response) {
 				tabImg.push([i, req.files[i]]);
 			}
 		}
-		console.log(tabImg);
 		tabImg.map((img) => {
 			const mimetype = img[1].mimetype.split("/");
-			const path =
-				"./images/" + profile.username + "/" + img[0] + "." + mimetype[1];
+			const path = "./images/" + profile.username + "/" + img[0] + "." + mimetype[1];
 			img[1].mv(path);
 		});
 		res.send("ok");
@@ -36,12 +34,7 @@ export async function getImagesController(req: Request, res: Response) {
 
 		const getFile = (file: string): Promise<string> => {
 			return new Promise((resolve) => {
-				const pathImage = path.join(
-					__dirname,
-					"../../images/",
-					profile.username,
-					file
-				);
+				const pathImage = path.join(__dirname, "../../images/", profile.username, file);
 				fs.readFile(pathImage, (error, data) => {
 					if (error) {
 						resolve(null);

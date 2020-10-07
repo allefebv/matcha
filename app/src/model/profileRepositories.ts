@@ -14,9 +14,20 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 	});
 }
 
-export function getProfileByUsername(
-	username: string
-): Promise<profile | null> {
+export function getProfileTest(id: number): Promise<profile[] | null> {
+	return new Promise((resolve) => {
+		const sql = `SELECT * FROM profile INNER JOIN tagProfile ON profile.userId = tagProfile.profileId`;
+		dataBase.query(sql, (error: string, result: profile[]) => {
+			if (error) {
+				console.log(error);
+				resolve(null);
+			}
+			resolve(result);
+		});
+	});
+}
+
+export function getProfileByUsername(username: string): Promise<profile | null> {
 	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE username = '${username}'`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
@@ -25,6 +36,19 @@ export function getProfileByUsername(
 				resolve(null);
 			}
 			resolve(result.length ? result[0] : null);
+		});
+	});
+}
+
+export function getProfileListByLocation(id: number, tabLocation: any[]): Promise<profile[] | null> {
+	return new Promise((resolve, reject) => {
+		const sql = `SELECT * FROM profile WHERE userId != ${id}`;
+		dataBase.query(sql, (error: string, result: profile[]) => {
+			if (error) {
+				console.log(error);
+				reject(null);
+			}
+			resolve(result.length ? result : null);
 		});
 	});
 }
@@ -51,14 +75,9 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			firstname,
 			lastname,
 			genre,
+			geoLocationAuthorization,
 			sexualOrientation,
-			location,
-			bio,
-			img0,
-			img1,
-			img2,
-			img3,
-			img4
+			bio
 		) VALUES (
 			${userId},
 			${profile.age},
@@ -66,14 +85,9 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.firstname}',
 			'${profile.lastname}',
 			'${profile.genre}',
+			${profile.geoLocationAuthorization},
 			'${profile.sexualOrientation}',
-			'${profile.location}',
-			'${profile.bio}',
-			'${profile.img0}',
-			'${profile.img1}',
-			'${profile.img2}',
-			'${profile.img3}',
-			'${profile.img4}'
+			'${profile.bio}'
 		)`;
 		dataBase.query(sql, async (error: string) => {
 			if (error) {
@@ -85,10 +99,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 	});
 }
 
-export function updateProfile(
-	profile: profile,
-	userId: number
-): Promise<boolean> {
+export function updateProfile(profile: profile, userId: number): Promise<boolean> {
 	return new Promise((resolve) => {
 		const sql = `UPDATE profile SET
 			age = ${profile.age},
@@ -97,7 +108,7 @@ export function updateProfile(
 			lastname= '${profile.lastname}',
 			genre = '${profile.genre}',
 			sexualOrientation = '${profile.sexualOrientation}',
-			location = '${profile.location}',
+			location = '${profile.geoLocationAuthorization}',
 			bio = '${profile.bio}'
 		WHERE userId = ${userId}`;
 		dataBase.query(sql, async (error: string) => {

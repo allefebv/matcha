@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/29 13:35:37 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:15:29 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ let dataBase = null;
 
 function initMysql() {
 	dataBase = createConnection({
-		host: 'fj199397-001.dbaas.ovh.net',
+		host: "fj199397-001.dbaas.ovh.net",
 		port: 35833,
-		user: 'jfleury',
-		database: 'matcha',
-		password: 'Matcha1234',
+		user: "jfleury",
+		database: "matcha",
+		password: "Matcha1234",
 	});
 	dataBase.connect((error) => {
 		if (error) {
 			throw error;
 		}
-		console.log('\x1b[33m' + 'mysql connected' + '\x1b[0m');
+		console.log("\x1b[33m" + "mysql connected" + "\x1b[0m");
 	});
 }
 
@@ -42,7 +42,7 @@ export async function addTableUser() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table user created');
+			console.log("Table user created");
 			resolve();
 		});
 	});
@@ -53,13 +53,13 @@ export async function addTableProfile() {
 		const sql = `CREATE TABLE profile (
 			userId							INTEGER NOT NULL,
 			age								INTEGER NOT NULL,
-			popularityScore					INTEGER DEFAULT 4000 NOT NULL,
+			popularityScore					INTEGER DEFAULT 50 NOT NULL,
 			username	 					TEXT NOT NULL,
 			firstname						TEXT NOT NULL,
 			lastname						TEXT NOT NULL,
 			genre							TEXT NOT NULL,
+			geoLocationAuthorization		BOOLEAN DEFAULT 0 NOT NULL,
 			sexualOrientation				TEXT,
-			location						TEXT,
 			bio								TEXT,
 			img0							TEXT,
 			img1							TEXT,
@@ -70,7 +70,47 @@ export async function addTableProfile() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table profile created');
+			console.log("Table profile created");
+			resolve();
+		});
+	});
+}
+
+export async function addTableGeoLocation() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE geoLocation (
+			userId							INTEGER NOT NULL,
+		    city							TEXT,
+    		postCode						TEXT,
+    		countryCode						TEXT,
+    		country							TEXT,
+    		lat								INTEGER,
+    		lng								INTEGER,
+			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log("Table geoLocation created");
+			resolve();
+		});
+	});
+}
+
+export async function addTableUsageLocation() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE usageLocation (
+			userId							INTEGER NOT NULL,
+		    city							TEXT NOT NULL,
+    		postCode						TEXT,
+    		countryCode						TEXT,
+    		country							TEXT,
+    		lat								INTEGER,
+    		lng								INTEGER,
+			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log("Table usageLocation created");
 			resolve();
 		});
 	});
@@ -86,7 +126,7 @@ export function addTableLike() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table likeProfile created');
+			console.log("Table likeProfile created");
 			resolve();
 		});
 	});
@@ -106,7 +146,7 @@ export async function addTableNotification() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table notificationProfile created');
+			console.log("Table notificationProfile created");
 			resolve();
 		});
 	});
@@ -120,7 +160,7 @@ export async function addTableTag() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table tag created');
+			console.log("Table tag created");
 			resolve();
 		});
 	});
@@ -136,7 +176,7 @@ export async function addTableTagProfile() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table tagProfile created');
+			console.log("Table tagProfile created");
 			resolve();
 		});
 	});
@@ -153,7 +193,7 @@ export async function addTableViewProfile() {
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
-			console.log('Table viewProfile created');
+			console.log("Table viewProfile created");
 			resolve();
 		});
 	});
@@ -171,13 +211,17 @@ export async function dropTable(nameTable: string) {
 }
 async function main() {
 	initMysql();
-	//dropTable('viewProfile');
-	//await addTableUser();
-	//await addTableProfile();
-	//await addTableLike();
-	//await addTableNotification();
-	//await addTableTag();
-	//await addTableTagProfile();
-	//await addTableViewProfile();
+	//dropTable("profile");
+	/*
+	await addTableUser();
+	await addTableProfile();
+	await addTableUsageLocation();
+	await addTableGeoLocation();
+	await addTableLike();
+	await addTableNotification();
+	await addTableTag();
+	await addTableTagProfile();
+	await addTableViewProfile();
+	*/
 }
 main();
