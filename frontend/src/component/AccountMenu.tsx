@@ -6,18 +6,21 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:32:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import { actionUser_logout } from "../store/user/action";
+import { useHistory } from "react-router-dom";
+
+import * as constants from "../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -27,6 +30,7 @@ type Props = {} & ReduxProps;
 
 const AccountMenuComponent = (props: Props) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+	const history = useHistory();
 
 	function handleClick(event: React.MouseEvent) {
 		setAnchorEl(event.currentTarget);
@@ -39,6 +43,7 @@ const AccountMenuComponent = (props: Props) => {
 	function handleLogout() {
 		handleClose();
 		props.dispatch(actionUser_logout({ user: null, token: null }));
+		history.push(constants.LANDING_ROUTE);
 	}
 
 	return (

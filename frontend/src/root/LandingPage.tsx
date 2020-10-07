@@ -1,4 +1,3 @@
-import { Grid } from "@material-ui/core";
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,13 +6,17 @@ import { Grid } from "@material-ui/core";
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 21:20:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:48:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SignInDialog } from "../component/SignInDialog";
 import { SignUpDialog } from "../component/SignUpDialog";
+import { Redirect } from "react-router-dom";
+import { connect, ConnectedProps } from "react-redux";
+import * as constants from "../services/constants";
+import { Grid } from "@material-ui/core";
 
 const styleLanding: React.CSSProperties = {
 	position: "absolute",
@@ -44,29 +47,46 @@ const styleImg: React.CSSProperties = {
 	msUserSelect: "none",
 };
 
-interface Props {}
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
-export const LandingPage = (props: Props) => {
+const LandingPageComponent = (props: Props) => {
 	const bg = require("../images/background2.jpg");
 	const isMobile = window.innerWidth < 480;
+	const [redirect, setRedirect] = useState<string | null>(null);
 
-	return (
-		<React.Fragment>
-			<img src={bg} style={styleImg}></img>
-			<Grid
-				item
-				container
-				justify="center"
-				alignItems="center"
-				style={styleLanding}
-			>
-				{isMobile && (
-					<React.Fragment>
-						<SignInDialog />
-						<SignUpDialog />
-					</React.Fragment>
-				)}
-			</Grid>
-		</React.Fragment>
-	);
+	useEffect(() => {
+		if (props.loggedIn) {
+			setRedirect(constants.SEARCH_ROUTE);
+		}
+	}, [props.loggedIn]);
+
+	if (redirect !== null) {
+		return <Redirect to={redirect} />;
+	} else {
+		return (
+			<React.Fragment>
+				<img src={bg} style={styleImg} alt=""></img>
+				<Grid
+					item
+					container
+					justify="center"
+					alignItems="center"
+					style={styleLanding}
+				>
+					{isMobile && (
+						<React.Fragment>
+							<SignInDialog />
+							<SignUpDialog />
+						</React.Fragment>
+					)}
+				</Grid>
+			</React.Fragment>
+		);
+	}
 };
+
+export const LandingPage = withReduxProps(LandingPageComponent);

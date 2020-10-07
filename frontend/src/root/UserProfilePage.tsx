@@ -6,15 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:56:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:10:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
 import { ProfileCardsScroll } from "../component/ProfileCardsScroll";
-import { fetchApi } from "../services/fetchApi";
-import * as constants from "../services/constants";
+import { getProfileAPI } from "../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { ProfilePictures } from "../component/ProfilePictures";
 import { Iprofile } from "../types/types";
@@ -50,26 +49,15 @@ const UserProfilePageComponent = (props: Props) => {
 	});
 
 	useEffect(() => {
-		function handleProfile() {
-			fetchApi<{ profile: Iprofile }>(
-				constants.URL + constants.URI_GET_PROFILE,
-				{
-					method: constants.POST_METHOD,
-					headers: {
-						"Content-Type": "application/json",
-						token: props.loggedIn,
-					},
-					credentials: "include",
-				}
-			)
-				.then(({ profile }) => {
-					setProfile(profile);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		}
-	});
+		getProfileAPI(props.loggedIn)
+			.then(({ profile }) => {
+				setProfile(profile);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<Grid item container direction="row" style={{ height: "100%" }}>

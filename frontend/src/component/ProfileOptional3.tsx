@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/05 20:17:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:39:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ import MyLocationIcon from "@material-ui/icons/MyLocation";
 import { Iprofile } from "../types/types";
 import * as constants from "../services/constants";
 import { throttle } from "lodash";
-import { renameKey } from "../services/renameKey";
+import { renameKey } from "../services/utils";
 
 interface Props {
 	activeStep: number;
@@ -38,7 +38,6 @@ export function ProfileOptional3(props: Props) {
 
 	const getOptions = useCallback(
 		throttle((input: string, location: any) => {
-			console.log("INPUT ??", input);
 			fetch(
 				constants.URI_AUTOCOMPLETE_API +
 					constants.LOCATION_IQ_API_KEY +
@@ -54,7 +53,6 @@ export function ProfileOptional3(props: Props) {
 					}
 					const jsonTmp = createAddressFromJson(json);
 					jsonTmp.unshift(location);
-					console.log("API RESULT : ", json);
 					setOptions(jsonTmp);
 				});
 		}, 1300),
@@ -86,8 +84,10 @@ export function ProfileOptional3(props: Props) {
 	};
 
 	useEffect(() => {
-		console.log("OPTIONS : ", options);
-	}, [options]);
+		if (inputValue && props.profile.location) {
+			getOptions(inputValue, props.profile.location.geoLocation);
+		}
+	}, [inputValue, props.profile, getOptions]);
 
 	useEffect(() => {
 		if (
@@ -96,13 +96,8 @@ export function ProfileOptional3(props: Props) {
 			!options.length
 		) {
 			setOptions([props.profile.location.geoLocation]);
-			return undefined;
 		}
-
-		if (inputValue && props.profile.location) {
-			getOptions(inputValue, props.profile.location.geoLocation);
-		}
-	}, [value, inputValue, props.profile]);
+	}, [options, props.profile.location]);
 
 	const handleInputChange = (
 		event: React.ChangeEvent<{}>,

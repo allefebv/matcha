@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:10:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:24:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,37 +18,39 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { fetchApi } from "../services/fetchApi";
+import { getProfileAPI, signinAPI } from "../services/apiCalls";
 import * as constants from "../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
-
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signin } from "../store/user/action";
+import { actionUser_signin, actionUser_getProfile } from "../store/user/action";
 
-import { useHistory } from "react-router-dom";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
-import { user } from "../types/types";
-
-const withReduxProps = connect((state: any) => ({}));
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 function SignInDialogComponent(props: Props) {
-	const [open, setOpen] = React.useState(false);
-	let [email, setEmail] = React.useState<string | null>("");
-	let [emailError, setEmailError] = React.useState(false);
-	const [password, setPassword] = React.useState<string | null>("");
-	let [passwordError, setPasswordError] = React.useState(false);
-
-	const history = useHistory();
+	const [open, setOpen] = useState(false);
+	let [email, setEmail] = useState<string>("");
+	let [emailError, setEmailError] = useState(false);
+	const [password, setPassword] = useState<string>("");
+	let [passwordError, setPasswordError] = useState(false);
+	let [snackbar, setSnackbar] = useState(false);
 
 	const handleClickOpen = () => {
+		setEmailError(false);
+		setPasswordError(false);
+		setPassword("");
 		setOpen(true);
 	};
 
 	const handleClose = () => {
 		setOpen(false);
-		setPassword(null);
+		setPassword("");
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -79,31 +81,40 @@ function SignInDialogComponent(props: Props) {
 			email: email,
 			password: password,
 		};
+		signinAPI(details).then(async ({ user, token }) => {
+			// if (user.activated) {
+			handleClose();
+			console.log(token);
+			const profile = await getProfileAPI(token);
+			props.dispatch(actionUser_getProfile({ profile: profile.profile }));
+			props.dispatch(actionUser_signin({ user, token }));
+			// } else {
+			// 	setSnackbar(true);
+			// }
+		});
+	};
 
-		fetchApi<{ user: user; token: string }>(
-			constants.URL + constants.URI_SIGNIN,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: details,
-			}
-		)
-			.then(({ user, token }) => {
-				console.log(user);
-				props.dispatch(actionUser_signin({ user, token }));
-				handleClose();
-				history.push(constants.SEARCH_ROUTE);
-			})
-			.catch((error) => {
-				setEmailError(true);
-				setPasswordError(true);
-			});
+	const handleSnackbarClose = (
+		event?: React.SyntheticEvent,
+		reason?: string
+	) => {
+		if (reason === "clickaway") {
+			return;
+		}
+		setSnackbar(false);
 	};
 
 	return (
 		<div>
+			<Snackbar
+				open={snackbar}
+				autoHideDuration={6000}
+				onClose={handleSnackbarClose}
+			>
+				<Alert onClose={handleSnackbarClose} severity="error">
+					Please check your emails to activate your account
+				</Alert>
+			</Snackbar>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
 				Sign in
 			</Button>

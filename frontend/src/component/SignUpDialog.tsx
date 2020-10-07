@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:10:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:07:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { user } from "../types/types";
-
-import { fetchApi } from "../services/fetchApi";
+import { signupAPI } from "../services/apiCalls";
 import * as constants from "../services/constants";
 
 import { connect, ConnectedProps } from "react-redux";
@@ -98,19 +96,8 @@ function SignUpDialogComponent(props: Props) {
 			password: password,
 			redirectUrl: constants.FRONT_URL + constants.PROFILE_CREATION_ROUTE,
 		};
-
-		fetchApi<{ user: user; token: string }>(
-			constants.URL + constants.URI_SIGNUP,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: details,
-			}
-		)
+		signupAPI(details)
 			.then(({ user, token }) => {
-				console.log(user);
 				props.dispatch(actionUser_signup({ user, token }));
 				handleClose();
 			})

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   renameKey.ts                                       :+:      :+:    :+:   */
+/*   utils.ts                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/05 17:35:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:30:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,4 +16,13 @@ export const renameKey = (object: any, key: any, newKey: any) => {
 	delete clonedObj[key];
 	clonedObj[newKey] = tmp;
 	return clonedObj;
+};
+
+export const isBaseProfileComplete = (profile: any) => {
+	return (
+		profile !== null &&
+		profile.username &&
+		profile.firstName &&
+		profile.lastName
+	);
 };

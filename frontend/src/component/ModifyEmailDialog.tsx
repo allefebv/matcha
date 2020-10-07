@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:12:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../services/constants";
-import { fetchApi } from "../services/fetchApi";
+import { modifyEmailAPI } from "../services/apiCalls";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -69,15 +69,7 @@ function ModifyEmailDialogComponent(props: Props) {
 			password: password,
 		};
 
-		fetchApi(constants.URL + constants.URI_UPDATE_EMAIL, {
-			method: constants.POST_METHOD,
-			headers: {
-				"Content-Type": "application/json",
-				token: props.loggedIn,
-			},
-			body: details,
-			credentials: "include",
-		})
+		modifyEmailAPI(details, props.loggedIn)
 			.then(() => {})
 			.catch((error) => {
 				setEmailError(true);

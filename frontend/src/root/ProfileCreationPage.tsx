@@ -6,16 +6,18 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 19:30:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import { Grid } from "@material-ui/core";
 
 import { ProfileCreationStepper } from "../component/ProfileCreationStepper";
+import { Redirect } from "react-router-dom";
+import * as constants from "../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -25,21 +27,33 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const ProfileCreationPageComponent = (props: Props) => {
-	return (
-		<React.Fragment>
-			<Grid
-				item
-				container
-				xs={8}
-				md={6}
-				lg={3}
-				justify="center"
-				alignItems="center"
-			>
-				<ProfileCreationStepper />
-			</Grid>
-		</React.Fragment>
-	);
+	const [redirect, setRedirect] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (props.loggedIn === false) {
+			setRedirect(constants.LANDING_ROUTE);
+		}
+	}, []);
+
+	if (redirect !== null) {
+		return <Redirect to={redirect} />;
+	} else {
+		return (
+			<React.Fragment>
+				<Grid
+					item
+					container
+					xs={8}
+					md={6}
+					lg={3}
+					justify="center"
+					alignItems="center"
+				>
+					<ProfileCreationStepper />
+				</Grid>
+			</React.Fragment>
+		);
+	}
 };
 
 export const ProfileCreationPage = withReduxProps(ProfileCreationPageComponent);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:07:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../services/constants";
-import { fetchApi } from "../services/fetchApi";
+import { deleteAPI } from "../services/apiCalls";
 import { actionUser_signin } from "../store/user/action";
 import { useHistory } from "react-router-dom";
 
@@ -59,23 +59,10 @@ function DeleteAccountDialogComponent(props: Props) {
 			password: password,
 		};
 
-		fetchApi<{ user: Object; token: string }>(
-			constants.URL + constants.URI_DELETE_ACCOUNT,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-					token: props.loggedIn,
-				},
-				body: details,
-				credentials: "include",
-			}
-		)
-			.then(() => {
-				props.dispatch(actionUser_signin({ user: null, token: null }));
-				history.push(constants.LANDING_ROUTE);
-			})
-			.catch((error) => {});
+		deleteAPI(details, props.loggedIn).then(() => {
+			props.dispatch(actionUser_signin({ user: null, token: null }));
+			history.push(constants.LANDING_ROUTE);
+		});
 	};
 
 	return (

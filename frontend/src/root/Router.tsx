@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 19:04:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 18:33:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,23 @@ export class RouterComponent extends React.Component<Props> {
 	render() {
 		return (
 			<Switch>
-				<Route
-					exact
-					path={constants.LANDING_ROUTE}
-					component={this.props.loggedIn ? MainPage : LandingPage}
-				/>
+				<Route exact path={constants.LANDING_ROUTE} component={LandingPage} />
 				<Route
 					exact
 					path={constants.ACCOUNT_ACTIVATION_ROUTE}
 					component={ActivateAccountPage}
 				></Route>
-				<PrivateRoute
-					path={constants.SEARCH_ROUTE}
-					isLogged={this.props.loggedIn}
-					component={MainPage}
-				/>
+				<PrivateRoute path={constants.SEARCH_ROUTE} component={MainPage} />
 				<PrivateRoute
 					path={constants.ACCOUNT_SETTINGS_ROUTE}
-					isLogged={this.props.loggedIn}
 					component={AccountSettingsPage}
 				/>
 				<PrivateRoute
 					path={constants.USER_PROFILE_ROUTE}
-					isLogged={this.props.loggedIn}
 					component={UserProfilePage}
 				/>
-				<PrivateRoute
+				<Route
 					path={constants.PROFILE_CREATION_ROUTE}
-					isLogged={this.props.loggedIn}
 					component={ProfileCreationPage}
 				/>
 			</Switch>

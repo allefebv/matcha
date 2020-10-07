@@ -45,11 +45,15 @@ function ProfileCreationStepperComponent(props: Props) {
 	const [activeStep, setActiveStep] = useState(0);
 	const steps = getSteps();
 	const [geolocation, setGeolocation] = useState(props.currentGeolocation);
+<<<<<<< HEAD
 	const [loading, setLoading] = useState(false);
+=======
+>>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
 
 	useEffect(() => {
 		if (!geolocation) {
 			fetch("https://ipinfo.io/geo?token=11e860581699f1")
+<<<<<<< HEAD
 				.then((response) => {
 					if (!response.ok) {
 						throw new Error(response.statusText);
@@ -107,6 +111,40 @@ function ProfileCreationStepperComponent(props: Props) {
 					return;
 				});
 		} // eslint-disable-next-line react-hooks/exhaustive-deps
+=======
+				.then((response) => response.json())
+				.then((json) => {
+					const coordinates = json.loc.split(",");
+					fetch(
+						constants.URI_REVERSE_GEOCODING_API +
+							constants.LOCATION_IQ_API_KEY +
+							"&lat=" +
+							coordinates[0] +
+							"&lon=" +
+							coordinates[1] +
+							constants.PARAMETERS_REVERSE_GEOCODING_API
+					)
+						.then((response) => {
+							return response.json();
+						})
+						.then((json) => {
+							const tmp: Iaddress = {
+								city: json.address.city_district
+									? json.address.city_district
+									: json.address.city,
+								postCode: json.address.postcode,
+								countryCode: json.address.country_code,
+								country: json.address.country,
+								isFromGeolocation: true,
+								lat: parseInt(json.lat),
+								lon: parseInt(json.lon),
+							};
+							setGeolocation(tmp);
+							props.dispatch(actionUser_geolocation({ geolocation: tmp }));
+						});
+				});
+		}
+>>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
 	}, []);
 
 	function getSteps() {
@@ -165,7 +203,11 @@ function ProfileCreationStepperComponent(props: Props) {
 		);
 
 		if (Object.values(profile.imgs).some((value) => value !== null)) {
+<<<<<<< HEAD
 			return postPicturesAPI(data, props.loggedIn).then(() => {});
+=======
+			postPicturesAPI(data, props.loggedIn).then(() => {});
+>>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
 		}
 	}
 
@@ -175,12 +217,21 @@ function ProfileCreationStepperComponent(props: Props) {
 				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
 			)
 		);
+<<<<<<< HEAD
 		return postProfileAPI(body, props.loggedIn);
+=======
+
+		postProfileAPI(body, props.loggedIn).then(() => {});
+>>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
 	}
 
 	function submitTags() {
 		//TODO: hardcoded tags
+<<<<<<< HEAD
 		return postTagsAPI({}, props.loggedIn)
+=======
+		postTagsAPI({}, props.loggedIn)
+>>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
 			.then(() => {})
 			.catch((error) => {});
 	}

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/05 19:38:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 16:12:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,12 @@ export interface Iprofile {
 	location: Ilocation;
 	tagList: string[] | null;
 	imgs: Iimgs;
+}
+
+export interface IgetProfile {
+	profile: any;
+	tags: any;
+	location: any;
 }
 
 export interface like {

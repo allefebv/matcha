@@ -1,4 +1,17 @@
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   index.tsx                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/07 16:18:30 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
