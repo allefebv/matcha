@@ -13,18 +13,19 @@ import {
 } from './controller/likeController';
 import {
 	getGeoLocationController,
-	handleGeoLocationController
+	getUsageLocationController,
+	handleGeoLocationController,
+	handleUsageLocationController
 } from './controller/locationController';
 import {
 	addNotificationController,
 	getNotificationController
 } from './controller/notificationController';
 import {
-	addProfileController,
 	getAllProfileController,
 	getProfileByUsernameController,
 	getProfileController,
-	updateProfileController
+	handleProfileController
 } from './controller/profileController';
 import {
 	recommendationController
@@ -63,8 +64,7 @@ function profileRouter(app: Application) {
 	app.get("/profile/getProfile", (req: Request, res: Response) => getProfileController(req, res));
 	app.get("/profile/getAllProfile", (req: Request, res: Response) => getAllProfileController(req, res));
 	app.get("/profile/getProfileByUsername", (req: Request, res: Response) => getProfileByUsernameController(req, res));
-	app.post("/profile/addProfile", (req: Request, res: Response) => addProfileController(req, res));
-	app.post("/profile/updateProfile", (req: Request, res: Response) => updateProfileController(req, res));
+	app.post("/profile/handleProfile", (req: Request, res: Response) => handleProfileController(req, res));
 }
 
 function likeRouter(app: Application) {
@@ -101,6 +101,8 @@ function recommendationRouter(app: Application) {
 function loactionRouter(app: Application) {
 	app.get("/location/getGeoLocation", (req: Request, res: Response) => getGeoLocationController(req, res));
 	app.post("/location/handleGeoLocation", (req: Request, res: Response) => handleGeoLocationController(req, res));
+	app.get("/location/getUsageLocation", (req: Request, res: Response) => getUsageLocationController(req, res));
+	app.post("/location/handleUsageLocation", (req: Request, res: Response) => handleUsageLocationController(req, res));
 }
 
 export function router(app: Application) {

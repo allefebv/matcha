@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 
 import {
-	getAllProfile,
-	getProfileByUserId,
-	getProfileListByLocation
+	getProfileBySexualOriantation,
+	getProfileByUserId
 } from '../model/profileRepositories';
 import { recommendationAlgorithm } from '../services/ recommendationAlgorithm';
 import { jwtVerify } from '../services/jwt';
@@ -15,7 +14,7 @@ export async function recommendationController(req: Request, res: Response) {
 	if (jwt && jwt.isLogin) {
 		try {
 			const profile = await getProfileByUserId(jwt.decoded.id);
-			let profileList = await getAllProfile(jwt.decoded.id);
+			let profileList = await getProfileBySexualOriantation(profile.sexualOrientation);
 			//profileList = await locationAlgorithm(profile, profileList, 100);
 			profileList = await recommendationAlgorithm(profileList);
 			profileList = profileList.sort();

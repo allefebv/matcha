@@ -14,19 +14,6 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 	});
 }
 
-export function getProfileTest(id: number): Promise<profile[] | null> {
-	return new Promise((resolve) => {
-		const sql = `SELECT * FROM profile INNER JOIN tagProfile ON profile.userId = tagProfile.profileId`;
-		dataBase.query(sql, (error: string, result: profile[]) => {
-			if (error) {
-				console.log(error);
-				resolve(null);
-			}
-			resolve(result);
-		});
-	});
-}
-
 export function getProfileByUsername(username: string): Promise<profile | null> {
 	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE username = '${username}'`;
@@ -40,7 +27,7 @@ export function getProfileByUsername(username: string): Promise<profile | null> 
 	});
 }
 
-export function getProfileListByLocation(id: number, tabLocation: any[]): Promise<profile[] | null> {
+export function getAllProfile(id: number): Promise<profile[] | null> {
 	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM profile WHERE userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
@@ -53,9 +40,9 @@ export function getProfileListByLocation(id: number, tabLocation: any[]): Promis
 	});
 }
 
-export function getAllProfile(id: number): Promise<profile[] | null> {
+export function getProfileBySexualOriantation(sexualOriantation: string): Promise<profile[] | null> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM profile WHERE userId != ${id}`;
+		const sql = `SELECT * FROM profile WHERE sexualOriantation = ${sexualOriantation}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
 				console.log(error);
@@ -107,8 +94,8 @@ export function updateProfile(profile: profile, userId: number): Promise<boolean
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',
 			genre = '${profile.genre}',
+			geoLocationAuthorization = ${profile.geoLocationAuthorization},
 			sexualOrientation = '${profile.sexualOrientation}',
-			location = '${profile.geoLocationAuthorization}',
 			bio = '${profile.bio}'
 		WHERE userId = ${userId}`;
 		dataBase.query(sql, async (error: string) => {
