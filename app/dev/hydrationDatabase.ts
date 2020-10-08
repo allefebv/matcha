@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/28 11:39:54 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/07 16:32:34 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/08 13:18:25 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { createConnection } from 'mysql';
 import fetch from 'node-fetch';
+import { isTaggedTemplateExpression } from 'typescript';
 
+import { addUsageLocation } from '../src/model/locationRepositories';
 import {
 	addProfile,
 	getProfileByUserId
@@ -23,7 +25,7 @@ import { addUser, getUserByEmail } from '../src/model/userRepositories';
 import { profile } from '../types/types';
 
 let dataBase = null;
-const HOW_MANY_CREATE = 1000;
+const HOW_MANY_CREATE = 1;
 
 function initMysql() {
 	return new Promise((resolve) => {
@@ -52,6 +54,19 @@ function getData() {
 			})
 			.then((body) => {
 				resolve(JSON.parse(body));
+			});
+	});
+}
+
+function getDataLocation(param: string) {
+	return new Promise((resolve) => {
+		fetch(`https://api.opencagedata.com/geocode/v1/json?q=${param}&key=351942e01c514c05abe71bdb2fbd5811`)
+			.then((res) => {
+				return res.json();
+			})
+			.then((body) => {
+				console.log(body);
+				resolve(body);
 			});
 	});
 }
@@ -97,10 +112,21 @@ const femaleSexualOrientation = ["lesbian", "bisexual", "heterosexual"];
 					await addProfile(profileInfo as profile, user.id);
 					const profile = await getProfileByUserId(user.id);
 					if (profile) {
+						const result: any = await getDataLocation("France," + userApi.location.city.toString());
+						const location = {
+							city: userApi.location.city as string,
+							postCode: userApi.location.postcode.toString() as string,
+							countryCode: "fr",
+							country: userApi.location.country as string,
+							lat: result.results[0].geometry.lat as number,
+							lng: result.results[0].geometry.lng as number,
+						};
+						await addUsageLocation(user.id, location);
 						const userProfile = {
 							[profile.username]: {
 								user: user,
 								profile: profile,
+								location: location,
 							},
 						};
 						userList.push(userProfile);

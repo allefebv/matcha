@@ -21,7 +21,7 @@ async function profileScore(profile: profile): Promise<number> {
 }
 
 export async function recommendationAlgorithm(profileList: profile[]): Promise<profile[]> {
-	const resultTab = [];
+	const resultTab: { profile: profile; score: number }[] = [];
 
 	await Promise.all(
 		profileList.map(async (profile) => {
@@ -32,5 +32,12 @@ export async function recommendationAlgorithm(profileList: profile[]): Promise<p
 			});
 		})
 	);
-	return resultTab;
+	await Promise.all(resultTab.sort((a, b) => a.score - b.score));
+	const profileListResult: profile[] = [];
+	await Promise.all(
+		resultTab.map((result) => {
+			profileListResult.push(result.profile);
+		})
+	);
+	return profileListResult;
 }

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/07 16:42:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/08 12:27:44 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ export async function dropTable(nameTable: string) {
 async function main() {
 	initMysql();
 	//dropTable("profile");
-	/*
+
 	await addTableUser();
 	await addTableProfile();
 	await addTableUsageLocation();
@@ -217,6 +217,5 @@ async function main() {
 	await addTableTag();
 	await addTableTagProfile();
 	await addTableViewProfile();
-	*/
 }
 main();

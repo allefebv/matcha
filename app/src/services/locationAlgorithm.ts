@@ -1,7 +1,8 @@
 import { profile, pts } from '../../types/types';
+import { getUsageLocation } from '../model/locationRepositories';
 
-const EARTH_RAY = 6367.445;
-/*
+const EARTH_RAY = 6367445;
+
 const radianConversion = (degree: number) => degree * (Math.PI / 180);
 
 const distanceConversion = (a: number, b: number, c: number, d: number) =>
@@ -21,17 +22,21 @@ export function locationAlgorithm(
 	distanceInKm: number
 ): Promise<profile[]> {
 	return new Promise(async (resolve) => {
-		let profileFilter: profile[];
+		let profileFilter: profile[] = [];
+		const locationProfile = await getUsageLocation(profileLocation.userId);
 		await Promise.all(
-			(profileFilter = profileList.filter(
-				(profileCompare) =>
+			profileList.map(async (profileCompare) => {
+				const locationProfileCompare = await getUsageLocation(profileCompare.userId);
+				const result =
 					calculateLocation(
-						{ lat: profileLocation.lat, lng: profileLocation.lng },
-						{ lat: profileCompare.lat, lng: profileCompare.lng }
-					) > distanceInKm
-			))
+						{ lat: locationProfile.lat, lng: locationProfile.lng },
+						{ lat: locationProfileCompare.lat, lng: locationProfileCompare.lng }
+					) / 1000;
+				if (result < distanceInKm) {
+					profileFilter.push(profileCompare);
+				}
+			})
 		);
 		resolve(profileFilter);
 	});
 }
-*/

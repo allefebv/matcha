@@ -18,7 +18,7 @@ export async function getProfileController(req: Request, res: Response) {
 			const profile = await shapingProfile(await getProfileByUserId(jwt.decoded.id));
 			res.status(200).json(profile);
 		} catch {
-			res.status(400).send("An error occured");
+			res.status(400).send("No profile exists for this user");
 		}
 	}
 }
@@ -36,18 +36,6 @@ export async function getProfileByUsernameController(req: Request, res: Response
 }
 
 export async function getAllProfileController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		try {
-			const profileList = await getAllProfile(jwt.decoded.id);
-			res.status(200).json(profileList);
-		} catch {
-			res.status(400).send("An error occured");
-		}
-	}
-}
-
-export async function getProfileBySexualOriantationController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		try {

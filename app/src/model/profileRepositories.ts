@@ -40,9 +40,9 @@ export function getAllProfile(id: number): Promise<profile[] | null> {
 	});
 }
 
-export function getProfileBySexualOriantation(sexualOriantation: string): Promise<profile[] | null> {
+export function getProfileBySexualOriantation(id: number, sexualOriantation: string): Promise<profile[] | null> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM profile WHERE sexualOriantation = ${sexualOriantation}`;
+		const sql = `SELECT * FROM profile WHERE sexualOrientation = '${sexualOriantation}' AND userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
 				console.log(error);

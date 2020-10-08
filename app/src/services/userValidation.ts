@@ -13,10 +13,9 @@ const validationPassword = (password: string): Promise<string | null> =>
 
 const validationEmail = (email: string): Promise<string | null> =>
 	new Promise(async (resolve) => {
+		email = email.toLowerCase();
 		const newUserEmailExist = await getUserByEmail(email);
-		const emailRegex = new RegExp(
-			/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-		);
+		const emailRegex = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 		if (newUserEmailExist) {
 			resolve("EMAIL_EXSIST");
 		}
@@ -26,18 +25,11 @@ const validationEmail = (email: string): Promise<string | null> =>
 		resolve(null);
 	});
 
-export const addUserValidation = async (
-	email: string,
-	password: string,
-	res: Response
-): Promise<boolean> => {
+export const addUserValidation = async (email: string, password: string, res: Response): Promise<boolean> => {
 	const passwordValidation = validationPassword(password);
 	const emailValidation = validationEmail(email);
 
-	let result: string[] = await Promise.all([
-		passwordValidation,
-		emailValidation,
-	]);
+	let result: string[] = await Promise.all([passwordValidation, emailValidation]);
 	result = result.filter((item) => item);
 	if (result.length) {
 		res.status(400).send(result);

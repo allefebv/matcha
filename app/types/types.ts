@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/06 15:43:32 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/08 11:20:46 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ export interface location {
 	postCode: string | null;
 	countryCode: string | null;
 	country: string | null;
-	isFromGeolocation: boolean;
 	lat: number;
 	lng: number;
 }
