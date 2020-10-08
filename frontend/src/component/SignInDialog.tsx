@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 15:12:21 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:38:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,9 @@ function SignInDialogComponent(props: Props) {
 		signinAPI(details).then(async ({ user, token }) => {
 			// if (user.activated) {
 			handleClose();
-			const profile = await getProfileAPI(token);
+			const profile = await getProfileAPI(token).catch((error) =>
+				console.log(error.message)
+			);
 			if (profile) {
 				props.dispatch(
 					actionUser_getProfile({ profile: profile.profile })

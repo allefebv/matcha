@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 20:07:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:33:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,17 @@ function SignUpDialogComponent(props: Props) {
 				setEmailError(true);
 				setPasswordError(true);
 				setPasswordConfirmError(true);
+				console.log(error.message);
 			});
 	};
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Sign up
 			</Button>
 			<Dialog
@@ -131,7 +136,9 @@ function SignUpDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							helperText={
+								emailError && constants.EMAIL_HELPER_ERROR
+							}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -143,7 +150,9 @@ function SignUpDialogComponent(props: Props) {
 							value={password}
 							onChange={handlePassword}
 							error={passwordError}
-							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							helperText={
+								passwordError && constants.PASSWORD_HELPER_ERROR
+							}
 						/>
 						<TextField
 							margin="dense"
@@ -155,7 +164,8 @@ function SignUpDialogComponent(props: Props) {
 							onChange={handlePasswordConfirm}
 							error={passwordConfirmError}
 							helperText={
-								passwordConfirmError && constants.PASSWORD_CONFIRM_HELPER_ERROR
+								passwordConfirmError &&
+								constants.PASSWORD_CONFIRM_HELPER_ERROR
 							}
 						/>
 					</DialogContent>
