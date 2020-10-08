@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 17:38:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:07:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ import * as constants from "../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_signin, actionUser_getProfile } from "../store/user/action";
-
-import { Snackbar } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { actionUi_showSnackbar } from "../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -39,7 +37,6 @@ function SignInDialogComponent(props: Props) {
 	let [emailError, setEmailError] = useState(false);
 	const [password, setPassword] = useState<string>("");
 	let [passwordError, setPasswordError] = useState(false);
-	let [snackbar, setSnackbar] = useState(false);
 
 	const handleClickOpen = () => {
 		setEmailError(false);
@@ -82,44 +79,31 @@ function SignInDialogComponent(props: Props) {
 			password: password,
 		};
 		signinAPI(details).then(async ({ user, token }) => {
-			// if (user.activated) {
-			handleClose();
-			const profile = await getProfileAPI(token).catch((error) =>
-				console.log(error.message)
-			);
-			if (profile) {
+			if (user.activated) {
+				const profile = await getProfileAPI(token).catch((error) =>
+					console.log(error.message)
+				);
+				if (profile) {
+					props.dispatch(
+						actionUser_getProfile({ profile: profile.profile })
+					);
+				}
+				props.dispatch(actionUser_signin({ user, token }));
+			} else {
 				props.dispatch(
-					actionUser_getProfile({ profile: profile.profile })
+					actionUi_showSnackbar({
+						message:
+							"Please check your emails to activate your account",
+						type: "error",
+					})
 				);
 			}
-			props.dispatch(actionUser_signin({ user, token }));
-			// } else {
-			// 	setSnackbar(true);
-			// }
+			handleClose();
 		});
-	};
-
-	const handleSnackbarClose = (
-		event?: React.SyntheticEvent,
-		reason?: string
-	) => {
-		if (reason === "clickaway") {
-			return;
-		}
-		setSnackbar(false);
 	};
 
 	return (
 		<div>
-			<Snackbar
-				open={snackbar}
-				autoHideDuration={6000}
-				onClose={handleSnackbarClose}
-			>
-				<Alert onClose={handleSnackbarClose} severity="error">
-					Please check your emails to activate your account
-				</Alert>
-			</Snackbar>
 			<Button
 				variant="outlined"
 				color="primary"

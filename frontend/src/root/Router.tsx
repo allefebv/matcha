@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 19:04:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 18:33:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:03:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ import { PrivateRoute } from "../component/PrivateRoute";
 import * as constants from "../services/constants";
 import { UserProfilePage } from "./UserProfilePage";
 import { ProfileCreationPage } from "./ProfileCreationPage";
-import { ActivateAccountPage } from "./ActivateAccountPage";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -32,13 +31,15 @@ export class RouterComponent extends React.Component<Props> {
 	render() {
 		return (
 			<Switch>
-				<Route exact path={constants.LANDING_ROUTE} component={LandingPage} />
 				<Route
 					exact
-					path={constants.ACCOUNT_ACTIVATION_ROUTE}
-					component={ActivateAccountPage}
-				></Route>
-				<PrivateRoute path={constants.SEARCH_ROUTE} component={MainPage} />
+					path={constants.LANDING_ROUTE}
+					component={LandingPage}
+				/>
+				<PrivateRoute
+					path={constants.SEARCH_ROUTE}
+					component={MainPage}
+				/>
 				<PrivateRoute
 					path={constants.ACCOUNT_SETTINGS_ROUTE}
 					component={AccountSettingsPage}

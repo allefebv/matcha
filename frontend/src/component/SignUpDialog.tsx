@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 17:33:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:00:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ function SignUpDialogComponent(props: Props) {
 		let details = {
 			email: email,
 			password: password,
-			redirectUrl: constants.FRONT_URL + constants.PROFILE_CREATION_ROUTE,
+			redirectUrl: constants.FRONT_URL + constants.LANDING_ROUTE,
 		};
 		signupAPI(details)
 			.then(({ user, token }) => {

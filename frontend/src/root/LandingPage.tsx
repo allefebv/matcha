@@ -6,17 +6,20 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 19:48:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:08:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { SignInDialog } from "../component/SignInDialog";
 import { SignUpDialog } from "../component/SignUpDialog";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import * as constants from "../services/constants";
 import { Grid } from "@material-ui/core";
+import { activateAccountAPI } from "../services/apiCalls";
+import { actionUser_activate } from "../store/user/action";
+import { actionUi_showSnackbar } from "../store/ui/action";
 
 const styleLanding: React.CSSProperties = {
 	position: "absolute",
@@ -49,6 +52,7 @@ const styleImg: React.CSSProperties = {
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
+	signupToken: state.user.signupToken,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -57,12 +61,40 @@ const LandingPageComponent = (props: Props) => {
 	const bg = require("../images/background2.jpg");
 	const isMobile = window.innerWidth < 480;
 	const [redirect, setRedirect] = useState<string | null>(null);
+	let location = useLocation();
 
 	useEffect(() => {
 		if (props.loggedIn) {
 			setRedirect(constants.SEARCH_ROUTE);
 		}
 	}, [props.loggedIn]);
+
+	useEffect(() => {
+		const parameters = new URLSearchParams(location.search);
+		if (parameters.get("id")) {
+			let id: number | string | null = parameters.get("id");
+			id = id ? parseInt(id) : null;
+			let details = {
+				activationKey: parameters.get("activationKey"),
+				id: id,
+			};
+
+			activateAccountAPI(details)
+				.then(() => {
+					props.dispatch(
+						actionUser_activate({ token: props.signupToken })
+					);
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: "Your account has been activated",
+							type: "success",
+						})
+					);
+				})
+				.catch((error) => console.log(error.message));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location]);
 
 	if (redirect !== null) {
 		return <Redirect to={redirect} />;
