@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:35:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 15:11:39 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,8 @@ export function fetchApi<T>(url: string, args: fetchArgs): Promise<T> {
 			if (!response.ok) {
 				throw new Error(response.statusText);
 			}
-			return response.json();
+			return response;
 		})
-		.catch((error) => {
-			throw new Error("Network error: " + error.message);
-		});
+		.then((response) => response.json())
+		.catch((error) => console.log(error.message));
 }

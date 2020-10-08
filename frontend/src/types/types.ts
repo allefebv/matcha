@@ -6,12 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/07 16:12:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 15:48:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 export interface Ilocation {
-	geoLocationAuthorization: boolean;
 	geoLocation: Iaddress | null;
 	usageLocation: Iaddress | null;
 }
@@ -49,16 +48,14 @@ export interface Iimgs {
 }
 
 export interface Iprofile {
-	id?: number;
-	userId?: number;
-	popularityScore?: string;
-	birthDay: Date | null;
+	dob: number | null;
 	userName: string;
 	firstName: string;
 	lastName: string;
 	gender: string | null;
 	sexualOrientation: string | null;
 	bio: string | null;
+	geoLocationAuthorization: boolean;
 	location: Ilocation;
 	tagList: string[] | null;
 	imgs: Iimgs;

@@ -6,7 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2020/10/09 18:35:39 by allefebv         ###   ########.fr       */
+=======
+/*   Updated: 2020/10/08 17:07:03 by allefebv         ###   ########.fr       */
+>>>>>>> feat(front) useGeolocation error handling
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +50,21 @@ function ProfileCreationStepperComponent(props: Props) {
 	const steps = getSteps();
 	const [geolocation, setGeolocation] = useState(props.currentGeolocation);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const [loading, setLoading] = useState(false);
 =======
 >>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
+=======
+	const [loading, setLoading] = useState(false);
+>>>>>>> feat(front) useGeolocation error handling
 
 	useEffect(() => {
 		if (!geolocation) {
 			fetch("https://ipinfo.io/geo?token=11e860581699f1")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> feat(front) useGeolocation error handling
 				.then((response) => {
 					if (!response.ok) {
 						throw new Error(response.statusText);
@@ -109,6 +120,7 @@ function ProfileCreationStepperComponent(props: Props) {
 				.catch((error: Error) => {
 					console.log(error.message);
 					return;
+<<<<<<< HEAD
 				});
 		} // eslint-disable-next-line react-hooks/exhaustive-deps
 =======
@@ -145,6 +157,10 @@ function ProfileCreationStepperComponent(props: Props) {
 				});
 		}
 >>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
+=======
+				});
+		} // eslint-disable-next-line react-hooks/exhaustive-deps
+>>>>>>> feat(front) useGeolocation error handling
 	}, []);
 
 	function getSteps() {
@@ -204,34 +220,50 @@ function ProfileCreationStepperComponent(props: Props) {
 
 		if (Object.values(profile.imgs).some((value) => value !== null)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			return postPicturesAPI(data, props.loggedIn).then(() => {});
 =======
 			postPicturesAPI(data, props.loggedIn).then(() => {});
 >>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
+=======
+			return postPicturesAPI(data, props.loggedIn).then(() => {});
+>>>>>>> feat(front) useGeolocation error handling
 		}
 	}
 
 	async function submitProfile() {
+<<<<<<< HEAD
+=======
+		console.log(profile);
+>>>>>>> feat(front) useGeolocation error handling
 		const body = Object.fromEntries(
 			Object.entries(profile).filter(
 				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
 			)
 		);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return postProfileAPI(body, props.loggedIn);
 =======
 
 		postProfileAPI(body, props.loggedIn).then(() => {});
 >>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
+=======
+		return postProfileAPI(body, props.loggedIn);
+>>>>>>> feat(front) useGeolocation error handling
 	}
 
 	function submitTags() {
 		//TODO: hardcoded tags
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return postTagsAPI({}, props.loggedIn)
 =======
 		postTagsAPI({}, props.loggedIn)
 >>>>>>> chore(front): some refacto, useEffect comments to avoid warnings, fetchApi externalized, routing refacto, routing for account creation
+=======
+		return postTagsAPI({}, props.loggedIn)
+>>>>>>> feat(front) useGeolocation error handling
 			.then(() => {})
 			.catch((error) => {});
 	}

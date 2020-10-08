@@ -34,7 +34,7 @@ export const getProfileAPI = (token: string) => {
 	return fetchApi<{ profile: Iprofile }>(
 		constants.URL + constants.URI_GET_PROFILE,
 		{
-			method: constants.POST_METHOD,
+			method: constants.GET_METHOD,
 			headers: {
 				"Content-Type": "application/json",
 				token: token,

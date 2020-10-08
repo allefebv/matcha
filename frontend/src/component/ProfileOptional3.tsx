@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 18:39:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 15:55:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ export function ProfileOptional3(props: Props) {
 		setPrevent(true);
 		const tmpProfile = props.profile;
 		tmpProfile.location.usageLocation = newValue;
-		tmpProfile.location.geoLocationAuthorization = tmpProfile.location
-			.usageLocation?.isFromGeolocation
+		tmpProfile.geoLocationAuthorization = tmpProfile.location.usageLocation
+			?.isFromGeolocation
 			? true
 			: false;
 		props.setProfile(tmpProfile);
@@ -144,7 +144,11 @@ export function ProfileOptional3(props: Props) {
 						getOptionLabel={(option) => {
 							if (option !== null) {
 								return (
-									option.postCode + ", " + option.city + ", " + option.country
+									option.postCode +
+									", " +
+									option.city +
+									", " +
+									option.country
 								);
 							}
 							return "";
@@ -159,7 +163,9 @@ export function ProfileOptional3(props: Props) {
 								<Grid item container xs={2}>
 									{option !== null ? (
 										option.isFromGeolocation ? (
-											<MyLocationIcon style={{ color: "#16F02D" }} />
+											<MyLocationIcon
+												style={{ color: "#16F02D" }}
+											/>
 										) : (
 											<LocationOnIcon />
 										)

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/06 17:50:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:08:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ interface Props {
 }
 
 export function ProfileOptional1(props: Props) {
-	const [birthday, setBirthday] = useState<Date | null>(null);
+	const [dob, setDob] = useState<Date | null>(null);
 
 	function handleChangeGender(
 		e: React.MouseEvent<HTMLElement>,
@@ -48,23 +48,30 @@ export function ProfileOptional1(props: Props) {
 		}
 	}
 
-	function handleChangeBirthDay(date: Date | null) {
-		const tmpProfile = { ...props.profile };
-		tmpProfile.birthDay = date;
-		setBirthday(date);
-		props.setProfile(tmpProfile);
+	function handleChangeDob(date: Date | null) {
+		if (date) {
+			const tmpProfile = { ...props.profile };
+			tmpProfile.dob = date.valueOf();
+			setDob(date);
+			props.setProfile(tmpProfile);
+		}
 	}
+
+	const date = new Date();
 
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
 				<DatePicker
 					margin="normal"
-					label="Birthday"
-					format="MM/dd/yyyy"
-					value={birthday}
-					onChange={handleChangeBirthDay}
+					label="Date of birth"
+					value={dob}
+					onChange={handleChangeDob}
 					fullWidth
+					disableFuture
+					minDate={new Date("1930-01-01")}
+					maxDate={date.setFullYear(date.getFullYear() - 13)}
+					openTo="year"
 				/>
 			</Grid>
 			<Grid

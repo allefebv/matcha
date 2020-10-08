@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 20:10:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 15:55:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ const UserProfilePageComponent = (props: Props) => {
 		firstName: "",
 		lastName: "",
 		userName: "",
-		birthDay: null,
+		dob: null,
 		gender: null,
 		sexualOrientation: null,
 		bio: null,
+		geoLocationAuthorization: false,
 		location: {
-			geoLocationAuthorization: false,
 			geoLocation: null,
 			usageLocation: null,
 		},
@@ -71,7 +71,10 @@ const UserProfilePageComponent = (props: Props) => {
 					md={6}
 					style={{ height: "15%" }}
 				>
-					<ProfilePictures setProfile={setProfile} profile={profile} />
+					<ProfilePictures
+						setProfile={setProfile}
+						profile={profile}
+					/>
 				</Grid>
 			</Grid>
 			<Grid container item xs={3} style={{ height: "100%" }} spacing={3}>

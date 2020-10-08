@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 20:24:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 15:12:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,12 @@ function SignInDialogComponent(props: Props) {
 		signinAPI(details).then(async ({ user, token }) => {
 			// if (user.activated) {
 			handleClose();
-			console.log(token);
 			const profile = await getProfileAPI(token);
-			props.dispatch(actionUser_getProfile({ profile: profile.profile }));
+			if (profile) {
+				props.dispatch(
+					actionUser_getProfile({ profile: profile.profile })
+				);
+			}
 			props.dispatch(actionUser_signin({ user, token }));
 			// } else {
 			// 	setSnackbar(true);
@@ -115,7 +118,11 @@ function SignInDialogComponent(props: Props) {
 					Please check your emails to activate your account
 				</Alert>
 			</Snackbar>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Sign in
 			</Button>
 			<Dialog
@@ -136,7 +143,9 @@ function SignInDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							helperText={
+								emailError && constants.EMAIL_HELPER_ERROR
+							}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -147,7 +156,9 @@ function SignInDialogComponent(props: Props) {
 							fullWidth
 							value={password}
 							error={passwordError}
-							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							helperText={
+								passwordError && constants.PASSWORD_HELPER_ERROR
+							}
 							onChange={handlePassword}
 						/>
 					</DialogContent>

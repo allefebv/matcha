@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/07 19:30:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:11:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 		if (props.loggedIn === false) {
 			setRedirect(constants.LANDING_ROUTE);
 		}
-	}, []);
+	}, [props.loggedIn]);
 
 	if (redirect !== null) {
 		return <Redirect to={redirect} />;

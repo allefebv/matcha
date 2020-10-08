@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/07 19:27:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:10:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Iaddress, user } from "../../types/types";
+import { user } from "../../types/types";
 import { createAction } from "typesafe-actions";
 
 export const actionUser_signin = createAction("USER.USERSIGNIN")<{
