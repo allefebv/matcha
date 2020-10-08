@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 11:20:46 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/08 18:49:37 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ export interface profile {
 	id: number;
 	userId: number;
 	age: number;
-	popularityScore: string;
+	popularityScore: number;
 	username: string;
 	firstname: string;
 	lastname: string;

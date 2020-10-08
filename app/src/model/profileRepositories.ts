@@ -63,6 +63,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			lastname,
 			genre,
 			geoLocationAuthorization,
+			popularityScore,
 			sexualOrientation,
 			bio
 		) VALUES (
@@ -73,6 +74,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.lastname}',
 			'${profile.genre}',
 			${profile.geoLocationAuthorization},
+			${profile.popularityScore || 50},
 			'${profile.sexualOrientation}',
 			'${profile.bio}'
 		)`;
@@ -95,6 +97,7 @@ export function updateProfile(profile: profile, userId: number): Promise<boolean
 			lastname= '${profile.lastname}',
 			genre = '${profile.genre}',
 			geoLocationAuthorization = ${profile.geoLocationAuthorization},
+			popularityScore = ${profile.popularityScore},
 			sexualOrientation = '${profile.sexualOrientation}',
 			bio = '${profile.bio}'
 		WHERE userId = ${userId}`;

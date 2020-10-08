@@ -9,7 +9,7 @@ export function getTag(tag: string): Promise<tag | null> {
 				console.log(error);
 				reject(null);
 			}
-			resolve(result && result.length === 1 ? result[0] : null);
+			resolve(result && result.length ? result[0] : null);
 		});
 	});
 }
@@ -29,7 +29,7 @@ export function getTagById(id: number): Promise<tag | null> {
 
 export function getTagProfile(id: number): Promise<{ tag: string }[] | null> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT tag.tag FROM tagProfile INNER JOIN tag WHERE tagProfile.profileId = ${id}`;
+		const sql = `SELECT * FROM tag INNER JOIN tagProfile WHERE tagProfile.profileId = ${id} AND tag.id = tagProfile.tagId`;
 		dataBase.query(sql, (error: string, result: { tag: string }[]) => {
 			if (error) {
 				console.log(error);

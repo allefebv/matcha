@@ -4,9 +4,11 @@
 frontend/node_modules
 frontend/.pnp
 frontend/.pnp.js
+
 app/node_modules
 app/images
 
+script/createUser/node_modules
 # testing
 /coverage
 

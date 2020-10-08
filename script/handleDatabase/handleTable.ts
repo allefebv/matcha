@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 12:27:44 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/08 14:06:45 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ export async function addTableGeoLocation() {
     		postCode						TEXT,
     		countryCode						TEXT,
     		country							TEXT,
-    		lat								INTEGER,
-    		lng								INTEGER,
+    		lat								FLOAT,
+    		lng								FLOAT,
 			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
 		)`;
 		dataBase.query(sql, (error: string) => {
@@ -99,8 +99,8 @@ export async function addTableUsageLocation() {
     		postCode						TEXT,
     		countryCode						TEXT,
     		country							TEXT,
-    		lat								INTEGER,
-    		lng								INTEGER,
+    		lat								FLOAT,
+    		lng								FLOAT,
 			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
 		)`;
 		dataBase.query(sql, (error: string) => {
