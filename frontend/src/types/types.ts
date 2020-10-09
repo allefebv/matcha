@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 15:48:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:42:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ export interface Iimgs {
 
 export interface Iprofile {
 	dob: number | null;
-	userName: string;
-	firstName: string;
-	lastName: string;
+	username: string;
+	firstname: string;
+	lastname: string;
 	gender: string | null;
 	sexualOrientation: string | null;
 	bio: string | null;

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/08 16:11:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 15:51:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ import { connect, ConnectedProps } from "react-redux";
 
 import { Grid } from "@material-ui/core";
 
-import { ProfileCreationStepper } from "../component/ProfileCreationStepper";
+import { MandatoryProfileStepper } from "../component/MandatoryProfileStepper";
 import { Redirect } from "react-router-dom";
 import * as constants from "../services/constants";
 
@@ -49,7 +49,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 					justify="center"
 					alignItems="center"
 				>
-					<ProfileCreationStepper />
+					<MandatoryProfileStepper />
 				</Grid>
 			</React.Fragment>
 		);

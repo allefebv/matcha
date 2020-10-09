@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/09 16:26:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/10 15:38:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@ import {
 	actionUser_activate,
 } from "./action";
 import { getType } from "typesafe-actions";
-import { isBaseProfileComplete } from "../../services/utils";
 
 const initialState = {
 	isLoggedIn: false,
 	isActivated: false,
-	isBaseProfileComplete: false,
+	profile: null,
 	user: null,
 	signupToken: null,
 	currentGeolocation: null,
@@ -59,9 +58,6 @@ export function userReducer(
 			return {
 				...state,
 				profile: action.payload.profile,
-				isBaseProfileComplete: isBaseProfileComplete(
-					action.payload.profile
-				),
 			};
 		case getType(actionUser_geolocation):
 			return {

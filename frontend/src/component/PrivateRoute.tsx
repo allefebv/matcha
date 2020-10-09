@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:03 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 18:39:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/10 15:31:57 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@ import { Redirect, Route } from "react-router-dom";
 
 import * as constants from "../services/constants";
 import { connect, ConnectedProps } from "react-redux";
+import { isProfileEmpty } from "../services/utils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	isBaseProfileComplete: state.user.isBaseProfileComplete,
+	isProfileEmpty: isProfileEmpty(state.user.profile),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
@@ -30,7 +31,7 @@ const PrivateRouteComponent = (props: Props) => {
 	const Component = () => {
 		if (!props.loggedIn) {
 			return <Redirect to={{ pathname: constants.LANDING_ROUTE }} />;
-		} else if (!props.isBaseProfileComplete) {
+		} else if (props.isProfileEmpty) {
 			return <Redirect to={{ pathname: constants.PROFILE_CREATION_ROUTE }} />;
 		} else {
 			return React.createElement(props.component);

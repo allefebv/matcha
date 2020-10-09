@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 14:00:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:53:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ export const URI_MODIFY_PASSWORD = "/user/changePassword";
 export const URI_DELETE_ACCOUNT = "/user/deleteUser";
 export const URI_GET_PROFILE = "/profile/getProfile";
 export const URI_POST_PICTURES = "/profile/handleImages";
-export const URI_POST_PROFILE = "/profile/handleProfile";
+export const URI_HANDLE_PROFILE = "/profile/handleProfile";
 export const URI_POST_TAGS = "/tag/addTagProfile";
 export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 
