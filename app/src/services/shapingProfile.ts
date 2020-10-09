@@ -6,12 +6,15 @@ export async function shapingProfile(profile: profile) {
 	const tagProfileList = await getTagProfile(profile.userId);
 	const location = await getUsageLocation(profile.userId);
 	const listTag: string[] = [];
+	console.log(tagProfileList);
 	await Promise.all(
-		tagProfileList.map((tag) => {
-			if (!listTag.includes(tag.tag)) {
-				listTag.push(tag.tag);
-			}
-		})
+		tagProfileList &&
+			tagProfileList.length &&
+			tagProfileList.map((tag) => {
+				if (!listTag.includes(tag.tag)) {
+					listTag.push(tag.tag);
+				}
+			})
 	);
 	return { profile: profile, tag: listTag, location: location };
 }

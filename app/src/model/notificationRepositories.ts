@@ -6,7 +6,7 @@ export function addNotification(
 	notifierProfileId: number,
 	notification: string
 ): Promise<boolean> {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const sql = `INSERT INTO notificationProfile (
 			profileNotifedId,
 			notifierProfileId,
@@ -21,7 +21,7 @@ export function addNotification(
 		dataBase.query(sql, (error: string) => {
 			if (error) {
 				console.log(error);
-				reject(false);
+				resolve(false);
 			}
 			resolve(true);
 		});
@@ -32,12 +32,12 @@ export function deleteNotification(
 	id: number,
 	profileNotifedId: number
 ): Promise<boolean> {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const sql = `DELETE FROM notificationProfile WHERE id = ${id} AND profileNotifedId = ${profileNotifedId}`;
 		dataBase.query(sql, (error: string) => {
 			if (error) {
 				console.log(error);
-				reject(false);
+				resolve(false);
 			}
 			resolve(true);
 		});
@@ -45,12 +45,12 @@ export function deleteNotification(
 }
 
 export function getNotification(id: number): Promise<notification[] | null> {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const sql = `SELECT * FROM notificationProfile WHERE profileNotifedId = ${id}`;
 		dataBase.query(sql, (error: string, result: notification[]) => {
 			if (error) {
 				console.log(error);
-				reject(null);
+				resolve(null);
 			}
 			resolve(result);
 		});

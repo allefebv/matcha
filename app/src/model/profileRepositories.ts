@@ -14,7 +14,9 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 	});
 }
 
-export function getProfileByUsername(username: string): Promise<profile | null> {
+export function getProfileByUsername(
+	username: string
+): Promise<profile | null> {
 	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE username = '${username}'`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
@@ -28,25 +30,28 @@ export function getProfileByUsername(username: string): Promise<profile | null> 
 }
 
 export function getAllProfile(id: number): Promise<profile[] | null> {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
 				console.log(error);
-				reject(null);
+				resolve(null);
 			}
 			resolve(result.length ? result : null);
 		});
 	});
 }
 
-export function getProfileBySexualOriantation(id: number, sexualOriantation: string): Promise<profile[] | null> {
-	return new Promise((resolve, reject) => {
+export function getProfileBySexualOriantation(
+	id: number,
+	sexualOriantation: string
+): Promise<profile[] | null> {
+	return new Promise((resolve) => {
 		const sql = `SELECT * FROM profile WHERE sexualOrientation = '${sexualOriantation}' AND userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
 				console.log(error);
-				reject(null);
+				resolve(null);
 			}
 			resolve(result.length ? result : null);
 		});
@@ -57,7 +62,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 	return new Promise((resolve) => {
 		const sql = `INSERT INTO profile (
 			userId,
-			age,
+			dob,
 			username,
 			firstname,
 			lastname,
@@ -68,7 +73,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			bio
 		) VALUES (
 			${userId},
-			${profile.age},
+			${profile.dob},
 			'${profile.username}',
 			'${profile.firstname}',
 			'${profile.lastname}',
@@ -88,10 +93,13 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 	});
 }
 
-export function updateProfile(profile: profile, userId: number): Promise<boolean> {
+export function updateProfile(
+	profile: profile,
+	userId: number
+): Promise<boolean> {
 	return new Promise((resolve) => {
 		const sql = `UPDATE profile SET
-			age = ${profile.age},
+			dob = ${profile.dob},
 			username = '${profile.username}',
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',

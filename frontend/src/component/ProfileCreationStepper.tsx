@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { Grid } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Stepper from "@material-ui/core/Stepper";
-import Typography from "@material-ui/core/Typography";
+import { Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Stepper from '@material-ui/core/Stepper';
+import Typography from '@material-ui/core/Typography';
 
-import { Iprofile } from "../types/types";
-import { ProfileMandatoryForm } from "./ProfileMandatoryForm";
-import { ProfileOptional1 } from "./ProfileOptional1";
-import { ProfileOptional2 } from "./ProfileOptional2";
-import { fetchApi } from "../services/fetchApi";
-import * as constants from "../services/constants";
-import { connect, ConnectedProps } from "react-redux";
+import * as constants from '../services/constants';
+import { fetchApi } from '../services/fetchApi';
+import { Iprofile } from '../types/types';
+import { ProfileMandatoryForm } from './ProfileMandatoryForm';
+import { ProfileOptional1 } from './ProfileOptional1';
+import { ProfileOptional2 } from './ProfileOptional2';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.signin.isLoggedIn,

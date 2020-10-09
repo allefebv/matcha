@@ -2,20 +2,24 @@ import { location, notification, profile } from '../../types/types';
 import { dataBase } from '../app';
 
 function getLocation(id: number, table: string): Promise<location> {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const sql = `SELECT * FROM ${table} WHERE userId = ${id}`;
 		dataBase.query(sql, (error: string, result: location[]) => {
 			if (error) {
 				console.log(error);
-				reject(null);
+				resolve(null);
 			}
 			resolve(result.length ? result[0] : null);
 		});
 	});
 }
 
-function addLocation(userId: number, location: location, table: string): Promise<boolean> {
-	return new Promise((resolve, reject) => {
+function addLocation(
+	userId: number,
+	location: location,
+	table: string
+): Promise<boolean> {
+	return new Promise((resolve) => {
 		const sql = `INSERT INTO ${table} (
 			userId,
 			city,
@@ -36,13 +40,17 @@ function addLocation(userId: number, location: location, table: string): Promise
 		dataBase.query(sql, (error: string) => {
 			if (error) {
 				console.log(error);
-				reject(false);
+				resolve(false);
 			}
 			resolve(true);
 		});
 	});
 }
-export function updateLocation(userId: number, location: location, table: string): Promise<boolean> {
+export function updateLocation(
+	userId: number,
+	location: location,
+	table: string
+): Promise<boolean> {
 	return new Promise((resolve) => {
 		const sql = `UPDATE ${table} SET
 		city = '${location.city}',

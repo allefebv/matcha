@@ -9,6 +9,7 @@ app/node_modules
 app/images
 
 script/createUser/node_modules
+script/handleDatabase/node_modules
 # testing
 /coverage
 

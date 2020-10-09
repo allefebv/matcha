@@ -70,14 +70,12 @@ export async function handleProfileController(req: Request, res: Response) {
 				try {
 					await updateProfile(req.body, jwt.decoded.id);
 					const profile = await getProfileByUserId(jwt.decoded.id);
-					const profileShaping = shapingProfile(profile);
-					res.status(200).json(profileShaping);
+					res.status(200).json(profile);
 				} catch {
 					res.status(400).send("ERROR");
 				}
 			}
 			return;
 		}
-		res.status(400).send(validation);
 	}
 }
