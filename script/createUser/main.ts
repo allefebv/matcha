@@ -6,18 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 18:58:51 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/09 12:06:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import fs from 'fs';
+//import fs from 'fs';
 import { createConnection } from 'mysql';
 
 import { location, profile, tag, user } from '../../app/types/types';
 import { HOW_MANY_CREATE_USER } from './src/const';
-import {
-	createLocation, createProfile, createTag, createUser
-} from './src/create';
+import { createProfile, createUser } from './src/create';
 import { getApiRandonUser } from './src/getApi';
 
 interface list {
@@ -26,7 +24,7 @@ interface list {
 	tag: tag;
 	location: location;
 }
-
+/*
 function initMysql() {
 	return new Promise((resolve) => {
 		let dataBase = createConnection({
@@ -45,17 +43,27 @@ function initMysql() {
 		});
 	});
 }
-
+*/
 async function main() {
-	await initMysql();
+	// await initMysql();
 	const userApiList: any = await getApiRandonUser();
+	console.log(userApiList);
 	const list: list[] = [];
 	let i = 0;
-	while (i < userApiList.length) {
-		const infoApi = userApiList[i];
+	while (i < userApiList.results.length) {
+		const infoApi = userApiList.results[i];
 		// User
-		const user = await createUser(infoApi.email, infoApi.login.password);
-		user.password = infoApi.login.password;
+		const user: any = await createUser(infoApi.email);
+		console.log("--> user\n", user);
+		if (user) {
+			const profile = await createProfile(infoApi, user.token);
+			console.log("--> Profile\n", profile);
+		}
+		console.log(`${i} / ${userApiList.results.length}`);
+		i++;
+	}
+	//user.password = infoApi.login.password;
+	/*
 		// Profile
 		const profile = await createProfile(infoApi, user);
 		// Tag
@@ -71,10 +79,12 @@ async function main() {
 		};
 		list.push(userProfile);
 		console.log(`${i} / ${HOW_MANY_CREATE_USER}`);
-	}
+	*/
+	/*
 	fs.writeFile("userList.json", JSON.stringify(list), () => {
 		console.log("Finish");
 	});
+	*/
 }
 
 main();

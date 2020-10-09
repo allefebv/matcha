@@ -6,11 +6,13 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 18:57:48 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/09 11:36:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { HOW_MANY_CREATE_USER } from './const';
+
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 export function getApiRandonUser() {
 	return new Promise((resolve, rejects) => {

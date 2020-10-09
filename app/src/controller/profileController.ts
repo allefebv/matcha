@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 
 import {
-	addProfile,
-	getAllProfile,
-	getProfileByUserId,
-	getProfileByUsername,
+	addProfile, getAllProfile, getProfileByUserId, getProfileByUsername,
 	updateProfile
 } from '../model/profileRepositories';
 import { jwtVerify } from '../services/jwt';
@@ -15,22 +12,29 @@ export async function getProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		try {
-			const profile = await shapingProfile(await getProfileByUserId(jwt.decoded.id));
+			const profile = await shapingProfile(
+				await getProfileByUserId(jwt.decoded.id)
+			);
 			res.status(200).json(profile);
 		} catch {
-			res.status(400).send("No profile exists for this user");
+			res.status(200).send(null);
 		}
 	}
 }
 
-export async function getProfileByUsernameController(req: Request, res: Response) {
+export async function getProfileByUsernameController(
+	req: Request,
+	res: Response
+) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		try {
-			const profile = await shapingProfile(await getProfileByUsername(req.query.username.toString()));
+			const profile = await shapingProfile(
+				await getProfileByUsername(req.query.username.toString())
+			);
 			res.status(200).json(profile);
 		} catch {
-			res.status(400).send("An error occured");
+			res.status(200).send(null);
 		}
 	}
 }
@@ -42,7 +46,7 @@ export async function getAllProfileController(req: Request, res: Response) {
 			const profileList = await getAllProfile(jwt.decoded.id);
 			res.status(200).json(profileList);
 		} catch {
-			res.status(400).send("An error occured");
+			res.status(200).send(null);
 		}
 	}
 }
@@ -56,7 +60,8 @@ export async function handleProfileController(req: Request, res: Response) {
 			if (!profile) {
 				try {
 					await addProfile(req.body, jwt.decoded.id);
-					res.status(200).send("Profile has been created");
+					const profile = await getProfileByUserId(jwt.decoded.id);
+					res.status(200).json(profile);
 				} catch {
 					res.status(400).send("ERROR");
 				}
@@ -64,7 +69,9 @@ export async function handleProfileController(req: Request, res: Response) {
 			} else {
 				try {
 					await updateProfile(req.body, jwt.decoded.id);
-					res.status(200).send("Profile has been update");
+					const profile = await getProfileByUserId(jwt.decoded.id);
+					const profileShaping = shapingProfile(profile);
+					res.status(200).json(profileShaping);
 				} catch {
 					res.status(400).send("ERROR");
 				}
