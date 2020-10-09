@@ -6,18 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 16:08:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 15:09:57 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Grid, Icon, Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 import { Iprofile } from "../types/types";
-
-import { DatePicker } from "@material-ui/pickers";
 
 interface Props {
 	activeStep: number;
@@ -28,14 +26,57 @@ interface Props {
 }
 
 export function ProfileOptional1(props: Props) {
-	const [dob, setDob] = useState<Date | null>(null);
+	const [orientationFieldInactive, setOrientationFieldInactive] = useState(
+		true
+	);
+	const [localSexualOrientation, setLocalSexualOrientation] = useState(
+		"bisexual"
+	);
+
+	function findOrientation(orientation: string, gender = props.profile.gender) {
+		if (gender === "male") {
+			switch (orientation) {
+				case "male":
+					return "gay";
+				case "female":
+					return "heterosexual";
+				case "bisexual":
+					return "bisexual";
+				default:
+					throw new Error("wrong value in orientation field: " + orientation);
+			}
+		}
+		if (gender === "female") {
+			switch (orientation) {
+				case "female":
+					return "lesbian";
+				case "male":
+					return "heterosexual";
+				case "bisexual":
+					return "bisexual";
+				default:
+					throw new Error("wrong value in orientation field: " + orientation);
+			}
+		}
+		return "bisexual";
+	}
+
+	useEffect(() => {
+		if (props.profile.gender !== null) {
+			setOrientationFieldInactive(false);
+		}
+	}, [props.profile]);
 
 	function handleChangeGender(
 		e: React.MouseEvent<HTMLElement>,
 		nextView: string
 	) {
 		if (nextView !== null) {
-			props.setProfile({ ...props.profile, gender: nextView });
+			props.setProfile({
+				...props.profile,
+				gender: nextView,
+				sexualOrientation: findOrientation(localSexualOrientation, nextView),
+			});
 		}
 	}
 
@@ -44,36 +85,16 @@ export function ProfileOptional1(props: Props) {
 		nextView: string
 	) {
 		if (nextView !== null) {
-			props.setProfile({ ...props.profile, sexualOrientation: nextView });
+			props.setProfile({
+				...props.profile,
+				sexualOrientation: findOrientation(nextView),
+			});
+			setLocalSexualOrientation(nextView);
 		}
 	}
-
-	function handleChangeDob(date: Date | null) {
-		if (date) {
-			const tmpProfile = { ...props.profile };
-			tmpProfile.dob = date.valueOf();
-			setDob(date);
-			props.setProfile(tmpProfile);
-		}
-	}
-
-	const date = new Date();
 
 	return (
 		<React.Fragment>
-			<Grid item xs={12}>
-				<DatePicker
-					margin="normal"
-					label="Date of birth"
-					value={dob}
-					onChange={handleChangeDob}
-					fullWidth
-					disableFuture
-					minDate={new Date("1930-01-01")}
-					maxDate={date.setFullYear(date.getFullYear() - 13)}
-					openTo="year"
-				/>
-			</Grid>
 			<Grid
 				item
 				container
@@ -90,10 +111,10 @@ export function ProfileOptional1(props: Props) {
 						exclusive
 						value={props.profile.gender || ""}
 					>
-						<ToggleButton value="man">
+						<ToggleButton value="male">
 							<Icon className="fa fa-mars" />
 						</ToggleButton>
-						<ToggleButton value="woman">
+						<ToggleButton value="female">
 							<Icon className="fa fa-venus" />
 						</ToggleButton>
 					</ToggleButtonGroup>
@@ -103,15 +124,15 @@ export function ProfileOptional1(props: Props) {
 					<ToggleButtonGroup
 						onChange={handleChangeSexualOrientation}
 						exclusive
-						value={props.profile.sexualOrientation || ""}
+						value={localSexualOrientation || ""}
 					>
-						<ToggleButton value="men">
+						<ToggleButton value="male" disabled={orientationFieldInactive}>
 							<Icon className="fa fa-mars" />
 						</ToggleButton>
-						<ToggleButton value="women">
+						<ToggleButton value="female" disabled={orientationFieldInactive}>
 							<Icon className="fa fa-venus" />
 						</ToggleButton>
-						<ToggleButton value="both">
+						<ToggleButton value="bisexual" disabled={orientationFieldInactive}>
 							<Icon className="fa fa-venus-mars" />
 						</ToggleButton>
 					</ToggleButtonGroup>

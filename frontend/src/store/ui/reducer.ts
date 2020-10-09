@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 15:48:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 16:17:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 18:24:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ import { getType } from "typesafe-actions";
 const initialState = {
 	snackbarOpen: false,
 	snackbarMessage: null,
-	snackbarType: "",
+	snackbarType: "success",
 };
 
 export function uiReducer(state = initialState, action: AnyAction) {
@@ -34,7 +34,7 @@ export function uiReducer(state = initialState, action: AnyAction) {
 				...state,
 				snackbarOpen: false,
 				snackbarMessage: null,
-				snackbarType: "",
+				snackbarType: "success",
 			};
 		default:
 			return state;

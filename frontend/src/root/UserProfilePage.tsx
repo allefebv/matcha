@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 15:55:58 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:42:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ type Props = {} & ReduxProps;
 
 const UserProfilePageComponent = (props: Props) => {
 	const [profile, setProfile] = useState<Iprofile>({
-		firstName: "",
-		lastName: "",
-		userName: "",
+		firstname: "",
+		lastname: "",
+		username: "",
 		dob: null,
 		gender: null,
 		sexualOrientation: null,
@@ -71,10 +71,7 @@ const UserProfilePageComponent = (props: Props) => {
 					md={6}
 					style={{ height: "15%" }}
 				>
-					<ProfilePictures
-						setProfile={setProfile}
-						profile={profile}
-					/>
+					<ProfilePictures setProfile={setProfile} profile={profile} />
 				</Grid>
 			</Grid>
 			<Grid container item xs={3} style={{ height: "100%" }} spacing={3}>

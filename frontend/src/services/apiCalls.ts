@@ -83,8 +83,8 @@ export const postPicturesAPI = (details: Object, token: string) => {
 	});
 };
 
-export const postProfileAPI = (details: Object, token: string) => {
-	return fetchApi(constants.URL + constants.URI_POST_PROFILE, {
+export const handleProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_HANDLE_PROFILE, {
 		method: constants.POST_METHOD,
 		headers: {
 			"Content-Type": "application/json",

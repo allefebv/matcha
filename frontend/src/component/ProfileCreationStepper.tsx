@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 18:38:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 14:53:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
 import {
 	postPicturesAPI,
-	postProfileAPI,
+	handleProfileAPI,
 	postTagsAPI,
 } from "../services/apiCalls";
 import * as constants from "../services/constants";
@@ -114,12 +114,12 @@ function ProfileCreationStepperComponent(props: Props) {
 	}
 
 	const [profile, setProfile] = useState<Iprofile>({
-		firstName: "",
-		lastName: "",
-		userName: "",
+		firstname: "",
+		lastname: "",
+		username: "",
 		dob: null,
 		gender: null,
-		sexualOrientation: null,
+		sexualOrientation: "bisexual",
 		bio: null,
 		geoLocationAuthorization: false,
 		location: {
@@ -175,7 +175,7 @@ function ProfileCreationStepperComponent(props: Props) {
 				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
 			)
 		);
-		return postProfileAPI(body, props.loggedIn);
+		return handleProfileAPI(body, props.loggedIn);
 	}
 
 	function submitTags() {
@@ -187,9 +187,10 @@ function ProfileCreationStepperComponent(props: Props) {
 
 	const handleSubmit = async () => {
 		setLoading(true);
-		await Promise.all([submitProfile(), submitTags()]);
+		await Promise.all([submitProfile()]);
 		setLoading(false);
 		// submitPictures();
+		// submitTags()
 	};
 
 	const handleNext = () => {
@@ -207,9 +208,10 @@ function ProfileCreationStepperComponent(props: Props) {
 
 	const isDisabled = () => {
 		return (
-			profile.firstName === "" ||
-			profile.lastName === "" ||
-			profile.userName === ""
+			profile.firstname === "" ||
+			profile.lastname === "" ||
+			profile.username === "" ||
+			profile.dob === null
 		);
 	};
 
@@ -222,6 +224,7 @@ function ProfileCreationStepperComponent(props: Props) {
 						steps={steps}
 						handleChange={handleChange}
 						profile={profile}
+						setProfile={setProfile}
 					/>
 				);
 			case 1:
@@ -255,9 +258,7 @@ function ProfileCreationStepperComponent(props: Props) {
 					/>
 				);
 			default:
-				return (
-					<Typography color="primary">All steps completed</Typography>
-				);
+				return <Typography color="primary">All steps completed</Typography>;
 		}
 	}
 
@@ -267,22 +268,6 @@ function ProfileCreationStepperComponent(props: Props) {
 				<CircularProgress size={80} color="primary" />
 			) : (
 				<React.Fragment>
-					<Grid
-						item
-						container
-						xs={12}
-						justify="center"
-						alignItems="center"
-						alignContent="center"
-					>
-						{activeStep === steps.length ? (
-							<React.Fragment>
-								<Typography>All steps completed</Typography>
-							</React.Fragment>
-						) : (
-							getStepContent()
-						)}
-					</Grid>
 					<Grid item xs={12}>
 						<Stepper activeStep={activeStep}>
 							{steps.map((label, key) => (
@@ -292,12 +277,18 @@ function ProfileCreationStepperComponent(props: Props) {
 							))}
 						</Stepper>
 					</Grid>
+					<Grid
+						item
+						container
+						xs={12}
+						justify="center"
+						alignItems="center"
+						alignContent="center"
+					>
+						{getStepContent()}
+					</Grid>
 					<Grid item xs={12} md={6}>
-						<Button
-							disabled={activeStep === 0}
-							onClick={handleBack}
-							fullWidth
-						>
+						<Button disabled={activeStep === 0} onClick={handleBack} fullWidth>
 							Back
 						</Button>
 					</Grid>
@@ -306,16 +297,12 @@ function ProfileCreationStepperComponent(props: Props) {
 							variant="contained"
 							color="primary"
 							onClick={
-								activeStep === steps.length - 1
-									? handleSubmit
-									: handleNext
+								activeStep === steps.length - 1 ? handleSubmit : handleNext
 							}
 							fullWidth
 							disabled={isDisabled()}
 						>
-							{activeStep === steps.length - 1
-								? "Finish"
-								: "Continue"}
+							{activeStep === steps.length - 1 ? "Finish" : "Continue"}
 						</Button>
 					</Grid>
 				</React.Fragment>
