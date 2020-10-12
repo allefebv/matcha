@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/09 17:24:52 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 13:36:25 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ export async function addTableProfile() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE profile (
 			userId							INTEGER NOT NULL,
-			dob								INTEGER NOT NULL,
+			dob								BIGINT NOT NULL,
 			popularityScore					INTEGER DEFAULT 50 NOT NULL,
 			username	 					TEXT NOT NULL,
 			firstname						TEXT NOT NULL,
 			lastname						TEXT NOT NULL,
-			gender							TEXT NOT NULL,
+			gender							TEXT,
 			geoLocationAuthorization		BOOLEAN DEFAULT 0 NOT NULL,
-			sexualOrientation				TEXT,
+			sexualOrientation				TEXT NOT NULL,
 			bio								TEXT,
 			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
 		)`;

@@ -66,9 +66,8 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			username,
 			firstname,
 			lastname,
-			genre,
+			gender,
 			geoLocationAuthorization,
-			popularityScore,
 			sexualOrientation,
 			bio
 		) VALUES (
@@ -77,11 +76,10 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.username}',
 			'${profile.firstname}',
 			'${profile.lastname}',
-			'${profile.genre}',
+			'${profile.genre || null}',
 			${profile.geoLocationAuthorization},
-			${profile.popularityScore || 50},
-			'${profile.sexualOrientation}',
-			'${profile.bio}'
+			'${profile.sexualOrientation || "bisexual"}',
+			'${profile.bio || null}'
 		)`;
 		dataBase.query(sql, async (error: string) => {
 			if (error) {
@@ -103,9 +101,8 @@ export function updateProfile(
 			username = '${profile.username}',
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',
-			genre = '${profile.genre}',
+			gender = '${profile.genre}',
 			geoLocationAuthorization = ${profile.geoLocationAuthorization},
-			popularityScore = ${profile.popularityScore},
 			sexualOrientation = '${profile.sexualOrientation}',
 			bio = '${profile.bio}'
 		WHERE userId = ${userId}`;

@@ -6,7 +6,6 @@ export async function shapingProfile(profile: profile) {
 	const tagProfileList = await getTagProfile(profile.userId);
 	const location = await getUsageLocation(profile.userId);
 	const listTag: string[] = [];
-	console.log(tagProfileList);
 	await Promise.all(
 		tagProfileList &&
 			tagProfileList.length &&

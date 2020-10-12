@@ -1,14 +1,10 @@
 import { Request, Response } from 'express';
 
 import {
-	addLikedProfile,
-	deleteLikedProfile,
-	getProfileMatch,
-	getUserHasBeenLikedById
+	addLikedProfile, deleteLikedProfile, getProfileMatch, getUserHasBeenLikedById
 } from '../model/likeRepositories';
 import {
-	getProfileByUserId,
-	getProfileByUsername
+	getProfileByUserId, getProfileByUsername
 } from '../model/profileRepositories';
 import { jwtVerify } from '../services/jwt';
 
@@ -92,29 +88,33 @@ export async function getProfileMatchController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		const listLike = await getProfileMatch(jwt.decoded.id);
-		const matchListId = await Promise.all(
-			listLike.filter(
-				(item) =>
-					listLike.filter(
-						(item2) =>
-							item.profileLikesId === item2.profileHasBeenLikedId &&
-							item.profileHasBeenLikedId === item2.profileLikesId &&
-							item.profileLikesId === jwt.decoded.id
-					).length
-			)
-		);
-		const matchListProfile = await Promise.all(
-			matchListId &&
-				matchListId.map(async (item) => {
-					const profileHasBeenLikedId = await getProfileByUserId(
-						item.profileHasBeenLikedId
-					);
-					return profileHasBeenLikedId;
-				})
-		);
-		if (matchListProfile.length) {
-			res.status(200).json(matchListProfile);
-			return;
+		if (listLike && listLike.length) {
+			const matchListId = await Promise.all(
+				listLike.filter(
+					(item) =>
+						listLike.filter(
+							(item2) =>
+								item.profileLikesId === item2.profileHasBeenLikedId &&
+								item.profileHasBeenLikedId === item2.profileLikesId &&
+								item.profileLikesId === jwt.decoded.id
+						).length
+				)
+			);
+			if (matchListId) {
+				const matchListProfile = await Promise.all(
+					matchListId &&
+						matchListId.map(async (item) => {
+							const profileHasBeenLikedId = await getProfileByUserId(
+								item.profileHasBeenLikedId
+							);
+							return profileHasBeenLikedId;
+						})
+				);
+				if (matchListProfile.length) {
+					res.status(200).json(matchListProfile);
+					return;
+				}
+			}
 		}
 	}
 	res.status(400).send("An error occured");

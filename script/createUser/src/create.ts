@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/09 17:32:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 14:09:18 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ import {
 } from './const';
 import { getApiLocationUser } from './getApi';
 
-//import { getApiLocationUser } from './getApi';
-
 export function createUser(
 	email: string
 ): Promise<{ user: user; token: string }> {
-	return new Promise(async (resolve, rejects) => {
+	return new Promise(async (resolve) => {
 		const args = {
 			method: "POST",
 			headers: {
@@ -49,7 +47,7 @@ export function createUser(
 }
 
 export function createProfile(infoApi: any, token: string): Promise<profile> {
-	return new Promise(async (resolve, rejects) => {
+	return new Promise(async (resolve) => {
 		const args = {
 			method: "POST",
 			headers: {
@@ -57,7 +55,7 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 				token: token,
 			},
 			body: JSON.stringify({
-				dob: infoApi.dob.age,
+				dob: new Date(infoApi.dob.date).getTime(),
 				firstname: infoApi.name.first,
 				popularityScore: Math.floor(Math.random() * Math.floor(100)),
 				lastname: infoApi.name.last,
@@ -79,18 +77,20 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 		await fetch("http://localhost:3001/profile/handleProfile", args)
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(response.statusText);
+					console.log(response);
+					resolve(null);
 				}
 				resolve(response.json());
 			})
 			.catch((error) => {
+				console.log(error);
 				resolve(null);
 			});
 	});
 }
 
 export function createTag(infoApi: any, token: string): Promise<tag> {
-	return new Promise(async (resolve, rejects) => {
+	return new Promise(async (resolve) => {
 		const tagList = {
 			tagList: [
 				tag1[Math.floor(Math.random() * tag1.length)],
@@ -123,37 +123,42 @@ export function createTag(infoApi: any, token: string): Promise<tag> {
 }
 
 export function createLocation(infoApi: any, token: string): Promise<location> {
-	return new Promise(async (resolve, rejects) => {
+	return new Promise(async (resolve) => {
 		const result: any = await getApiLocationUser(
 			"France," + infoApi.location.city.toString()
 		);
-		const args = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				token: token,
-			},
-			body: JSON.stringify({
-				city: infoApi.location.city as string,
-				postCode: result.results[0].components.postcode
-					? result.results[0].components.postcode.toString()
-					: "unknown",
-				countryCode: result.results[0].components.country_code,
-				country: result.results[0].components.country,
-				lat: result.results[0].geometry.lat as number,
-				lng: result.results[0].geometry.lng as number,
-			}),
-		};
+		if (result) {
+			const args = {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					token: token,
+				},
+				body: JSON.stringify({
+					city: infoApi.location.city as string,
+					postCode: result.results[0].components.postcode
+						? result.results[0].components.postcode.toString()
+						: null,
+					countryCode: result.results[0].components.country_code,
+					country: result.results[0].components.country,
+					lat: result.results[0].geometry.lat as number,
+					lng: result.results[0].geometry.lng as number,
+				}),
+			};
 
-		await fetch("http://localhost:3001/location/handleUsageLocation", args)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(response.statusText);
-				}
-				resolve(response.json());
-			})
-			.catch((error) => {
-				resolve(null);
-			});
+			await fetch("http://localhost:3001/location/handleUsageLocation", args)
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(response.statusText);
+					}
+					resolve(response.json());
+				})
+				.catch((error) => {
+					resolve(null);
+				});
+		} else {
+			console.log("getApiLocationUser null");
+			resolve(null);
+		}
 	});
 }
