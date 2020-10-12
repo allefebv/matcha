@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   SignUpDialog.tsx                                   :+:      :+:    :+:   */
+/*   SignInDialog.tsx                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 18:21:23 by allefebv         ###   ########.fr       */
+/*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/12 18:31:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,37 +18,39 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { signupAPI } from "../services/apiCalls";
-import * as constants from "../services/constants";
-
+import { getProfileAPI, signinAPI } from "../../services/apiCalls";
+import * as constants from "../../services/constants";
+import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signup } from "../store/user/action";
-import { actionUi_showSnackbar } from "../store/ui/action";
+import {
+	actionUser_signin,
+	actionUser_setProfile,
+} from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
-const withReduxProps = connect((state: any) => ({}));
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-function SignUpDialogComponent(props: Props) {
+function SignInDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [email, setEmail] = useState<string | null>("");
+	let [email, setEmail] = useState<string>("");
 	let [emailError, setEmailError] = useState(false);
-	let [password, setPassword] = useState<string | null>("");
+	const [password, setPassword] = useState<string>("");
 	let [passwordError, setPasswordError] = useState(false);
-	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
-	let [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
 	const handleClickOpen = () => {
+		setEmailError(false);
+		setPasswordError(false);
+		setPassword("");
 		setOpen(true);
 	};
 
 	const handleClose = () => {
 		setOpen(false);
 		setPassword("");
-		setPasswordConfirm("");
-		setPasswordError(false);
-		setPasswordConfirmError(false);
-		setEmailError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -61,7 +63,7 @@ function SignUpDialogComponent(props: Props) {
 	}
 
 	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
-		setEmailError(!isEmailValid(email));
+		email !== "" && setEmailError(!isEmailValid(email));
 	}
 
 	function isEmailValid(email: string | null) {
@@ -72,62 +74,38 @@ function SignUpDialogComponent(props: Props) {
 
 	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
 		setPassword(e.currentTarget.value);
-		setPasswordError(!isPasswordValid(e.currentTarget.value));
 	}
 
-	function handlePasswordConfirm(e: React.ChangeEvent<HTMLInputElement>) {
-		setPasswordConfirm(e.currentTarget.value);
-		setPasswordConfirmError(!arePasswordsIdentical(e.currentTarget.value));
-	}
-
-	function isPasswordValid(password: string | null) {
-		return typeof password === "string" &&
-			password.match(constants.REGEX_PASSWORD)
-			? true
-			: false;
-	}
-
-	function arePasswordsIdentical(passwordConfirm: string | null) {
-		return password === passwordConfirm;
-	}
-
-	const handleSignUp = () => {
+	const handleSignIn = () => {
 		let details = {
 			email: email,
 			password: password,
-			redirectUrl: constants.FRONT_URL + constants.LANDING_ROUTE,
 		};
-		signupAPI(details)
-			.then(({ user, token }) => {
-				props.dispatch(actionUser_signup({ user, token }));
-				props.dispatch(
-					actionUi_showSnackbar({
-						message:
-							"Your account has been created, please check your emails to activate it.",
-						type: "success",
-					})
+		signinAPI(details).then(async ({ user, token }) => {
+			if (user.activated) {
+				const profile = await getProfileAPI(token).catch((error) =>
+					console.log(error.message)
 				);
-			})
-			.catch((error) => {
+				if (profile) {
+					props.dispatch(actionUser_setProfile({ profile: profile.profile }));
+				}
+				props.dispatch(actionUser_signin({ user, token }));
+			} else {
 				props.dispatch(
 					actionUi_showSnackbar({
-						message: error.message,
+						message: "Please check your emails to activate your account",
 						type: "error",
 					})
 				);
-				console.log(error.message);
-			});
-		handleClose();
+			}
+			handleClose();
+		});
 	};
 
 	return (
 		<div>
-			<Button
-				variant="outlined"
-				color="primary"
-				onClick={handleClickOpen}
-			>
-				Sign up
+			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+				Sign in
 			</Button>
 			<Dialog
 				open={open}
@@ -135,7 +113,7 @@ function SignUpDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Sign up</DialogTitle>
+					<DialogTitle id="form-dialog-title">Sign in</DialogTitle>
 					<DialogContent>
 						<TextField
 							autoFocus
@@ -147,9 +125,7 @@ function SignUpDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={
-								emailError && constants.EMAIL_HELPER_ERROR
-							}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -159,42 +135,23 @@ function SignUpDialogComponent(props: Props) {
 							variant="filled"
 							fullWidth
 							value={password}
-							onChange={handlePassword}
 							error={passwordError}
-							helperText={
-								passwordError && constants.PASSWORD_HELPER_ERROR
-							}
-						/>
-						<TextField
-							margin="dense"
-							label="Confirm Password"
-							type="password"
-							variant="filled"
-							fullWidth
-							value={passwordConfirm}
-							onChange={handlePasswordConfirm}
-							error={passwordConfirmError}
-							helperText={
-								passwordConfirmError &&
-								constants.PASSWORD_CONFIRM_HELPER_ERROR
-							}
+							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							onChange={handlePassword}
 						/>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
+						<ForgotPasswordDialog />
 						<Button
-							disabled={
-								!isEmailValid(email) ||
-								!isPasswordValid(password) ||
-								!arePasswordsIdentical(passwordConfirm)
-							}
-							onClick={handleSignUp}
+							disabled={!isEmailValid(email) || password === ""}
+							onClick={handleSignIn}
 							type="submit"
 							color="primary"
 						>
-							Sign up
+							Sign in
 						</Button>
 					</DialogActions>
 				</form>
@@ -203,4 +160,4 @@ function SignUpDialogComponent(props: Props) {
 	);
 }
 
-export const SignUpDialog = withReduxProps(SignUpDialogComponent);
+export const SignInDialog = withReduxProps(SignInDialogComponent);

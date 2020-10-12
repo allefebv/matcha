@@ -6,17 +6,17 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/06 20:57:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:11:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
-import { ModifyPasswordDialog } from "../component/ModifyPasswordDialog";
-import { DeleteAccountDialog } from "../component/DeleteAccountDialog";
+import { ModifyPasswordDialog } from "../user/ModifyPasswordDialog";
+import { DeleteAccountDialog } from "../user/DeleteAccountDialog";
 import { Grid } from "@material-ui/core";
 
 import { connect, ConnectedProps } from "react-redux";
-import { ModifyEmailDialog } from "../component/ModifyEmailDialog";
+import { ModifyEmailDialog } from "../user/ModifyEmailDialog";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,

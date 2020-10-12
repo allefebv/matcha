@@ -1,7 +1,7 @@
 import React from "react";
-import { CustomAvatar } from "./CustomAvatar";
+import { CustomAvatar } from "../../component/CustomAvatar";
 import { AvatarGroup } from "@material-ui/lab";
-import { Iprofile } from "../types/types";
+import { Iprofile } from "../../types/types";
 
 interface Props {
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;

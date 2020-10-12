@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 15:55:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 19:53:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,17 @@ import { Autocomplete } from "@material-ui/lab";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 
-import { Iprofile } from "../types/types";
-import * as constants from "../services/constants";
+import { Iprofile } from "../../types/types";
+import * as constants from "../../services/constants";
 import { throttle } from "lodash";
-import { renameKey } from "../services/utils";
+import { renameKey } from "../../services/utils";
 
 interface Props {
 	activeStep: number;
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
+	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
 }
 
@@ -120,6 +121,11 @@ export function ProfileOptional3(props: Props) {
 			? true
 			: false;
 		props.setProfile(tmpProfile);
+		if (newValue) {
+			props.setDisabled(false);
+		} else {
+			props.setDisabled(true);
+		}
 	}
 
 	return (
@@ -144,11 +150,7 @@ export function ProfileOptional3(props: Props) {
 						getOptionLabel={(option) => {
 							if (option !== null) {
 								return (
-									option.postCode +
-									", " +
-									option.city +
-									", " +
-									option.country
+									option.postCode + ", " + option.city + ", " + option.country
 								);
 							}
 							return "";
@@ -163,9 +165,7 @@ export function ProfileOptional3(props: Props) {
 								<Grid item container xs={2}>
 									{option !== null ? (
 										option.isFromGeolocation ? (
-											<MyLocationIcon
-												style={{ color: "#16F02D" }}
-											/>
+											<MyLocationIcon style={{ color: "#16F02D" }} />
 										) : (
 											<LocationOnIcon />
 										)

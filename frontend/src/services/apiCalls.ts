@@ -133,3 +133,15 @@ export const signinAPI = (details: Object) => {
 		}
 	);
 };
+
+export const handleGeoLocationAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_HANDLE_GEOLOCATION, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};

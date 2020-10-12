@@ -1,40 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ModifyPasswordDialog.tsx                           :+:      :+:    :+:   */
+/*   SignUpDialog.tsx                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 20:13:40 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:10:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-
 import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
 
-import * as constants from "../services/constants";
-import { modifyPasswordAPI } from "../services/apiCalls";
+import { signupAPI } from "../../services/apiCalls";
+import * as constants from "../../services/constants";
 
-const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.isLoggedIn,
-	user: state.user.user,
-}));
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_signup } from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
+
+const withReduxProps = connect((state: any) => ({}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-function ModifyPasswordDialogComponent(props: Props) {
+function SignUpDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [currentPassword, setCurrentPassword] = useState<string | null>("");
-	let [newPassword, setNewPassword] = useState<string | null>("");
-	let [newPasswordError, setNewPasswordError] = useState(false);
+	let [email, setEmail] = useState<string | null>("");
+	let [emailError, setEmailError] = useState(false);
+	let [password, setPassword] = useState<string | null>("");
+	let [passwordError, setPasswordError] = useState(false);
 	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
 	let [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
@@ -44,25 +44,35 @@ function ModifyPasswordDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
-		setCurrentPassword("");
-		setNewPassword("");
+		setPassword("");
 		setPasswordConfirm("");
-		setNewPasswordError(false);
+		setPasswordError(false);
 		setPasswordConfirmError(false);
+		setEmailError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		handleClose();
 	}
 
-	function handleCurrentPassword(e: React.ChangeEvent<HTMLInputElement>) {
-		setCurrentPassword(e.currentTarget.value);
+	function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
+		setEmail(e.currentTarget.value);
+		isEmailValid(e.currentTarget.value) && setEmailError(false);
 	}
 
-	function handleNewPassword(e: React.ChangeEvent<HTMLInputElement>) {
-		setNewPassword(e.currentTarget.value);
-		setNewPasswordError(!isPasswordValid(e.currentTarget.value));
+	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
+		setEmailError(!isEmailValid(email));
+	}
+
+	function isEmailValid(email: string | null) {
+		return typeof email === "string" && email.match(constants.REGEX_EMAIL)
+			? true
+			: false;
+	}
+
+	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
+		setPassword(e.currentTarget.value);
+		setPasswordError(!isPasswordValid(e.currentTarget.value));
 	}
 
 	function handlePasswordConfirm(e: React.ChangeEvent<HTMLInputElement>) {
@@ -78,22 +88,42 @@ function ModifyPasswordDialogComponent(props: Props) {
 	}
 
 	function arePasswordsIdentical(passwordConfirm: string | null) {
-		return newPassword === passwordConfirm;
+		return password === passwordConfirm;
 	}
 
-	const handleModifyPassword = () => {
+	const handleSignUp = () => {
 		let details = {
-			password: currentPassword,
-			newPassword: newPassword,
+			email: email,
+			password: password,
+			redirectUrl: constants.FRONT_URL + constants.LANDING_ROUTE,
 		};
-
-		modifyPasswordAPI(details, props.loggedIn).then(({ user, token }) => {});
+		signupAPI(details)
+			.then(({ user, token }) => {
+				props.dispatch(actionUser_signup({ user, token }));
+				props.dispatch(
+					actionUi_showSnackbar({
+						message:
+							"Your account has been created, please check your emails to activate it.",
+						type: "success",
+					})
+				);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+		handleClose();
 	};
 
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Modify Password
+				Sign up
 			</Button>
 			<Dialog
 				open={open}
@@ -101,31 +131,35 @@ function ModifyPasswordDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Modify Password</DialogTitle>
+					<DialogTitle id="form-dialog-title">Sign up</DialogTitle>
 					<DialogContent>
 						<TextField
+							autoFocus
 							margin="dense"
-							label="Current password"
-							type="password"
+							label="Email Address"
+							type="email"
 							variant="filled"
 							fullWidth
-							value={currentPassword}
-							onChange={handleCurrentPassword}
+							value={email}
+							onChange={handleEmail}
+							error={emailError}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							onBlur={handleBlurEmail}
 						/>
 						<TextField
 							margin="dense"
-							label="New password"
+							label="Password"
 							type="password"
 							variant="filled"
 							fullWidth
-							value={newPassword}
-							onChange={handleNewPassword}
-							error={newPasswordError}
-							helperText={newPasswordError && constants.PASSWORD_HELPER_ERROR}
+							value={password}
+							onChange={handlePassword}
+							error={passwordError}
+							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
 						/>
 						<TextField
 							margin="dense"
-							label="Confirm new password"
+							label="Confirm Password"
 							type="password"
 							variant="filled"
 							fullWidth
@@ -142,11 +176,16 @@ function ModifyPasswordDialogComponent(props: Props) {
 							Cancel
 						</Button>
 						<Button
-							onClick={handleModifyPassword}
+							disabled={
+								!isEmailValid(email) ||
+								!isPasswordValid(password) ||
+								!arePasswordsIdentical(passwordConfirm)
+							}
+							onClick={handleSignUp}
 							type="submit"
 							color="primary"
 						>
-							Confirm
+							Sign up
 						</Button>
 					</DialogActions>
 				</form>
@@ -155,6 +194,4 @@ function ModifyPasswordDialogComponent(props: Props) {
 	);
 }
 
-export const ModifyPasswordDialog = withReduxProps(
-	ModifyPasswordDialogComponent
-);
+export const SignUpDialog = withReduxProps(SignUpDialogComponent);

@@ -6,17 +6,17 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/10 13:42:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 21:37:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
-import { ProfileCardsScroll } from "../component/ProfileCardsScroll";
-import { getProfileAPI } from "../services/apiCalls";
+import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
+import { getProfileAPI } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { ProfilePictures } from "../component/ProfilePictures";
-import { Iprofile } from "../types/types";
+import { ProfilePictures } from "../profile/ProfilePictures";
+import { Iprofile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -31,7 +31,7 @@ const UserProfilePageComponent = (props: Props) => {
 		username: "",
 		dob: null,
 		gender: null,
-		sexualOrientation: null,
+		sexualOrientation: "bisexual",
 		bio: null,
 		geoLocationAuthorization: false,
 		location: {

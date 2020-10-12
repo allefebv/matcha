@@ -6,16 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:03 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/10 15:31:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:10:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { FC } from "react";
 import { Redirect, Route } from "react-router-dom";
 
-import * as constants from "../services/constants";
+import * as constants from "../../services/constants";
 import { connect, ConnectedProps } from "react-redux";
-import { isProfileEmpty } from "../services/utils";
+import { isProfileEmpty } from "../../services/utils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
