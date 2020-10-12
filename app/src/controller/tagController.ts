@@ -1,21 +1,19 @@
 import { Request, Response } from 'express';
-import { send } from 'process';
-import { isConstructorTypeNode } from 'typescript';
 
 import { getProfileByUserId } from '../model/profileRepositories';
 import {
-	addTag, addTagProfile, deleteTagProfile, getAllTag, getTag, getTagById,
-	getTagProfile
+	addTagProfile, deleteTagProfile, getTag, getTagProfile
 } from '../model/tagRepositories';
 import { addNewTag } from '../services/addNewTag';
 import { jwtVerify } from '../services/jwt';
 
+/*
 export async function addTagProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
+		console.log("-> tag start id = ", jwt.decoded.id);
 		try {
 			await addNewTag(req.body.tagList);
-			const tag = await getAllTag();
 			const tagProfile = await getTagProfile(jwt.decoded.id);
 			const tagProfileFilter = tagProfile.map((item) => item.tag);
 			const tagList: string[] = req.body.tagList.filter((item) => {
@@ -33,7 +31,17 @@ export async function addTagProfileController(req: Request, res: Response) {
 		} catch {
 			res.status(400).send("ERROR");
 		}
+		console.log("-> tag end id = ", jwt.decoded.id);
 	}
+}
+*/
+export function addTagProfileController(req: Request, res: Response) {
+	jwtVerify(req.headers.token, res).then((jwt) => {
+		addNewTag(req.body.tagList).then(() => {});
+		getTagProfile(jwt.decoded.id)
+			.then((tagProfile) => tagProfile.map((item) => item.tag))
+			.then((tagProfileFilter) => {});
+	});
 }
 
 export async function deleteTagProfileController(req: Request, res: Response) {

@@ -8,7 +8,7 @@ const usernameValidation = async (
 	username: string
 ): Promise<string> => {
 	const profile = await getProfileByUsername(username);
-	if (username.length > 16) {
+	if (username.length > 36) {
 		return "Username is too long";
 	}
 	if (profile && profile.userId !== userId) {
@@ -42,10 +42,11 @@ export const profileValidation = async (
 
 	result.push(await usernameValidation(id, body.username));
 	result.push(ageValidation(body.dob));
-	result.push(genreValidation(body.genre));
+	result.push(genreValidation(body.gender));
 	result.push(sexualOrientationValidation(body.sexualOrientation));
 	result = result.filter((item) => item);
 	if (result.length) {
+		console.log("-> profileValidation id:" + id + "error: ", result);
 		res.status(400).send(result);
 		return false;
 	}

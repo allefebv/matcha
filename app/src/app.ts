@@ -1,15 +1,16 @@
-import bodyParser from "body-parser";
-import cors from "cors";
-import express from "express";
-import fileUpload from "express-fileupload";
-import { createConnection } from "mysql";
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express from 'express';
+import fileUpload from 'express-fileupload';
+import { createConnection } from 'mysql';
 
-import { router } from "./router";
+import { router } from './router';
 
 export let dataBase = null;
 let app: express.Application | null = null;
+export let transporter = null;
 
-function initMiddelware() {
+async function initMiddelware() {
 	app.use(
 		fileUpload({
 			createParentPath: true,

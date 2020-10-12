@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/09 17:26:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 15:13:24 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ export interface profile {
 	username: string;
 	firstname: string;
 	lastname: string;
-	genre: string;
+	gender: string;
 	sexualOrientation: string | null;
 	geoLocationAuthorization: boolean;
 	bio: string | null;

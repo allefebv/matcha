@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 14:04:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 16:47:47 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ export function getApiRandonUser() {
 
 export function getApiLocationUser(param: string) {
 	return new Promise((resolve) => {
-		var apikey = "102a4a73c0c24ac6bd57d86d944ce895";
+		var apikey = "3ecb300886c341918a12a8c983d6aaeb";
 		var api_url = "https://api.opencagedata.com/geocode/v1/json";
 		var request_url =
 			api_url +

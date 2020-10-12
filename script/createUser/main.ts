@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 14:05:22 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 16:27:14 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,9 @@ async function main() {
 	if (userApiList) {
 		await Promise.all(
 			userApiList.results.map(async (infoApi) => {
-				// User
 				const user = await createUser(infoApi.email);
 				if (user) {
 					const profile = await createProfile(infoApi, user.token);
-					console.log(profile);
 					if (profile) {
 						const tag = await createTag(infoApi, user.token);
 						const location = await createLocation(infoApi, user.token);
@@ -44,7 +42,6 @@ async function main() {
 						};
 						i++;
 						list.push(userProfile);
-						console.log(`--> user num* ${i} / ${HOW_MANY_CREATE_USER} push`);
 					}
 				}
 			})

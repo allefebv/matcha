@@ -76,7 +76,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.username}',
 			'${profile.firstname}',
 			'${profile.lastname}',
-			'${profile.genre || null}',
+			'${profile.gender || null}',
 			${profile.geoLocationAuthorization},
 			'${profile.sexualOrientation || "bisexual"}',
 			'${profile.bio || null}'
@@ -101,7 +101,7 @@ export function updateProfile(
 			username = '${profile.username}',
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',
-			gender = '${profile.genre}',
+			gender = '${profile.gender}',
 			geoLocationAuthorization = ${profile.geoLocationAuthorization},
 			sexualOrientation = '${profile.sexualOrientation}',
 			bio = '${profile.bio}'

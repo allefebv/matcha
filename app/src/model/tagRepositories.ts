@@ -55,11 +55,22 @@ export function getTagProfile(id: number): Promise<{ tag: string }[] | null> {
 
 export function addTag(tag: string): Promise<tag | null> {
 	return new Promise((resolve) => {
+		/*
 		const sql = `INSERT INTO tag (
 			tag
 		) VALUES (
 			'${tag}'
+		) WHERE NOT EXISTS (
+			SELECT tag FROM tag WHERE tag = ${tag}
 		)`;
+		*/
+		const sql = `
+		BEGIN
+			IF NOT EXSISTS (SELECT * FROM tag WHERE tag = '${tag}')
+			BEGIN
+				INSERT INTO tag (tag) VALUES ('${tag}')
+			END
+		END`;
 		dataBase.query(sql, (error: string, result: tag) => {
 			if (error) {
 				console.log(error);

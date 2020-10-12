@@ -5,6 +5,7 @@ import { user } from '../../types/types';
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
 	port: 465,
+	pool: true,
 	secure: true,
 	auth: {
 		user: "project.matcha.42@gmail.com",
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function activatedUserMailer(user: user, link: string) {
-	transporter.sendMail({
+	await transporter.sendMail({
 		to: user.email,
 		subject: "Matcha: Activate your account",
 		text: `Hello,\nFor activate your account click on this link: ${link}\n`,
@@ -21,7 +22,7 @@ export async function activatedUserMailer(user: user, link: string) {
 }
 
 export async function newPasswordMailer(user: user, password: string) {
-	transporter.sendMail({
+	await transporter.sendMail({
 		to: user.email,
 		subject: "Matcha: Reset password",
 		text: `Hello,\nYour new password is: ${password}\n`,
@@ -29,9 +30,11 @@ export async function newPasswordMailer(user: user, password: string) {
 }
 
 export async function newEmailMailer(email: string, link: string) {
-	transporter.sendMail({
+	await transporter.sendMail({
 		to: email,
 		subject: "Matcha: Activate your new email",
 		text: `Hello,\nTo activate your new email click here ${link}\n`,
 	});
 }
+
+transporter.close();

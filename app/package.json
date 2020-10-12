@@ -37,6 +37,7 @@
 		"@types/cors": "^2.8.7",
 		"@types/express-fileupload": "^1.1.5",
 		"@types/node-fetch": "^2.5.7",
+		"@types/nodemailer": "^6.4.0",
 		"prettier": "2.1.1"
 	}
 }

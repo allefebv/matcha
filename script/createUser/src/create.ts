@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 14:09:18 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/12 16:42:15 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ import { getApiLocationUser } from './getApi';
 
 export function createUser(
 	email: string
-): Promise<{ user: user; token: string }> {
+): Promise<{ user: user; token: string } | null> {
 	return new Promise(async (resolve) => {
 		const args = {
 			method: "POST",
@@ -38,9 +38,18 @@ export function createUser(
 				if (!response.ok) {
 					throw new Error(response.statusText);
 				}
-				resolve(response.json());
+				return response;
+			})
+			.then((response) => {
+				const contentType = response.headers.get("content-type");
+				if (contentType && contentType.indexOf("application/json") !== -1) {
+					resolve(response.json());
+				} else {
+					resolve(null);
+				}
 			})
 			.catch((error) => {
+				console.log("-> addUser error");
 				resolve(null);
 			});
 	});
@@ -59,7 +68,7 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 				firstname: infoApi.name.first,
 				popularityScore: Math.floor(Math.random() * Math.floor(100)),
 				lastname: infoApi.name.last,
-				genre: infoApi.gender,
+				gender: infoApi.gender,
 				sexualOrientation:
 					infoApi.gender === "male"
 						? maleSexualOrientation[
@@ -77,13 +86,20 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 		await fetch("http://localhost:3001/profile/handleProfile", args)
 			.then((response) => {
 				if (!response.ok) {
-					console.log(response);
+					throw new Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => {
+				const contentType = response.headers.get("content-type");
+				if (contentType && contentType.indexOf("application/json") !== -1) {
+					resolve(response.json());
+				} else {
 					resolve(null);
 				}
-				resolve(response.json());
 			})
 			.catch((error) => {
-				console.log(error);
+				console.log("-> addProfile error");
 				resolve(null);
 			});
 	});
@@ -114,9 +130,18 @@ export function createTag(infoApi: any, token: string): Promise<tag> {
 				if (!response.ok) {
 					throw new Error(response.statusText);
 				}
-				resolve(response.json());
+				return response;
+			})
+			.then((response) => {
+				const contentType = response.headers.get("content-type");
+				if (contentType && contentType.indexOf("application/json") !== -1) {
+					resolve(response.json());
+				} else {
+					resolve(null);
+				}
 			})
 			.catch((error) => {
+				console.log("-> addTag error");
 				resolve(null);
 			});
 	});
@@ -151,9 +176,18 @@ export function createLocation(infoApi: any, token: string): Promise<location> {
 					if (!response.ok) {
 						throw new Error(response.statusText);
 					}
-					resolve(response.json());
+					return response;
+				})
+				.then((response) => {
+					const contentType = response.headers.get("content-type");
+					if (contentType && contentType.indexOf("application/json") !== -1) {
+						resolve(response.json());
+					} else {
+						resolve(null);
+					}
 				})
 				.catch((error) => {
+					console.log("-> addLocation error");
 					resolve(null);
 				});
 		} else {

@@ -31,7 +31,9 @@ export async function addUserController(req: Request, res: Response) {
 			activatedUserMailer(
 				user,
 				`${req.body.redirectUrl}?activationKey=${user.activationKey}&id=${user.id}`
-			);
+			).catch((error) => {
+				console.log("mailer = ", error);
+			});
 			return;
 		}
 		res.status(400).send("ERROR_OCCURED");
