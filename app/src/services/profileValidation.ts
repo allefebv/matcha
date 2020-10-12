@@ -21,9 +21,9 @@ const ageValidation = (dob: number) =>
 	Date.now() - dob < 567648000000 ? "Age under 18" : null;
 
 const genreValidation = (genre: string) =>
-	genre === "male" || genre === "female"
+	genre === "male" || genre === "female" || genre === null
 		? null
-		: "Genre invalid select male or female";
+		: "Genre invalid select male, female or null";
 
 const sexualOrientationValidation = (sexualOrientation: string) => {
 	const genreList = ["gay", "lesbian", "bisexual", "heterosexual"];

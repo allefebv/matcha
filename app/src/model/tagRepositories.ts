@@ -65,12 +65,8 @@ export function addTag(tag: string): Promise<tag | null> {
 		)`;
 		*/
 		const sql = `
-		BEGIN
 			IF NOT EXSISTS (SELECT * FROM tag WHERE tag = '${tag}')
-			BEGIN
-				INSERT INTO tag (tag) VALUES ('${tag}')
-			END
-		END`;
+			INSERT INTO tag (tag) VALUES ('${tag}')`;
 		dataBase.query(sql, (error: string, result: tag) => {
 			if (error) {
 				console.log(error);
