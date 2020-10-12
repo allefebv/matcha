@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:00:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { user } from "../types/types";
-
-import { fetchApi } from "../services/fetchApi";
+import { signupAPI } from "../services/apiCalls";
 import * as constants from "../services/constants";
 
-type Props = {};
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_signup } from "../store/user/action";
 
-export function SignUpDialog(props: Props) {
+const withReduxProps = connect((state: any) => ({}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
+
+function SignUpDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	let [email, setEmail] = useState<string | null>("");
 	let [emailError, setEmailError] = useState(false);
@@ -91,32 +94,28 @@ export function SignUpDialog(props: Props) {
 		let details = {
 			email: email,
 			password: password,
-			redirectUrl: "localhost:3000/my-profile",
+			redirectUrl: constants.FRONT_URL + constants.LANDING_ROUTE,
 		};
-
-		fetchApi<{ user: user; token: string }>(
-			constants.URL + constants.URI_SIGNUP,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: details,
-			}
-		)
+		signupAPI(details)
 			.then(({ user, token }) => {
+				props.dispatch(actionUser_signup({ user, token }));
 				handleClose();
 			})
 			.catch((error) => {
 				setEmailError(true);
 				setPasswordError(true);
 				setPasswordConfirmError(true);
+				console.log(error.message);
 			});
 	};
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Sign up
 			</Button>
 			<Dialog
@@ -137,7 +136,9 @@ export function SignUpDialog(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							helperText={
+								emailError && constants.EMAIL_HELPER_ERROR
+							}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -149,7 +150,9 @@ export function SignUpDialog(props: Props) {
 							value={password}
 							onChange={handlePassword}
 							error={passwordError}
-							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							helperText={
+								passwordError && constants.PASSWORD_HELPER_ERROR
+							}
 						/>
 						<TextField
 							margin="dense"
@@ -161,7 +164,8 @@ export function SignUpDialog(props: Props) {
 							onChange={handlePasswordConfirm}
 							error={passwordConfirmError}
 							helperText={
-								passwordConfirmError && constants.PASSWORD_CONFIRM_HELPER_ERROR
+								passwordConfirmError &&
+								constants.PASSWORD_CONFIRM_HELPER_ERROR
 							}
 						/>
 					</DialogContent>
@@ -187,3 +191,5 @@ export function SignUpDialog(props: Props) {
 		</div>
 	);
 }
+
+export const SignUpDialog = withReduxProps(SignUpDialogComponent);

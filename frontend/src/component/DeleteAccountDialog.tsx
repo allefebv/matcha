@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:07:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../services/constants";
-import { fetchApi } from "../services/fetchApi";
+import { deleteAPI } from "../services/apiCalls";
+import { actionUser_signin } from "../store/user/action";
+import { useHistory } from "react-router-dom";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
-	user: state.user.signin.user,
+	loggedIn: state.user.isLoggedIn,
+	user: state.user.user,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -33,6 +35,7 @@ type Props = {} & ReduxProps;
 function DeleteAccountDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	let [password, setPassword] = useState<string | null>("");
+	const history = useHistory();
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -56,24 +59,14 @@ function DeleteAccountDialogComponent(props: Props) {
 			password: password,
 		};
 
-		fetchApi<{ user: Object; token: string }>(
-			constants.URL + constants.URI_DELETE_ACCOUNT,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-					token: props.loggedIn,
-				},
-				body: details,
-				credentials: "include",
-			}
-		)
-			.then(() => {})
-			.catch((error) => {});
+		deleteAPI(details, props.loggedIn).then(() => {
+			props.dispatch(actionUser_signin({ user: null, token: null }));
+			history.push(constants.LANDING_ROUTE);
+		});
 	};
 
 	return (
-		<div>
+		<React.Fragment>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
 				Delete Account
 			</Button>
@@ -86,6 +79,7 @@ function DeleteAccountDialogComponent(props: Props) {
 					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
 					<DialogContent>
 						<TextField
+							autoFocus
 							margin="dense"
 							label="Password"
 							type="password"
@@ -110,7 +104,7 @@ function DeleteAccountDialogComponent(props: Props) {
 					</DialogActions>
 				</form>
 			</Dialog>
-		</div>
+		</React.Fragment>
 	);
 }
 

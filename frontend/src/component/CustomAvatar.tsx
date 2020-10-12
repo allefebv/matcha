@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:38:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/30 19:21:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/04 22:23:00 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ export const CustomAvatar = (props: Props) => {
 	const showFileUpload = () => {
 		if (fileUpload && fileUpload.current !== null) {
 			fileUpload.current.click();
-			console.log("Hello", props.src);
 		}
 	};
 

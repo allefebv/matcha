@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:35:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:48:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,36 @@ interface fetchArgs {
 	credentials?: "include" | "omit" | "same-origin" | undefined;
 }
 
-export function fetchApi<T>(url: string, args: fetchArgs): Promise<T> {
-	if (args.body && args.headers["Content-Type"] === "application/json") {
-		args.body = JSON.stringify(args.body);
-	}
+const TIMEOUT = 5000;
 
-	return fetch(url, args as RequestInit)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(response.statusText);
-			}
-			return response.json();
-		})
-		.catch((error) => {
-			throw new Error("Network error: " + error.message);
-		});
+export function fetchApi<T>(url: string, args: fetchArgs): Promise<T> {
+	return new Promise((resolve, reject) => {
+		const timeout = setTimeout(() => {
+			reject(new Error("timeout"));
+		}, TIMEOUT);
+
+		if (args.body && args.headers["Content-Type"] === "application/json") {
+			args.body = JSON.stringify(args.body);
+		}
+
+		fetch(url, args as RequestInit)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => {
+				const contentType = response.headers.get("content-type");
+				if (
+					contentType &&
+					contentType.indexOf("application/json") !== -1
+				) {
+					resolve(response.json());
+				} else {
+					resolve();
+				}
+			})
+			.catch((error) => reject(error));
+	});
 }

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:36:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 20:13:40 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../services/constants";
-import { fetchApi } from "../services/fetchApi";
+import { modifyPasswordAPI } from "../services/apiCalls";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
-	user: state.user.signin.user,
+	loggedIn: state.user.isLoggedIn,
+	user: state.user.user,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -87,18 +87,7 @@ function ModifyPasswordDialogComponent(props: Props) {
 			newPassword: newPassword,
 		};
 
-		fetchApi<{ user: Object; token: string }>(
-			constants.URL + constants.URI_MODIFY_PASSWORD,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-					token: props.loggedIn,
-				},
-				credentials: "include",
-				body: details,
-			}
-		).then(({ user, token }) => {});
+		modifyPasswordAPI(details, props.loggedIn).then(({ user, token }) => {});
 	};
 
 	return (

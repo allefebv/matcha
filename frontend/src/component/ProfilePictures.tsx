@@ -1,7 +1,7 @@
 import React from "react";
 import { CustomAvatar } from "./CustomAvatar";
 import { AvatarGroup } from "@material-ui/lab";
-import { Iimgs, Iprofile } from "../types/types";
+import { Iprofile } from "../types/types";
 
 interface Props {
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
@@ -16,7 +16,6 @@ export const ProfilePictures = (props: Props) => {
 			...props.profile,
 			imgs: { ...props.profile.imgs, [name]: img },
 		});
-		console.log(imgs);
 	}
 
 	const { imgs } = props.profile;

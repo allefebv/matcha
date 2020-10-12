@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -17,13 +17,17 @@ const styleFooter: React.CSSProperties = {
 	display: "flex",
 	color: "white",
 	zIndex: 10,
-	justifyContent: "center"
+	justifyContent: "center",
 };
 
 interface Props {}
 
 export class Footer extends React.Component<Props> {
 	render() {
-		return <Grid item xs={4} style={styleFooter}>made by jfleury and allefebv</Grid>;
+		return (
+			<Grid item xs={4} style={styleFooter}>
+				<Typography>made by jfleury and allefebv</Typography>
+			</Grid>
+		);
 	}
 }

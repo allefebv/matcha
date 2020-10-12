@@ -6,12 +6,12 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/30 15:22:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/07 17:55:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
-import { Button, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { AccountMenu } from "../component/AccountMenu";
 import { Link } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
@@ -23,7 +23,7 @@ import { SignUpDialog } from "../component/SignUpDialog";
 import * as constants from "../services/constants";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
+	loggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -44,6 +44,7 @@ class HeaderComponent extends React.Component<Props> {
 						<img
 							src={require("../images/logo_white.png")}
 							style={{ height: "100%" }}
+							alt="logo"
 						/>
 					</Link>
 				</Grid>

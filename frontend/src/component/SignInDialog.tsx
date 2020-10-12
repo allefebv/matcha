@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/02 12:23:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:07:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,39 +18,36 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { fetchApi } from "../services/fetchApi";
+import { getProfileAPI, signinAPI } from "../services/apiCalls";
 import * as constants from "../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
-
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signin } from "../store/user/action";
-
-import { useHistory } from "react-router-dom";
-
-import { user } from "../types/types";
+import { actionUser_signin, actionUser_getProfile } from "../store/user/action";
+import { actionUi_showSnackbar } from "../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
-	loggedIn: state.user.signin.isLoggedIn,
+	loggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 function SignInDialogComponent(props: Props) {
-	const [open, setOpen] = React.useState(false);
-	let [email, setEmail] = React.useState<string | null>("");
-	let [emailError, setEmailError] = React.useState(false);
-	const [password, setPassword] = React.useState<string | null>("");
-	let [passwordError, setPasswordError] = React.useState(false);
-
-	const history = useHistory();
+	const [open, setOpen] = useState(false);
+	let [email, setEmail] = useState<string>("");
+	let [emailError, setEmailError] = useState(false);
+	const [password, setPassword] = useState<string>("");
+	let [passwordError, setPasswordError] = useState(false);
 
 	const handleClickOpen = () => {
+		setEmailError(false);
+		setPasswordError(false);
+		setPassword("");
 		setOpen(true);
 	};
 
 	const handleClose = () => {
 		setOpen(false);
-		setPassword(null);
+		setPassword("");
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -81,32 +78,37 @@ function SignInDialogComponent(props: Props) {
 			email: email,
 			password: password,
 		};
-
-		fetchApi<{ user: user; token: string }>(
-			constants.URL + constants.URI_SIGNIN,
-			{
-				method: constants.POST_METHOD,
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: details,
-			}
-		)
-			.then(({ user, token }) => {
+		signinAPI(details).then(async ({ user, token }) => {
+			if (user.activated) {
+				const profile = await getProfileAPI(token).catch((error) =>
+					console.log(error.message)
+				);
+				if (profile) {
+					props.dispatch(
+						actionUser_getProfile({ profile: profile.profile })
+					);
+				}
 				props.dispatch(actionUser_signin({ user, token }));
-				handleClose();
-				history.push(constants.SEARCH_ROUTE);
-			})
-			.catch((error) => {
-				console.log(error);
-				setEmailError(true);
-				setPasswordError(true);
-			});
+			} else {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message:
+							"Please check your emails to activate your account",
+						type: "error",
+					})
+				);
+			}
+			handleClose();
+		});
 	};
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Sign in
 			</Button>
 			<Dialog
@@ -127,7 +129,9 @@ function SignInDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							helperText={
+								emailError && constants.EMAIL_HELPER_ERROR
+							}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -138,7 +142,9 @@ function SignInDialogComponent(props: Props) {
 							fullWidth
 							value={password}
 							error={passwordError}
-							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
+							helperText={
+								passwordError && constants.PASSWORD_HELPER_ERROR
+							}
 							onChange={handlePassword}
 						/>
 					</DialogContent>
