@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ProfileCreationStepper.tsx                         :+:      :+:    :+:   */
+/*   ExtendedProfileStepper.tsx                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 14:53:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 19:56:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Typography from "@material-ui/core/Typography";
 
-import { Iaddress, Iprofile } from "../types/types";
-import { ProfileMandatoryForm } from "./ProfileMandatoryForm";
+import { Iprofile } from "../../types/types";
 import { ProfileOptional1 } from "./ProfileOptional1";
 import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
@@ -28,10 +27,10 @@ import {
 	postPicturesAPI,
 	handleProfileAPI,
 	postTagsAPI,
-} from "../services/apiCalls";
-import * as constants from "../services/constants";
+} from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_geolocation } from "../store/user/action";
+import { useGeolocation } from "../../services/useGeolocation";
+import { actionUser_geolocation } from "../../store/user/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -41,76 +40,15 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-function ProfileCreationStepperComponent(props: Props) {
+function ExtendedProfileStepperComponent(props: Props) {
 	const [activeStep, setActiveStep] = useState(0);
 	const steps = getSteps();
-	const [geolocation, setGeolocation] = useState(props.currentGeolocation);
+	const geolocation = useGeolocation();
 	const [loading, setLoading] = useState(false);
-
-	useEffect(() => {
-		if (!geolocation) {
-			fetch("https://ipinfo.io/geo?token=11e860581699f1")
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error(response.statusText);
-					}
-					return response.json();
-				})
-				.then((json: any) => {
-					if (json.loc) {
-						const coordinates = json.loc.split(",");
-						fetch(
-							constants.URI_REVERSE_GEOCODING_API +
-								constants.LOCATION_IQ_API_KEY +
-								"&lat=" +
-								coordinates[0] +
-								"&lon=" +
-								coordinates[1] +
-								constants.PARAMETERS_REVERSE_GEOCODING_API
-						)
-							.then((response) => {
-								if (!response.ok) {
-									throw new Error(response.statusText);
-								}
-								return response.json();
-							})
-							.then((json) => {
-								if (json.address) {
-									const tmp: Iaddress = {
-										city: json.address.city_district
-											? json.address.city_district
-											: json.address.city,
-										postCode: json.address.postcode,
-										countryCode: json.address.country_code,
-										country: json.address.country,
-										isFromGeolocation: true,
-										lat: parseInt(json.lat),
-										lon: parseInt(json.lon),
-									};
-									setGeolocation(tmp);
-									props.dispatch(
-										actionUser_geolocation({
-											geolocation: tmp,
-										})
-									);
-								}
-							})
-							.catch((error: Error) => {
-								console.log(error.message);
-							});
-					} else {
-						throw new Error("Geolocation error");
-					}
-				})
-				.catch((error: Error) => {
-					console.log(error.message);
-					return;
-				});
-		} // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const [disabled, setDisabled] = useState(true);
 
 	function getSteps() {
-		return [0, 1, 2, 3];
+		return [0, 1, 2];
 	}
 
 	const [profile, setProfile] = useState<Iprofile>({
@@ -141,9 +79,14 @@ function ProfileCreationStepperComponent(props: Props) {
 			const tmpProfile = { ...profile };
 			tmpProfile.location.geoLocation = geolocation;
 			setProfile(tmpProfile);
+			props.dispatch(
+				actionUser_geolocation({
+					geolocation: geolocation,
+				})
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [geolocation]);
+	}, []);
 
 	async function submitPictures() {
 		const data = new FormData();
@@ -195,10 +138,12 @@ function ProfileCreationStepperComponent(props: Props) {
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		setDisabled(true);
 	};
 
 	const handleBack = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		setDisabled(false);
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,54 +151,38 @@ function ProfileCreationStepperComponent(props: Props) {
 		setProfile({ ...profile, [name]: value });
 	};
 
-	const isDisabled = () => {
-		return (
-			profile.firstname === "" ||
-			profile.lastname === "" ||
-			profile.username === "" ||
-			profile.dob === null
-		);
-	};
-
 	function getStepContent() {
 		switch (activeStep) {
 			case 0:
-				return (
-					<ProfileMandatoryForm
-						activeStep={activeStep}
-						steps={steps}
-						handleChange={handleChange}
-						profile={profile}
-						setProfile={setProfile}
-					/>
-				);
-			case 1:
 				return (
 					<ProfileOptional1
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
 						setProfile={setProfile}
+						setDisabled={setDisabled}
 						profile={profile}
 					/>
 				);
-			case 2:
+			case 1:
 				return (
 					<ProfileOptional2
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
 						setProfile={setProfile}
+						setDisabled={setDisabled}
 						profile={profile}
 					/>
 				);
-			case 3:
+			case 2:
 				return (
 					<ProfileOptional3
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
 						setProfile={setProfile}
+						setDisabled={setDisabled}
 						profile={profile}
 					/>
 				);
@@ -300,7 +229,7 @@ function ProfileCreationStepperComponent(props: Props) {
 								activeStep === steps.length - 1 ? handleSubmit : handleNext
 							}
 							fullWidth
-							disabled={isDisabled()}
+							disabled={disabled}
 						>
 							{activeStep === steps.length - 1 ? "Finish" : "Continue"}
 						</Button>
@@ -311,6 +240,6 @@ function ProfileCreationStepperComponent(props: Props) {
 	);
 }
 
-export const ProfileCreationStepper = withReduxProps(
-	ProfileCreationStepperComponent
+export const ExtendedProfileStepper = withReduxProps(
+	ExtendedProfileStepperComponent
 );

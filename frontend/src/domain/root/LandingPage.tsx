@@ -6,20 +6,20 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 16:08:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:20:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
-import { SignInDialog } from "../component/SignInDialog";
-import { SignUpDialog } from "../component/SignUpDialog";
+import { SignInDialog } from "../user/SignInDialog";
+import { SignUpDialog } from "../user/SignUpDialog";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
-import * as constants from "../services/constants";
+import * as constants from "../../services/constants";
 import { Grid } from "@material-ui/core";
-import { activateAccountAPI } from "../services/apiCalls";
-import { actionUser_activate } from "../store/user/action";
-import { actionUi_showSnackbar } from "../store/ui/action";
+import { activateAccountAPI } from "../../services/apiCalls";
+import { actionUser_activate } from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const styleLanding: React.CSSProperties = {
 	position: "absolute",
@@ -58,7 +58,7 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const LandingPageComponent = (props: Props) => {
-	const bg = require("../images/background2.jpg");
+	const bg = require("../../images/background2.jpg");
 	const isMobile = window.innerWidth < 480;
 	const [redirect, setRedirect] = useState<string | null>(null);
 	let location = useLocation();
@@ -81,9 +81,7 @@ const LandingPageComponent = (props: Props) => {
 
 			activateAccountAPI(details)
 				.then(() => {
-					props.dispatch(
-						actionUser_activate({ token: props.signupToken })
-					);
+					props.dispatch(actionUser_activate({ token: props.signupToken }));
 					props.dispatch(
 						actionUi_showSnackbar({
 							message: "Your account has been activated",

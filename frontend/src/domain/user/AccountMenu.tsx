@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/08 16:10:33 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:11:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ import { Link } from "react-router-dom";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
-import { actionUser_logout } from "../store/user/action";
+import { actionUser_logout } from "../../store/user/action";
 import { useHistory } from "react-router-dom";
 
-import * as constants from "../services/constants";
+import * as constants from "../../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,

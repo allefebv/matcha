@@ -6,14 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/10 15:38:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 18:31:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { AnyAction } from "redux";
 import {
 	actionUser_geolocation,
-	actionUser_getProfile,
+	actionUser_setProfile,
 	actionUser_signin,
 	actionUser_signup,
 	actionUser_activate,
@@ -54,7 +54,7 @@ export function userReducer(
 				isActivated: true,
 				isLoggedIn: action.payload.token,
 			};
-		case getType(actionUser_getProfile):
+		case getType(actionUser_setProfile):
 			return {
 				...state,
 				profile: action.payload.profile,

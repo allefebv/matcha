@@ -6,21 +6,21 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 17:55:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:20:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 import { Grid } from "@material-ui/core";
-import { AccountMenu } from "../component/AccountMenu";
+import { AccountMenu } from "../user/AccountMenu";
 import { Link } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import IconButton from "@material-ui/core/IconButton";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import PersonIcon from "@material-ui/icons/Person";
-import { SignInDialog } from "../component/SignInDialog";
-import { SignUpDialog } from "../component/SignUpDialog";
-import * as constants from "../services/constants";
+import { SignInDialog } from "../user/SignInDialog";
+import { SignUpDialog } from "../user/SignUpDialog";
+import * as constants from "../../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -42,7 +42,7 @@ class HeaderComponent extends React.Component<Props> {
 						}
 					>
 						<img
-							src={require("../images/logo_white.png")}
+							src={require("../../images/logo_white.png")}
 							style={{ height: "100%" }}
 							alt="logo"
 						/>

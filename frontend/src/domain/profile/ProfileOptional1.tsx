@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 15:09:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 21:38:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@ import React, { useState, useEffect } from "react";
 import { Grid, Icon, Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-import { Iprofile } from "../types/types";
+import { Iprofile } from "../../types/types";
 
 interface Props {
 	activeStep: number;
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
+	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
 }
 
@@ -30,7 +31,7 @@ export function ProfileOptional1(props: Props) {
 		true
 	);
 	const [localSexualOrientation, setLocalSexualOrientation] = useState(
-		"bisexual"
+		findReverseOrientation()
 	);
 
 	function findOrientation(orientation: string, gender = props.profile.gender) {
@@ -61,9 +62,32 @@ export function ProfileOptional1(props: Props) {
 		return "bisexual";
 	}
 
+	function findReverseOrientation() {
+		if (props.profile.sexualOrientation === "gay") {
+			return "male";
+		}
+		if (props.profile.sexualOrientation === "lesbian") {
+			return "female";
+		}
+		if (props.profile.sexualOrientation === "heterosexual") {
+			switch (props.profile.gender) {
+				case "male":
+					return "female";
+				case "female":
+					return "male";
+			}
+		}
+		return "bisexual";
+	}
+
 	useEffect(() => {
 		if (props.profile.gender !== null) {
 			setOrientationFieldInactive(false);
+		}
+		if (props.profile.gender && props.profile.sexualOrientation) {
+			props.setDisabled(false);
+		} else {
+			props.setDisabled(true);
 		}
 	}, [props.profile]);
 

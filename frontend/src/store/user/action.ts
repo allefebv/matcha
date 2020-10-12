@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/08 17:53:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 18:32:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ export const actionUser_activate = createAction("USER.USERACTIVATE")<{
 	token: string | null;
 }>();
 
-export const actionUser_getProfile = createAction("USER.GETPROFILE")<{
+export const actionUser_setProfile = createAction("USER.SETPROFILE")<{
 	profile: any;
 }>();
 

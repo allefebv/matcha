@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { TextField } from "@material-ui/core";
 
-import { Iprofile } from "../types/types";
+import { Iprofile } from "../../types/types";
 import { DatePicker } from "@material-ui/pickers";
 
 interface Props {

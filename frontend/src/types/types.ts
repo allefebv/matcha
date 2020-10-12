@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/10 13:42:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 21:31:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ export interface Iprofile {
 	firstname: string;
 	lastname: string;
 	gender: string | null;
-	sexualOrientation: string | null;
+	sexualOrientation: string;
 	bio: string | null;
 	geoLocationAuthorization: boolean;
 	location: Ilocation;

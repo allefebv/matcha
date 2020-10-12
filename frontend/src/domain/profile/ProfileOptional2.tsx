@@ -6,16 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 16:28:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 20:04:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Grid, TextField, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
-import { Iprofile } from "../types/types";
+import { Iprofile } from "../../types/types";
 import { ProfilePictures } from "./ProfilePictures";
 
 interface Props {
@@ -23,6 +23,7 @@ interface Props {
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
+	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
 }
 
@@ -38,6 +39,36 @@ export function ProfileOptional2(props: Props) {
 			tagList: tags,
 		});
 	}
+
+	function profileHasImages(profile: Iprofile) {
+		const imgs = Object.values(props.profile.imgs);
+		for (let img of imgs) {
+			if (img !== null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function profileHasTags(profile: Iprofile) {
+		console.log(profile.tagList);
+		return !(
+			props.profile.tagList === null || props.profile.tagList.length === 0
+		);
+	}
+
+	useEffect(() => {
+		console.log(profileHasTags(props.profile));
+		if (
+			profileHasImages(props.profile) &&
+			profileHasTags(props.profile) &&
+			props.profile.bio
+		) {
+			props.setDisabled(false);
+		} else {
+			props.setDisabled(true);
+		}
+	}, [props.profile]);
 
 	return (
 		<React.Fragment>
