@@ -1,6 +1,6 @@
 import { profile } from '../../types/types';
 import { getUsageLocation } from '../model/locationRepositories';
-import { getTagProfile } from '../model/tagRepositories';
+import { getTagProfile } from '../model/tagProfileRepositories';
 
 export async function shapingProfile(profile: profile) {
 	const tagProfileList = await getTagProfile(profile.userId);

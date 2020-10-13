@@ -16,8 +16,8 @@ import {
 	addNotificationController, getNotificationController
 } from './controller/notificationController';
 import {
-	getAllProfileController, getProfileByUsernameController, getProfileController,
-	handleProfileController
+	addProfileController, getAllProfileController, getProfileByUsernameController,
+	getProfileController, updateProfileController
 } from './controller/profileController';
 import {
 	recommendationController
@@ -71,8 +71,11 @@ function profileRouter(app: Application) {
 	app.get("/profile/getProfileByUsername", (req: Request, res: Response) =>
 		getProfileByUsernameController(req, res)
 	);
-	app.post("/profile/handleProfile", (req: Request, res: Response) =>
-		handleProfileController(req, res)
+	app.post("/profile/addProfile", (req: Request, res: Response) =>
+		addProfileController(req, res)
+	);
+	app.post("/profile/updateProfile", (req: Request, res: Response) =>
+		updateProfileController(req, res)
 	);
 }
 

@@ -12,7 +12,6 @@ export function getUserById(id: number): Promise<user> {
 				throw error;
 			}
 			if (!result || result.length !== 1) {
-				console.log("Error getUserById:\nid: ", id, "\n\tresult: ", result);
 				reject("Error: user does not exist");
 			}
 			resolve(result[0]);
@@ -28,12 +27,6 @@ export function getUserByEmail(email: string): Promise<user> {
 				throw error;
 			}
 			if (!result || result.length !== 1) {
-				console.log(
-					"Error getUserByEmail:\n\temail: ",
-					email,
-					"\n\tresult: ",
-					result
-				);
 				reject("Error: user does not exist");
 			}
 			resolve(result[0]);
@@ -49,7 +42,6 @@ export function changePassword(id: number, password: string): Promise<string> {
 				throw error;
 			}
 			if (result.affectedRows) {
-				console.log("Error getUserByEmail:\nid: ", id, "\n\tresult: ", result);
 				resolve("Password has beeen change");
 			}
 			reject("Error: password not change");

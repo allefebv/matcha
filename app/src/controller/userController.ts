@@ -69,12 +69,6 @@ export async function addUserController(req: Request, res: Response) {
 			token: generateTokenForUser(newUser),
 		});
 	} catch (error) {
-		console.log(
-			"Error addUserController: email: ",
-			req.body.email,
-			" error:",
-			error
-		);
 		res.status(400).send(error);
 	}
 }

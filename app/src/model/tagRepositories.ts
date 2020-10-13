@@ -40,67 +40,20 @@ export function getTagById(id: number): Promise<tag | null> {
 	});
 }
 
-export function getTagProfile(id: number): Promise<{ tag: string }[] | null> {
-	return new Promise((resolve) => {
-		const sql = `SELECT * FROM tag INNER JOIN tagProfile WHERE tagProfile.profileId = ${id} AND tag.id = tagProfile.tagId`;
-		dataBase.query(sql, (error: string, result: { tag: string }[]) => {
+export function addTag(tag: string): Promise<string | null> {
+	return new Promise((resolve, reject) => {
+		const sql = `INSERT INTO tag (tag) VALUES ('${tag}')`;
+		dataBase.query(sql, (error, result) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				if (error.errno === 1062) {
+					resolve("Tag already exsist");
+				}
+				reject(error);
 			}
-			resolve(result);
-		});
-	});
-}
-
-export function addTag(tag: string): Promise<tag | null> {
-	return new Promise((resolve) => {
-		const sql = `INSERT INTO tag (tag)
-		SELECT '${tag}' WHERE NOT EXISTS(SELECT * FROM tag WHERE tag='${tag}')`;
-		dataBase.query(sql, (error: string, result: tag) => {
-			if (error) {
-				console.log(error);
-				resolve(null);
+			if (result && result.affectedRows) {
+				resolve(tag);
 			}
-			resolve(result);
-		});
-	});
-}
-
-export function addTagProfile(
-	profileId: number,
-	tagId: number
-): Promise<tagProfile | null> {
-	return new Promise((resolve) => {
-		const sql = `INSERT INTO tagProfile (
-			tagId,
-			profileId
-		) VALUES (
-			${tagId},
-			${profileId}
-		)`;
-		dataBase.query(sql, (error: string, result: tagProfile) => {
-			if (error) {
-				console.log(error);
-				resolve(null);
-			}
-			resolve(result);
-		});
-	});
-}
-
-export function deleteTagProfile(
-	tagId: number,
-	profileId: number
-): Promise<boolean> {
-	return new Promise((resolve) => {
-		const sql = `DELETE FROM tagProfile WHERE tagId = ${tagId} AND profileId = ${profileId}`;
-		dataBase.query(sql, (error: string, result: tagProfile) => {
-			if (error) {
-				console.log(error);
-				resolve(false);
-			}
-			resolve(true);
+			reject("Error: an error occured");
 		});
 	});
 }

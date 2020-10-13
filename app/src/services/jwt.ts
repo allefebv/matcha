@@ -36,7 +36,7 @@ export async function jwtVerify(
 				isLogin = error ? false : true;
 
 				if (isLogin === false) {
-					reject("Token error or the user is not connected");
+					reject("Token invalid");
 				}
 				resolve({
 					isLogin: isLogin,

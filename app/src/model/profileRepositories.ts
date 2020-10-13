@@ -2,14 +2,16 @@ import { profile } from '../../types/types';
 import { dataBase } from '../app';
 
 export function getProfileByUserId(id: number): Promise<profile | null> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM profile WHERE userId = ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				throw error;
 			}
-			resolve(result.length === 1 ? result[0] : null);
+			if (!result || result.length !== 1) {
+				reject("Error: profile does not exist");
+			}
+			resolve(result[0]);
 		});
 	});
 }
@@ -17,27 +19,31 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 export function getProfileByUsername(
 	username: string
 ): Promise<profile | null> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM profile WHERE username = '${username}'`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				throw error;
 			}
-			resolve(result.length ? result[0] : null);
+			if (!result || result.length !== 1) {
+				reject("Error: profile does not exist");
+			}
+			resolve(result[0]);
 		});
 	});
 }
 
 export function getAllProfile(id: number): Promise<profile[] | null> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM profile WHERE userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				throw error;
 			}
-			resolve(result.length ? result : null);
+			if (!result || result.length === 0) {
+				reject("Error: profile list is empty");
+			}
+			resolve(result);
 		});
 	});
 }
@@ -46,20 +52,22 @@ export function getProfileBySexualOriantation(
 	id: number,
 	sexualOriantation: string
 ): Promise<profile[] | null> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM profile WHERE sexualOrientation = '${sexualOriantation}' AND userId != ${id}`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				throw error;
 			}
-			resolve(result.length ? result : null);
+			if (!result || result.length === 0) {
+				reject("Error: profile list is empty");
+			}
+			resolve(result);
 		});
 	});
 }
 
-export function addProfile(profile: profile, userId: number): Promise<boolean> {
-	return new Promise((resolve) => {
+export function addProfile(profile: profile, userId: number): Promise<profile> {
+	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO profile (
 			userId,
 			dob,
@@ -70,7 +78,7 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			geoLocationAuthorization,
 			sexualOrientation,
 			bio
-		) VALUES (
+		) VALUES ( 
 			${userId},
 			${profile.dob},
 			'${profile.username}',
@@ -79,14 +87,19 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 			'${profile.gender || null}',
 			${profile.geoLocationAuthorization},
 			'${profile.sexualOrientation || "bisexual"}',
-			'${profile.bio || null}'
-		)`;
-		dataBase.query(sql, async (error: string) => {
+			'${profile.bio || null}')`;
+		dataBase.query(sql, async (error, result) => {
 			if (error) {
-				console.log(error);
-				resolve(false);
+				if (error.errno === 1062) {
+					reject("Error: username or profile already exsist");
+				}
+				reject(error);
 			}
-			resolve(true);
+			if (result && result.affectedRows) {
+				const profileResult = await getProfileByUsername(profile.username);
+				resolve(profileResult);
+			}
+			reject("Error: an error occured");
 		});
 	});
 }
@@ -94,8 +107,8 @@ export function addProfile(profile: profile, userId: number): Promise<boolean> {
 export function updateProfile(
 	profile: profile,
 	userId: number
-): Promise<boolean> {
-	return new Promise((resolve) => {
+): Promise<profile> {
+	return new Promise((resolve, reject) => {
 		const sql = `UPDATE profile SET
 			dob = ${profile.dob},
 			username = '${profile.username}',
@@ -106,12 +119,18 @@ export function updateProfile(
 			sexualOrientation = '${profile.sexualOrientation}',
 			bio = '${profile.bio}'
 		WHERE userId = ${userId}`;
-		dataBase.query(sql, async (error: string) => {
+		dataBase.query(sql, async (error, result) => {
 			if (error) {
-				console.log(error);
-				resolve(false);
+				if (error.errno === 1062) {
+					reject("Error: username already exsist");
+				}
+				reject(error);
 			}
-			resolve(true);
+			if (result && result.affectedRows) {
+				const profileResult = await getProfileByUsername(profile.username);
+				resolve(profileResult);
+			}
+			reject("Error: username already exsist");
 		});
 	});
 }
