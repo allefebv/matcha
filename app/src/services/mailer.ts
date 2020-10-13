@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   mailer.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:53 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/13 23:16:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
-import { user } from '../../types/types';
+import { user } from "../../types/types";
 
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",

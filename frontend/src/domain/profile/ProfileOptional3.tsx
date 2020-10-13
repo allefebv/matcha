@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 19:53:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 14:37:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,23 @@ import { Iprofile } from "../../types/types";
 import * as constants from "../../services/constants";
 import { throttle } from "lodash";
 import { renameKey } from "../../services/utils";
+import { connect, ConnectedProps } from "react-redux";
+import {
+	actionUser_setProfile,
+	actionUser_usagelocation,
+} from "../../store/user/action";
 
-interface Props {
+const withReduxProps = connect((state: any) => ({
+	profile: state.user.profile,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {
 	activeStep: number;
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
-}
+} & ReduxProps;
 
 export function ProfileOptional3(props: Props) {
 	const [value, setValue] = useState<any>(null);
@@ -115,12 +123,12 @@ export function ProfileOptional3(props: Props) {
 		setValue(newValue);
 		setPrevent(true);
 		const tmpProfile = props.profile;
-		tmpProfile.location.usageLocation = newValue;
 		tmpProfile.geoLocationAuthorization = tmpProfile.location.usageLocation
 			?.isFromGeolocation
 			? true
 			: false;
-		props.setProfile(tmpProfile);
+		props.dispatch(actionUser_setProfile(tmpProfile));
+		props.dispatch(actionUser_usagelocation(newValue));
 		if (newValue) {
 			props.setDisabled(false);
 		} else {
@@ -150,7 +158,11 @@ export function ProfileOptional3(props: Props) {
 						getOptionLabel={(option) => {
 							if (option !== null) {
 								return (
-									option.postCode + ", " + option.city + ", " + option.country
+									option.postCode +
+									", " +
+									option.city +
+									", " +
+									option.country
 								);
 							}
 							return "";
@@ -165,7 +177,9 @@ export function ProfileOptional3(props: Props) {
 								<Grid item container xs={2}>
 									{option !== null ? (
 										option.isFromGeolocation ? (
-											<MyLocationIcon style={{ color: "#16F02D" }} />
+											<MyLocationIcon
+												style={{ color: "#16F02D" }}
+											/>
 										) : (
 											<LocationOnIcon />
 										)

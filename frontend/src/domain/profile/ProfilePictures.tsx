@@ -4,47 +4,48 @@ import { AvatarGroup } from "@material-ui/lab";
 import { Iprofile } from "../../types/types";
 
 interface Props {
-	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
-	profile: Iprofile;
+	setImgUrls: React.Dispatch<React.SetStateAction<string[]>>;
+	imgUrls: string[];
 }
 
 export const ProfilePictures = (props: Props) => {
 	function handleChangeImg(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, files } = e.currentTarget;
 		const img = files && URL.createObjectURL(files[0]);
-		props.setProfile({
-			...props.profile,
-			imgs: { ...props.profile.imgs, [name]: img },
-		});
+		const tmpImgs = [...props.imgUrls];
+		if (img) {
+			tmpImgs.push(img);
+		}
+		props.setImgUrls(tmpImgs);
 	}
 
-	const { imgs } = props.profile;
+	const iterator = props.imgUrls.values();
 
 	return (
 		<AvatarGroup>
 			<CustomAvatar
 				id={0}
-				src={imgs.img0 ? imgs.img0 : null}
+				src={iterator.next().value || null}
 				handleChange={handleChangeImg}
 			/>
 			<CustomAvatar
 				id={1}
-				src={imgs.img1 ? imgs.img1 : null}
+				src={iterator.next().value || null}
 				handleChange={handleChangeImg}
 			/>
 			<CustomAvatar
 				id={2}
-				src={imgs.img2 ? imgs.img2 : null}
+				src={iterator.next().value || null}
 				handleChange={handleChangeImg}
 			/>
 			<CustomAvatar
 				id={3}
-				src={imgs.img3 ? imgs.img3 : null}
+				src={iterator.next().value || null}
 				handleChange={handleChangeImg}
 			/>
 			<CustomAvatar
 				id={4}
-				src={imgs.img4 ? imgs.img4 : null}
+				src={iterator.next().value || null}
 				handleChange={handleChangeImg}
 			/>
 		</AvatarGroup>

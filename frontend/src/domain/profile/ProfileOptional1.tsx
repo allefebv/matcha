@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 21:38:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 14:31:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,20 @@ import { Grid, Icon, Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 import { Iprofile } from "../../types/types";
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_setProfile } from "../../store/user/action";
 
-interface Props {
+const withReduxProps = connect((state: any) => ({
+	profile: state.user.profile,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {
 	activeStep: number;
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
-}
+} & ReduxProps;
 
 export function ProfileOptional1(props: Props) {
 	const [orientationFieldInactive, setOrientationFieldInactive] = useState(
@@ -34,7 +39,10 @@ export function ProfileOptional1(props: Props) {
 		findReverseOrientation()
 	);
 
-	function findOrientation(orientation: string, gender = props.profile.gender) {
+	function findOrientation(
+		orientation: string,
+		gender = props.profile.gender
+	) {
 		if (gender === "male") {
 			switch (orientation) {
 				case "male":
@@ -44,7 +52,9 @@ export function ProfileOptional1(props: Props) {
 				case "bisexual":
 					return "bisexual";
 				default:
-					throw new Error("wrong value in orientation field: " + orientation);
+					throw new Error(
+						"wrong value in orientation field: " + orientation
+					);
 			}
 		}
 		if (gender === "female") {
@@ -56,7 +66,9 @@ export function ProfileOptional1(props: Props) {
 				case "bisexual":
 					return "bisexual";
 				default:
-					throw new Error("wrong value in orientation field: " + orientation);
+					throw new Error(
+						"wrong value in orientation field: " + orientation
+					);
 			}
 		}
 		return "bisexual";
@@ -96,11 +108,13 @@ export function ProfileOptional1(props: Props) {
 		nextView: string
 	) {
 		if (nextView !== null) {
-			props.setProfile({
-				...props.profile,
-				gender: nextView,
-				sexualOrientation: findOrientation(localSexualOrientation, nextView),
-			});
+			const tmpProfile = { ...props.profile };
+			tmpProfile.gender = nextView;
+			tmpProfile.sexualOrientation = findOrientation(
+				localSexualOrientation,
+				nextView
+			);
+			props.dispatch(actionUser_setProfile(tmpProfile));
 		}
 	}
 
@@ -109,10 +123,9 @@ export function ProfileOptional1(props: Props) {
 		nextView: string
 	) {
 		if (nextView !== null) {
-			props.setProfile({
-				...props.profile,
-				sexualOrientation: findOrientation(nextView),
-			});
+			const tmpProfile = { ...props.profile };
+			tmpProfile.sexualOrientation = findOrientation(nextView);
+			props.dispatch(actionUser_setProfile(tmpProfile));
 			setLocalSexualOrientation(nextView);
 		}
 	}
@@ -150,13 +163,22 @@ export function ProfileOptional1(props: Props) {
 						exclusive
 						value={localSexualOrientation || ""}
 					>
-						<ToggleButton value="male" disabled={orientationFieldInactive}>
+						<ToggleButton
+							value="male"
+							disabled={orientationFieldInactive}
+						>
 							<Icon className="fa fa-mars" />
 						</ToggleButton>
-						<ToggleButton value="female" disabled={orientationFieldInactive}>
+						<ToggleButton
+							value="female"
+							disabled={orientationFieldInactive}
+						>
 							<Icon className="fa fa-venus" />
 						</ToggleButton>
-						<ToggleButton value="bisexual" disabled={orientationFieldInactive}>
+						<ToggleButton
+							value="bisexual"
+							disabled={orientationFieldInactive}
+						>
 							<Icon className="fa fa-venus-mars" />
 						</ToggleButton>
 					</ToggleButtonGroup>

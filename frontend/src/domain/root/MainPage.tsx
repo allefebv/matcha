@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:11:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 12:27:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SliderDouble } from "../../component/SliderDouble";
 import { CategoryFilterSort } from "../search/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
@@ -21,10 +21,16 @@ import { ToggleGroup } from "../../component/ToggleGroup";
 interface Props {}
 
 export const MainPage = (props: Props) => {
+	const [modal, setModal] = useState(false);
+
+	useEffect(() => {
+		console.log("here :" + modal);
+	}, [modal]);
+
 	return (
 		<React.Fragment>
 			<Grid item style={{ alignSelf: "center" }}>
-				<ToggleGroup />
+				<ToggleGroup toggleModal={setModal} />
 			</Grid>
 			<Grid
 				item
@@ -57,7 +63,9 @@ export const MainPage = (props: Props) => {
 								options={["John", "Lennon", "Toto"]}
 								getOptionLabel={(option) => option}
 								filterSelectedOptions
-								renderInput={(params) => <TextField {...params} />}
+								renderInput={(params) => (
+									<TextField {...params} />
+								)}
 							/>
 						</CategoryFilterSort>
 					</Grid>

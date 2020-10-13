@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 19:56:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 14:59:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Typography from "@material-ui/core/Typography";
 
-import { Iprofile } from "../../types/types";
 import { ProfileOptional1 } from "./ProfileOptional1";
 import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
@@ -30,12 +29,18 @@ import {
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { useGeolocation } from "../../services/useGeolocation";
-import { actionUser_geolocation } from "../../store/user/action";
+import {
+	actionUser_geolocation,
+	actionUser_setProfile,
+} from "../../store/user/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
+	profile: state.user.profile,
+	imgs: state.user.imgs,
+	tagList: state.user.tagList,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -51,34 +56,11 @@ function ExtendedProfileStepperComponent(props: Props) {
 		return [0, 1, 2];
 	}
 
-	const [profile, setProfile] = useState<Iprofile>({
-		firstname: "",
-		lastname: "",
-		username: "",
-		dob: null,
-		gender: null,
-		sexualOrientation: "bisexual",
-		bio: null,
-		geoLocationAuthorization: false,
-		location: {
-			usageLocation: null,
-			geoLocation: null,
-		},
-		tagList: null,
-		imgs: {
-			img0: null,
-			img1: null,
-			img2: null,
-			img3: null,
-			img4: null,
-		},
-	});
-
 	useEffect(() => {
 		if (geolocation !== null) {
-			const tmpProfile = { ...profile };
+			const tmpProfile = { ...props.profile };
 			tmpProfile.location.geoLocation = geolocation;
-			setProfile(tmpProfile);
+			props.dispatch(actionUser_setProfile(tmpProfile));
 			props.dispatch(
 				actionUser_geolocation({
 					geolocation: geolocation,
@@ -86,12 +68,12 @@ function ExtendedProfileStepperComponent(props: Props) {
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [geolocation]);
 
 	async function submitPictures() {
 		const data = new FormData();
 		await Promise.all(
-			Object.entries(profile.imgs).map(async (entry) => {
+			Object.entries(props.imgs).map(async (entry) => {
 				if (entry[1] !== null) {
 					await fetch(entry[1])
 						.then((response) => response.blob())
@@ -107,14 +89,14 @@ function ExtendedProfileStepperComponent(props: Props) {
 			})
 		);
 
-		if (Object.values(profile.imgs).some((value) => value !== null)) {
+		if (Object.values(props.imgs).some((value) => value !== null)) {
 			return postPicturesAPI(data, props.loggedIn).then(() => {});
 		}
 	}
 
 	async function submitProfile() {
 		const body = Object.fromEntries(
-			Object.entries(profile).filter(
+			Object.entries(props.profile).filter(
 				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
 			)
 		);
@@ -148,7 +130,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProfile({ ...profile, [name]: value });
+		props.dispatch(actionUser_setProfile({ ...profile, [name]: value }));
 	};
 
 	function getStepContent() {
@@ -159,9 +141,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			case 1:
@@ -170,9 +150,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			case 2:
@@ -181,13 +159,13 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			default:
-				return <Typography color="primary">All steps completed</Typography>;
+				return (
+					<Typography color="primary">All steps completed</Typography>
+				);
 		}
 	}
 
@@ -217,7 +195,11 @@ function ExtendedProfileStepperComponent(props: Props) {
 						{getStepContent()}
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<Button disabled={activeStep === 0} onClick={handleBack} fullWidth>
+						<Button
+							disabled={activeStep === 0}
+							onClick={handleBack}
+							fullWidth
+						>
 							Back
 						</Button>
 					</Grid>
@@ -226,12 +208,16 @@ function ExtendedProfileStepperComponent(props: Props) {
 							variant="contained"
 							color="primary"
 							onClick={
-								activeStep === steps.length - 1 ? handleSubmit : handleNext
+								activeStep === steps.length - 1
+									? handleSubmit
+									: handleNext
 							}
 							fullWidth
 							disabled={disabled}
 						>
-							{activeStep === steps.length - 1 ? "Finish" : "Continue"}
+							{activeStep === steps.length - 1
+								? "Finish"
+								: "Continue"}
 						</Button>
 					</Grid>
 				</React.Fragment>

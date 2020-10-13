@@ -6,40 +6,45 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 20:04:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 15:49:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Grid, TextField, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
 import { Iprofile } from "../../types/types";
 import { ProfilePictures } from "./ProfilePictures";
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_setTagList } from "../../store/user/action";
 
-interface Props {
+const withReduxProps = connect((state: any) => ({
+	profile: state.user.profile,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {
 	activeStep: number;
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
 	profile: Iprofile;
-}
+} & ReduxProps;
 
 export function ProfileOptional2(props: Props) {
+	const [imgUrls, setImgUrls] = useState<string[]>([]);
+
 	function handleChangeTags(
 		e: React.ChangeEvent<{}>,
 		value: string | string[],
 		reason: string
 	) {
 		let tags = typeof value === "string" ? [value] : value;
-		props.setProfile({
-			...props.profile,
-			tagList: tags,
-		});
+		props.dispatch(actionUser_setTagList({ tagList: tags }));
 	}
 
+	//TODO: change this
 	function profileHasImages(profile: Iprofile) {
 		const imgs = Object.values(props.profile.imgs);
 		for (let img of imgs) {
@@ -51,14 +56,12 @@ export function ProfileOptional2(props: Props) {
 	}
 
 	function profileHasTags(profile: Iprofile) {
-		console.log(profile.tagList);
 		return !(
 			props.profile.tagList === null || props.profile.tagList.length === 0
 		);
 	}
 
 	useEffect(() => {
-		console.log(profileHasTags(props.profile));
 		if (
 			profileHasImages(props.profile) &&
 			profileHasTags(props.profile) &&
@@ -73,10 +76,7 @@ export function ProfileOptional2(props: Props) {
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
-				<ProfilePictures
-					profile={props.profile}
-					setProfile={props.setProfile}
-				/>
+				<ProfilePictures imgUrls={imgUrls} setImgUrls={setImgUrls} />
 			</Grid>
 			<Grid item xs={12}>
 				<Typography color="primary">About you</Typography>
@@ -94,7 +94,9 @@ export function ProfileOptional2(props: Props) {
 				/>
 			</Grid>
 			<Grid item xs={12}>
-				<Typography color="primary">List some of your interests</Typography>
+				<Typography color="primary">
+					List some of your interests
+				</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Autocomplete
@@ -103,7 +105,9 @@ export function ProfileOptional2(props: Props) {
 					getOptionLabel={(option) => option}
 					filterSelectedOptions
 					onChange={handleChangeTags}
-					renderInput={(params) => <TextField {...params} fullWidth />}
+					renderInput={(params) => (
+						<TextField {...params} fullWidth />
+					)}
 					freeSolo
 				/>
 			</Grid>
