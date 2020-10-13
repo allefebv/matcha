@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import path from 'path';
 
 import {
-	getImagesController, handleImagesController
+	getImageByUsernameController, getImageController, handleImageController
 } from './controller/imageController';
 import {
 	addlikedProfileController, deletelikedProfileController,
@@ -122,11 +122,14 @@ function viewRouter(app: Application) {
 }
 
 function imagesController(app: Application) {
-	app.get("/images/getImages", (req: Request, res: Response) =>
-		getImagesController(req, res)
+	app.post("/images/getImage", (req: Request, res: Response) =>
+		getImageController(req, res)
+	);
+	app.post("/images/getImageByUsername", (req: Request, res: Response) =>
+		getImageByUsernameController(req, res)
 	);
 	app.post("/images/handleImages", (req: Request, res: Response) =>
-		handleImagesController(req, res)
+		handleImageController(req, res)
 	);
 }
 
