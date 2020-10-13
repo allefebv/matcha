@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   recommendationController.ts                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
+/*   Updated: 2020/10/13 19:05:04 by jfleury          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import { Request, Response } from 'express';
 
 import {
-	getProfileBySexualOriantation,
-	getProfileByUserId
+	getProfileBySexualOriantation, getProfileByUserId
 } from '../model/profileRepositories';
 import { recommendationAlgorithm } from '../services/ recommendationAlgorithm';
 import { jwtVerify } from '../services/jwt';
@@ -17,7 +28,10 @@ export async function recommendationController(req: Request, res: Response) {
 		try {
 			const profileResult = [];
 			const profile = await getProfileByUserId(jwt.decoded.id);
-			let profileList = await getProfileBySexualOriantation(jwt.decoded.id, profile.sexualOrientation);
+			let profileList = await getProfileBySexualOriantation(
+				jwt.decoded.id,
+				profile.sexualOrientation
+			);
 			profileList = await locationAlgorithm(profile, profileList, 100);
 			profileList = await recommendationAlgorithm(profileList);
 			await Promise.all(

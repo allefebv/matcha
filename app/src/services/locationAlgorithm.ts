@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   locationAlgorithm.ts                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
+/*   Updated: 2020/10/13 19:06:50 by jfleury          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import { profile, pts } from '../../types/types';
 import { getUsageLocation } from '../model/locationRepositories';
 
@@ -6,7 +18,10 @@ const EARTH_RAY = 6367445;
 const radianConversion = (degree: number) => degree * (Math.PI / 180);
 
 const distanceConversion = (a: number, b: number, c: number, d: number) =>
-	EARTH_RAY * Math.acos(Math.sin(a) * Math.sin(b) + Math.cos(a) * Math.cos(b) * Math.cos(c - d));
+	EARTH_RAY *
+	Math.acos(
+		Math.sin(a) * Math.sin(b) + Math.cos(a) * Math.cos(b) * Math.cos(c - d)
+	);
 
 const calculateLocation = (profileLocation: pts, profileCompare: pts) =>
 	distanceConversion(
@@ -26,7 +41,9 @@ export function locationAlgorithm(
 		const locationProfile = await getUsageLocation(profileLocation.userId);
 		await Promise.all(
 			profileList.map(async (profileCompare) => {
-				const locationProfileCompare = await getUsageLocation(profileCompare.userId);
+				const locationProfileCompare = await getUsageLocation(
+					profileCompare.userId
+				);
 				const result =
 					calculateLocation(
 						{ lat: locationProfile.lat, lng: locationProfile.lng },

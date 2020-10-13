@@ -1,11 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   viewController.ts                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/13 19:05:16 by jfleury           #+#    #+#             */
+/*   Updated: 2020/10/13 19:05:16 by jfleury          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import { Request, Response } from 'express';
 
 import { getProfileByUsername } from '../model/profileRepositories';
 import {
-	addView,
-	getView,
-	getViewByViewerProfileId,
-	updateView
+	addView, getView, getViewByViewerProfileId, updateView
 } from '../model/viewRepositories';
 import { jwtVerify } from '../services/jwt';
 
