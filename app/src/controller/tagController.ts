@@ -7,41 +7,29 @@ import {
 import { addNewTag } from '../services/addNewTag';
 import { jwtVerify } from '../services/jwt';
 
-/*
 export async function addTagProfileController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		console.log("-> tag start id = ", jwt.decoded.id);
-		try {
-			await addNewTag(req.body.tagList);
-			const tagProfile = await getTagProfile(jwt.decoded.id);
-			const tagProfileFilter = tagProfile.map((item) => item.tag);
-			const tagList: string[] = req.body.tagList.filter((item) => {
-				return !tagProfileFilter.includes(item);
-			});
-			const tabResult = [];
-			await Promise.all(
-				tagList.map(async (item) => {
-					const tag = await getTag(item);
-					const result = await addTagProfile(jwt.decoded.id, tag.id);
-					tabResult.push(tag.tag);
-				})
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
+		await addNewTag(req.body.tagList);
+		const tagProfile = await getTagProfile(jwt.decoded.id);
+		const tagProfileFilter = tagProfile.map((item) => item.tag);
+		const tagList: string[] =
+			req.body.tagList &&
+			req.body.tagList.length &&
+			req.body.tagList.filter(
+				(item: string) => !tagProfileFilter.includes(item)
 			);
-			res.status(200).json(tabResult);
-		} catch {
-			res.status(400).send("ERROR");
-		}
-		console.log("-> tag end id = ", jwt.decoded.id);
+		const result = await Promise.all(
+			tagList.map(async (item) => {
+				const tag = await getTag(item);
+				const result = await addTagProfile(jwt.decoded.id, tag.id);
+				return tag.tag;
+			})
+		);
+		res.status(200).json(result);
+	} catch {
+		(error: string) => console.log(error);
 	}
-}
-*/
-export function addTagProfileController(req: Request, res: Response) {
-	jwtVerify(req.headers.token, res).then((jwt) => {
-		addNewTag(req.body.tagList).then(() => {});
-		getTagProfile(jwt.decoded.id)
-			.then((tagProfile) => tagProfile.map((item) => item.tag))
-			.then((tagProfileFilter) => {});
-	});
 }
 
 export async function deleteTagProfileController(req: Request, res: Response) {

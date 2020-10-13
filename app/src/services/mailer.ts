@@ -36,5 +36,3 @@ export async function newEmailMailer(email: string, link: string) {
 		text: `Hello,\nTo activate your new email click here ${link}\n`,
 	});
 }
-
-transporter.close();

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 13:36:25 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/13 15:17:20 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ function initMysql() {
 export async function addTableUser() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE user (
-			id					INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-			email				TEXT NOT NULL,
-			password			TEXT NOT NULL,
-			registrationDate	TEXT NOT NULL,
-			activated			BOOLEAN DEFAULT 0 NOT NULL,
-			activationKey		CHAR(32) NOT NULL
+			id						INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+			email					char(255) NOT NULL UNIQUE,
+			password				TEXT NOT NULL,
+			registrationDate		TEXT NOT NULL,
+			activated				BOOLEAN DEFAULT 0 NOT NULL,
+			activationKey			CHAR(32) NOT NULL
 		)`;
 		dataBase.query(sql, (error: string) => {
 			if (error) throw error;
@@ -206,9 +206,10 @@ export async function dropTable(nameTable: string) {
 }
 async function main() {
 	initMysql();
-	//dropTable("profile");
+	await dropTable("user");
 
 	await addTableUser();
+
 	await addTableProfile();
 	await addTableUsageLocation();
 	await addTableGeoLocation();
