@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 21:31:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/15 17:07:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ export interface Iaddress {
 	countryCode: string | null;
 	country: string | null;
 	isFromGeolocation: boolean;
-	lat: number;
-	lon: number;
+	lat: number | null;
+	lng: number | null;
 }
 
 export interface Icoordinates {

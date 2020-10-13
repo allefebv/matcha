@@ -1,52 +1,49 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ProfilePictures.tsx                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/14 13:31:30 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/15 15:12:18 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 import React from "react";
 import { CustomAvatar } from "../../component/CustomAvatar";
 import { AvatarGroup } from "@material-ui/lab";
-import { Iprofile } from "../../types/types";
+import { connect, ConnectedProps } from "react-redux";
+import { actionUser_setImages } from "../../store/user/action";
+import { Iimgs } from "../../types/types";
 
-interface Props {
-	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
-	profile: Iprofile;
-}
+const withReduxProps = connect((state: any) => ({
+	imgs: state.user.imgs,
+	username: state.user.profile.username,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
-export const ProfilePictures = (props: Props) => {
+const ProfilePicturesComponent = (props: Props) => {
 	function handleChangeImg(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, files } = e.currentTarget;
 		const img = files && URL.createObjectURL(files[0]);
-		props.setProfile({
-			...props.profile,
-			imgs: { ...props.profile.imgs, [name]: img },
-		});
+		const tmpImgs: Iimgs = { ...props.imgs, [name]: img };
+		props.dispatch(actionUser_setImages({ imgs: tmpImgs }));
 	}
 
-	const { imgs } = props.profile;
+	const images = Object.entries(props.imgs).map((entry: any, index) => (
+		<CustomAvatar
+			key={entry[0]}
+			id={index}
+			src={
+				entry[1] || "http://localhost:3001/" + props.username + "/img" + index
+			}
+			handleChange={handleChangeImg}
+		/>
+	));
 
-	return (
-		<AvatarGroup>
-			<CustomAvatar
-				id={0}
-				src={imgs.img0 ? imgs.img0 : null}
-				handleChange={handleChangeImg}
-			/>
-			<CustomAvatar
-				id={1}
-				src={imgs.img1 ? imgs.img1 : null}
-				handleChange={handleChangeImg}
-			/>
-			<CustomAvatar
-				id={2}
-				src={imgs.img2 ? imgs.img2 : null}
-				handleChange={handleChangeImg}
-			/>
-			<CustomAvatar
-				id={3}
-				src={imgs.img3 ? imgs.img3 : null}
-				handleChange={handleChangeImg}
-			/>
-			<CustomAvatar
-				id={4}
-				src={imgs.img4 ? imgs.img4 : null}
-				handleChange={handleChangeImg}
-			/>
-		</AvatarGroup>
-	);
+	return <AvatarGroup>{images}</AvatarGroup>;
 };
+
+export const ProfilePictures = withReduxProps(ProfilePicturesComponent);

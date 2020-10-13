@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 19:56:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/15 16:12:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,33 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Typography from "@material-ui/core/Typography";
 
-import { Iprofile } from "../../types/types";
 import { ProfileOptional1 } from "./ProfileOptional1";
 import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
 import {
 	postPicturesAPI,
-	handleProfileAPI,
+	updateProfileAPI,
 	postTagsAPI,
+	handleUsageLocationAPI,
+	handleGeoLocationAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { useGeolocation } from "../../services/useGeolocation";
-import { actionUser_geolocation } from "../../store/user/action";
+import {
+	actionUser_geolocation,
+	actionUser_setProfile,
+	actionUser_usagelocation,
+} from "../../store/user/action";
+import { Iimgs } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
+	profile: state.user.profile,
+	imgs: state.user.imgs as Iimgs,
+	tagList: state.user.tagList,
+	usagelocation: state.user.usagelocation,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -51,47 +61,22 @@ function ExtendedProfileStepperComponent(props: Props) {
 		return [0, 1, 2];
 	}
 
-	const [profile, setProfile] = useState<Iprofile>({
-		firstname: "",
-		lastname: "",
-		username: "",
-		dob: null,
-		gender: null,
-		sexualOrientation: "bisexual",
-		bio: null,
-		geoLocationAuthorization: false,
-		location: {
-			usageLocation: null,
-			geoLocation: null,
-		},
-		tagList: null,
-		imgs: {
-			img0: null,
-			img1: null,
-			img2: null,
-			img3: null,
-			img4: null,
-		},
-	});
-
 	useEffect(() => {
-		if (geolocation !== null) {
-			const tmpProfile = { ...profile };
-			tmpProfile.location.geoLocation = geolocation;
-			setProfile(tmpProfile);
+		if (geolocation) {
 			props.dispatch(
 				actionUser_geolocation({
 					geolocation: geolocation,
 				})
 			);
+			handleGeoLocationAPI(geolocation, props.loggedIn);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [geolocation]);
 
 	async function submitPictures() {
 		const data = new FormData();
 		await Promise.all(
-			Object.entries(profile.imgs).map(async (entry) => {
+			Object.entries(props.imgs).map(async (entry) => {
 				if (entry[1] !== null) {
 					await fetch(entry[1])
 						.then((response) => response.blob())
@@ -107,33 +92,44 @@ function ExtendedProfileStepperComponent(props: Props) {
 			})
 		);
 
-		if (Object.values(profile.imgs).some((value) => value !== null)) {
+		for (var pair of data.entries()) {
+			console.log(pair[0] + " - " + pair[1]);
+		}
+
+		if (Object.values(props.imgs).some((value) => value !== null)) {
 			return postPicturesAPI(data, props.loggedIn).then(() => {});
 		}
 	}
 
 	async function submitProfile() {
-		const body = Object.fromEntries(
-			Object.entries(profile).filter(
-				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
-			)
-		);
-		return handleProfileAPI(body, props.loggedIn);
+		return updateProfileAPI(props.profile, props.loggedIn)
+			.then()
+			.catch((error: Error) => console.log(error));
 	}
 
-	function submitTags() {
-		//TODO: hardcoded tags
-		return postTagsAPI({}, props.loggedIn)
+	async function submitTags() {
+		return postTagsAPI({ tagList: [...props.tagList] }, props.loggedIn)
 			.then(() => {})
 			.catch((error) => {});
 	}
 
+	async function submitUsageLocation() {
+		return handleUsageLocationAPI(props.usagelocation, props.loggedIn).then(
+			(response) => {
+				props.dispatch(actionUser_usagelocation({ usagelocation: response }));
+			}
+		);
+	}
+
 	const handleSubmit = async () => {
 		setLoading(true);
-		await Promise.all([submitProfile()]);
+		await Promise.all([
+			submitProfile(),
+			submitTags(),
+			submitPictures(),
+			submitUsageLocation(),
+		]);
 		setLoading(false);
-		// submitPictures();
-		// submitTags()
 	};
 
 	const handleNext = () => {
@@ -148,7 +144,9 @@ function ExtendedProfileStepperComponent(props: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProfile({ ...profile, [name]: value });
+		props.dispatch(
+			actionUser_setProfile({ profile: { ...props.profile, [name]: value } })
+		);
 	};
 
 	function getStepContent() {
@@ -159,9 +157,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			case 1:
@@ -170,9 +166,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			case 2:
@@ -181,9 +175,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						activeStep={activeStep}
 						steps={steps}
 						handleChange={handleChange}
-						setProfile={setProfile}
 						setDisabled={setDisabled}
-						profile={profile}
 					/>
 				);
 			default:

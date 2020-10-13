@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/12 19:35:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 13:33:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
-type Props = {} & ReduxProps;
+type Props = {
+	location?: any;
+} & ReduxProps;
 
 const ProfileCreationPageComponent = (props: Props) => {
 	const [loading, setLoading] = useState(false);
@@ -41,7 +43,20 @@ const ProfileCreationPageComponent = (props: Props) => {
 		}
 	}, [props.loggedIn]);
 
-	const handleExtended = (event: React.MouseEvent<HTMLButtonElement>): void => {
+	//case of redirection from main page to access extended profile
+	useEffect(() => {
+		if (
+			props.location &&
+			props.location.state &&
+			props.location.state.extended
+		) {
+			setNext("extended");
+		}
+	}, []);
+
+	const handleExtended = (
+		event: React.MouseEvent<HTMLButtonElement>
+	): void => {
 		setNext("extended");
 	};
 
@@ -74,7 +89,6 @@ const ProfileCreationPageComponent = (props: Props) => {
 				);
 			case "skip":
 				setRedirect(constants.SEARCH_ROUTE);
-				return <div>Hello</div>;
 			case "extended":
 				return <ExtendedProfileStepper />;
 		}
