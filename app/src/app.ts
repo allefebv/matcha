@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:07:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 12:47:25 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@ import cors from 'cors';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import { createConnection } from 'mysql';
+import path from 'path';
 
 import { router } from './router';
 
@@ -33,8 +34,7 @@ async function initMiddelware() {
 		optionsSuccessStatus: 200,
 		credentials: true,
 	};
-	app.use(express.static("public"));
-	app.use(express.static("files"));
+	app.use(express.static("images", { extensions: ["png", "jpg", "jpeg"] }));
 	app.use(cors(corsOptions));
 	app.use(bodyParser.json());
 }

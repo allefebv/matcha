@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:04:43 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 12:02:29 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ function getFile(file: string, profile: profile): Promise<string> {
 	return new Promise((resolve) => {
 		const pathImage = path.join(
 			__dirname,
-			"../../images/",
+			"../../public/images/",
 			profile.username,
 			file
 		);
