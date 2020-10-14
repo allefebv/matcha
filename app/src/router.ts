@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:07:34 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 10:57:09 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ export function router(app: Application) {
 	imagesController(app);
 	recommendationRouter(app);
 	loactionRouter(app);
+
 	app.use((req: Request, res: Response) => {
 		res.setHeader("Content-Type", "text/plain");
 		res.status(404).json({ code: 404, error: "Page not found" });

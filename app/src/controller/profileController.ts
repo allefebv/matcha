@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:05:00 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 11:28:04 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,11 @@ import { shapingProfile } from '../services/shapingProfile';
 export async function getProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profile = await shapingProfile(
-			await getProfileByUserId(jwt.decoded.id)
-		);
-		res.status(200).json(profile);
+		const profile = await getProfileByUserId(jwt.decoded.id);
+		const profileShaping = await shapingProfile(profile);
+		res.status(200).json(profileShaping);
 	} catch (error) {
-		res.status(200).send(error);
+		res.status(400).send(error);
 	}
 }
 
