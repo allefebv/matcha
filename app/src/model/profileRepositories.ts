@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 11:18:27 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 14:59:18 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ export function getProfileBySexualOriantation(
 
 export function addProfile(profile: profile, userId: number): Promise<profile> {
 	return new Promise((resolve, reject) => {
+		const gender = profile.gender ? `'${profile.gender}'` : null;
+		const bio = profile.bio ? `'${profile.bio}'` : null;
 		const sql = `INSERT INTO profile (
 			userId,
 			dob,
@@ -96,10 +98,10 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			'${profile.username}',
 			'${profile.firstname}',
 			'${profile.lastname}',
-			'${profile.gender || null}',
+			${gender},
 			${profile.geoLocationAuthorization},
 			'${profile.sexualOrientation || "bisexual"}',
-			'${profile.bio || null}')`;
+			${bio})`;
 		dataBase.query(sql, async (error, result) => {
 			if (error) {
 				if (error.errno === 1062) {
@@ -121,15 +123,17 @@ export function updateProfile(
 	userId: number
 ): Promise<profile> {
 	return new Promise((resolve, reject) => {
+		const gender = profile.gender ? `'${profile.gender}'` : null;
+		const bio = profile.bio ? `'${profile.bio}'` : null;
 		const sql = `UPDATE profile SET
 			dob = ${profile.dob},
 			username = '${profile.username}',
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',
-			gender = '${profile.gender}',
+			gender = ${gender},
 			geoLocationAuthorization = ${profile.geoLocationAuthorization},
 			sexualOrientation = '${profile.sexualOrientation}',
-			bio = '${profile.bio}'
+			bio = ${bio}
 		WHERE userId = ${userId}`;
 		dataBase.query(sql, async (error, result) => {
 			if (error) {
