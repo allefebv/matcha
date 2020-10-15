@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:55 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:56 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 16:11:09 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ export function checkPassword(password: string, hash: string) {
 		if (hashPassword(password) === hash) {
 			resolve();
 		} else {
-			reject("Password invalid");
+			reject({ code: 400, message: "Password invalid" });
 		}
 	});
 }

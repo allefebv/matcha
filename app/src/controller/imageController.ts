@@ -6,18 +6,13 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:06:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 15:37:08 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
 
-import { profile } from '../../types/types';
-import {
-	getProfileByUserId, getProfileByUsername
-} from '../model/profileRepositories';
+import { getProfileByUserId } from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function handleImageController(req: Request, res: Response) {
