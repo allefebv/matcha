@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 16:42:15 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 15:47:49 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,10 @@ export function createUser(
 				return response;
 			})
 			.then((response) => {
-				const contentType = response.headers.get("content-type");
-				if (contentType && contentType.indexOf("application/json") !== -1) {
-					resolve(response.json());
-				} else {
-					resolve(null);
-				}
+				resolve(response.json());
 			})
 			.catch((error) => {
-				console.log("-> addUser error");
+				console.log("-> addUser error", error);
 				resolve(null);
 			});
 	});
@@ -66,7 +61,6 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 			body: JSON.stringify({
 				dob: new Date(infoApi.dob.date).getTime(),
 				firstname: infoApi.name.first,
-				popularityScore: Math.floor(Math.random() * Math.floor(100)),
 				lastname: infoApi.name.last,
 				gender: infoApi.gender,
 				sexualOrientation:
@@ -83,7 +77,7 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 			}),
 		};
 
-		await fetch("http://localhost:3001/profile/handleProfile", args)
+		await fetch("http://localhost:3001/profile/addProfile", args)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(response.statusText);
@@ -91,15 +85,10 @@ export function createProfile(infoApi: any, token: string): Promise<profile> {
 				return response;
 			})
 			.then((response) => {
-				const contentType = response.headers.get("content-type");
-				if (contentType && contentType.indexOf("application/json") !== -1) {
-					resolve(response.json());
-				} else {
-					resolve(null);
-				}
+				resolve(response.json());
 			})
 			.catch((error) => {
-				console.log("-> addProfile error");
+				console.log("-> addProfile error", error);
 				resolve(null);
 			});
 	});
@@ -133,15 +122,10 @@ export function createTag(infoApi: any, token: string): Promise<tag> {
 				return response;
 			})
 			.then((response) => {
-				const contentType = response.headers.get("content-type");
-				if (contentType && contentType.indexOf("application/json") !== -1) {
-					resolve(response.json());
-				} else {
-					resolve(null);
-				}
+				resolve(response.json());
 			})
 			.catch((error) => {
-				console.log("-> addTag error");
+				console.log("-> addTag error", error);
 				resolve(null);
 			});
 	});
@@ -179,15 +163,10 @@ export function createLocation(infoApi: any, token: string): Promise<location> {
 					return response;
 				})
 				.then((response) => {
-					const contentType = response.headers.get("content-type");
-					if (contentType && contentType.indexOf("application/json") !== -1) {
-						resolve(response.json());
-					} else {
-						resolve(null);
-					}
+					resolve(response.json());
 				})
 				.catch((error) => {
-					console.log("-> addLocation error");
+					console.log("-> addLocation error", error);
 					resolve(null);
 				});
 		} else {

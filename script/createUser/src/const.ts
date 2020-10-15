@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:22 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/12 17:04:48 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 15:50:57 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,4 +18,4 @@ export const tag2 = ["Pen", "Travel", "Key", "Amazon", "Mouse"];
 export const tag3 = ["Kebab", "Burger", "Candel", "Lighter", "Smartphone"];
 export const tag4 = ["Water", "Cup", "Glass", "Router", "Web"];
 
-export const HOW_MANY_CREATE_USER = 10;
+export const HOW_MANY_CREATE_USER = 100;

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 14:59:18 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 11:38:04 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 	return new Promise((resolve, reject) => {
 		const gender = profile.gender ? `'${profile.gender}'` : null;
 		const bio = profile.bio ? `'${profile.bio}'` : null;
+		const geoLocationAuthorization = profile.geoLocationAuthorization
+			? `${profile.geoLocationAuthorization}`
+			: false;
 		const sql = `INSERT INTO profile (
 			userId,
 			dob,
@@ -99,7 +102,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			'${profile.firstname}',
 			'${profile.lastname}',
 			${gender},
-			${profile.geoLocationAuthorization},
+			${geoLocationAuthorization},
 			'${profile.sexualOrientation || "bisexual"}',
 			${bio})`;
 		dataBase.query(sql, async (error, result) => {
@@ -125,13 +128,16 @@ export function updateProfile(
 	return new Promise((resolve, reject) => {
 		const gender = profile.gender ? `'${profile.gender}'` : null;
 		const bio = profile.bio ? `'${profile.bio}'` : null;
+		const geoLocationAuthorization = profile.geoLocationAuthorization
+			? `${profile.geoLocationAuthorization}`
+			: false;
 		const sql = `UPDATE profile SET
 			dob = ${profile.dob},
 			username = '${profile.username}',
 			firstname = '${profile.firstname}',
 			lastname= '${profile.lastname}',
 			gender = ${gender},
-			geoLocationAuthorization = ${profile.geoLocationAuthorization},
+			geoLocationAuthorization = ${geoLocationAuthorization},
 			sexualOrientation = '${profile.sexualOrientation}',
 			bio = ${bio}
 		WHERE userId = ${userId}`;

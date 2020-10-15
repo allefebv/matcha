@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:05:12 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 10:56:31 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ import {
 	activatedUserMailer, newEmailMailer, newPasswordMailer
 } from '../services/mailer';
 import { checkPassword, hashPassword } from '../services/password';
-import { addUserValidation } from '../services/userValidation';
+import { addUserValidation } from '../services/validation';
 
 export async function loginUserController(req: Request, res: Response) {
 	try {
@@ -68,10 +68,12 @@ export async function addUserController(req: Request, res: Response) {
 		await addUserValidation(req.body.email, req.body.password);
 		const password = hashPassword(req.body.password);
 		const newUser = await addUser(req.body.email, password);
+		/*
 		await activatedUserMailer(
 			newUser,
 			`${req.body.redirectUrl}?activationKey=${newUser.activationKey}&id=${newUser.id}`
 		);
+		*/
 		res.status(200).json({
 			user: {
 				email: newUser.email,

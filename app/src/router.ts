@@ -6,16 +6,13 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 12:46:06 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/14 15:12:42 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import express, { Application, Request, Response } from 'express';
-import path from 'path';
+import { Application, Request, Response } from 'express';
 
-import {
-	getImageByUsernameController, getImageController, handleImageController
-} from './controller/imageController';
+import { handleImageController } from './controller/imageController';
 import {
 	addlikedProfileController, deletelikedProfileController,
 	getProfileLikeController, getProfileMatchController
@@ -134,12 +131,6 @@ function viewRouter(app: Application) {
 }
 
 function imagesController(app: Application) {
-	app.post("/images/getImage", (req: Request, res: Response) =>
-		getImageController(req, res)
-	);
-	app.post("/images/getImageByUsername", (req: Request, res: Response) =>
-		getImageByUsernameController(req, res)
-	);
 	app.post("/images/handleImages", (req: Request, res: Response) =>
 		handleImageController(req, res)
 	);

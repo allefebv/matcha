@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 17:21:26 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 11:18:28 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ export async function addTableGeoLocation() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE geoLocation (
 			userId							INTEGER NOT NULL,
+			isFromGeolocation				BOOLEAN DEFAULT 0 NOT NULL,
 		    city							TEXT,
     		postCode						TEXT,
     		countryCode						TEXT,
@@ -95,6 +96,7 @@ export async function addTableUsageLocation() {
 	return new Promise((resolve) => {
 		const sql = `CREATE TABLE usageLocation (
 			userId							INTEGER NOT NULL,
+			isFromGeolocation				BOOLEAN DEFAULT 0 NOT NULL,
 		    city							TEXT NOT NULL,
     		postCode						TEXT,
     		countryCode						TEXT,
