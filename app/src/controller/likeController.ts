@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:04:51 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:06:18 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ import {
 import {
 	getProfileByUserId, getProfileByUsername
 } from '../model/profileRepositories';
-import { jwtVerify } from '../services/jwt';
+import { jwtVerify } from '../services/validation/jwt';
 
 export async function addlikedProfileController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);

@@ -6,13 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:37 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:27:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { couldStartTrivia } from 'typescript';
-
-import { profile } from '../../types/types';
+import { profile } from '../../../types/types';
 
 async function distanceScore(profile: profile): Promise<number> {
 	return new Promise((resolve) => {

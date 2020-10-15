@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 15:15:45 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:06:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ import { profile } from '../../types/types';
 import {
 	getProfileByUserId, getProfileByUsername
 } from '../model/profileRepositories';
-import { jwtVerify } from '../services/jwt';
+import { jwtVerify } from '../services/validation/jwt';
 
 export async function handleImageController(req: Request, res: Response) {
 	const tabNameimg = ["img0", "img1", "img2", "img3", "img4"];

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:54 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 10:44:59 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:25:50 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,18 @@ import {
 	addGeoLocation, addUsageLocation, getGeoLocation, getUsageLocation,
 	updateGeoLocation, updateUsageLocation
 } from '../model/locationRepositories';
-import { jwtVerify } from '../services/jwt';
+import { jwtVerify } from '../services/validation/jwt';
+import { locationValidation } from '../services/validation/locationValidation';
 
 async function handleLocation(req: Request, res: Response, table: string) {
 	const jwt = await jwtVerify(req.headers.token, res);
 
 	if (jwt && jwt.isLogin) {
+		try {
+			await locationValidation(req.body);
+		} catch (error) {
+			res.status(400).send(error);
+		}
 		const location =
 			table === "GeoLocation"
 				? await getGeoLocation(jwt.decoded.id)

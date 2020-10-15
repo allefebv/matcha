@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 15:12:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:59:12 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ import {
 	recommendationController
 } from './controller/recommendationController';
 import {
-	addTagProfileController, deleteTagProfileController
+	addTagProfileController, deleteTagProfileController,
+	getTagAutocompleteController
 } from './controller/tagController';
 import {
 	activateNewEmailController, activateUserController, addUserController,
@@ -113,6 +114,9 @@ function notificationRouter(app: Application) {
 }
 
 function tagRouter(app: Application) {
+	app.post("/tag/getTagAutocomplete", (req: Request, res: Response) =>
+		getTagAutocompleteController(req, res)
+	);
 	app.post("/tag/addTagProfile", (req: Request, res: Response) =>
 		addTagProfileController(req, res)
 	);

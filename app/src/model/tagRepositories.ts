@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:26 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 15:10:54 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@ export function getAllTag(): Promise<{ tag: string }[] | null> {
 			if (error) {
 				console.log(error);
 				resolve(null);
+			}
+			resolve(result);
+		});
+	});
+}
+
+export function getTagAutocomplete(
+	partial: string,
+	limit: number
+): Promise<{ tag: string }[]> {
+	return new Promise((resolve, reject) => {
+		const sql = `SELECT tag from tag WHERE tag LIKE '${partial}%' LIMIT ${limit}`;
+		dataBase.query(sql, (error, result: { tag: string }[]) => {
+			if (error) {
+				reject({ code: 500, message: error });
 			}
 			resolve(result);
 		});

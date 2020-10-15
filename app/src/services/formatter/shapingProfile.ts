@@ -6,13 +6,13 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 11:27:32 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:06:32 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { profile } from '../../types/types';
-import { getUsageLocation } from '../model/locationRepositories';
-import { getTagProfile } from '../model/tagProfileRepositories';
+import { profile } from '../../../types/types';
+import { getUsageLocation } from '../../model/locationRepositories';
+import { getTagProfile } from '../../model/tagProfileRepositories';
 
 export function shapingProfile(profile: profile) {
 	return new Promise(async (resolve) => {

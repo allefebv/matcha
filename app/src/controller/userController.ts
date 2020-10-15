@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 10:56:31 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:20:23 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,19 @@ import {
 	getUserByEmail, getUserById
 } from '../model/userRepositories';
 import { generatePassword } from '../services/generateString';
-import { generateTokenForUser, jwtVerify } from '../services/jwt';
 import {
 	activatedUserMailer, newEmailMailer, newPasswordMailer
 } from '../services/mailer';
-import { checkPassword, hashPassword } from '../services/password';
-import { addUserValidation } from '../services/validation';
+import { generateTokenForUser, jwtVerify } from '../services/validation/jwt';
+import { checkPassword, hashPassword } from '../services/validation/password';
+import {
+	addUserValidation, changeEmailValidation, changePasswordValidation,
+	deleteUserValidation, loginUserValidation, resetPasswordValidation
+} from '../services/validation/userValidation';
 
 export async function loginUserController(req: Request, res: Response) {
 	try {
+		await loginUserValidation(req.body);
 		const user = await getUserByEmail(req.body.email);
 		await checkPassword(req.body.password, user.password);
 		res.status(200).json({
@@ -37,7 +41,7 @@ export async function loginUserController(req: Request, res: Response) {
 			token: generateTokenForUser(user),
 		});
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -49,7 +53,7 @@ export async function activateUserController(req: Request, res: Response) {
 			res.status(200).json(result);
 		}
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -59,21 +63,21 @@ export async function activateNewEmailController(req: Request, res: Response) {
 		const result = await changeEmail(userId, req.query.email as string);
 		res.status(200).send(result);
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
 export async function addUserController(req: Request, res: Response) {
 	try {
-		await addUserValidation(req.body.email, req.body.password);
+		await addUserValidation(req.body);
 		const password = hashPassword(req.body.password);
 		const newUser = await addUser(req.body.email, password);
-		/*
+
 		await activatedUserMailer(
 			newUser,
 			`${req.body.redirectUrl}?activationKey=${newUser.activationKey}&id=${newUser.id}`
 		);
-		*/
+
 		res.status(200).json({
 			user: {
 				email: newUser.email,
@@ -83,7 +87,7 @@ export async function addUserController(req: Request, res: Response) {
 			token: generateTokenForUser(newUser),
 		});
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -91,11 +95,12 @@ export async function changePasswordController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const user = await getUserById(jwt.decoded.id);
+		await changePasswordValidation(req.body, user);
 		await checkPassword(req.body.password, user.password);
 		await changePassword(jwt.decoded.id, hashPassword(req.body.newPassword));
 		res.status(200).send("Password change");
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -103,6 +108,7 @@ export async function changeEmailController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const user = await getUserById(jwt.decoded.id);
+		await changeEmailValidation(req.body, user);
 		await checkPassword(req.body.password, user.password);
 		newEmailMailer(
 			req.body.newEmail,
@@ -110,30 +116,32 @@ export async function changeEmailController(req: Request, res: Response) {
 		);
 		res.status(200).send("Email send to your new email");
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
 export async function resetPasswordController(req: Request, res: Response) {
 	try {
+		await resetPasswordValidation(req.body);
 		const user = await getUserByEmail(req.body.email);
 		const newPassword = generatePassword();
 		await changePassword(user.id, hashPassword(newPassword));
 		newPasswordMailer(user, newPassword);
 		res.status(200).send("New password send in email");
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
 export async function deleteUserController(req: Request, res: Response) {
 	try {
+		await deleteUserValidation(req.body);
 		const jwt = await jwtVerify(req.headers.token, res);
 		const user = await getUserById(jwt.decoded.id);
 		await checkPassword(req.body.password, user.password);
 		await deleteUser(parseInt(jwt.decoded.id.toString()));
 		res.status(200).send("User as deleted");
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }

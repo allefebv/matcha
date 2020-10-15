@@ -6,12 +6,12 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:50 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:26:58 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { profile, pts } from '../../types/types';
-import { getUsageLocation } from '../model/locationRepositories';
+import { profile, pts } from '../../../types/types';
+import { getUsageLocation } from '../../model/locationRepositories';
 
 const EARTH_RAY = 6367445;
 

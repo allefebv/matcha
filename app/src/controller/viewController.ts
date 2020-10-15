@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:05:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:06:26 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ import { getProfileByUsername } from '../model/profileRepositories';
 import {
 	addView, getView, getViewByViewerProfileId, updateView
 } from '../model/viewRepositories';
-import { jwtVerify } from '../services/jwt';
+import { jwtVerify } from '../services/validation/jwt';
 
 export async function getViewController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);

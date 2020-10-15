@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 12:34:47 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ export function getUserById(id: number): Promise<user> {
 		const sql = `SELECT * FROM user WHERE id = ${id}`;
 		dataBase.query(sql, (error: string, result: user[]) => {
 			if (error) {
-				throw error;
+				reject({ code: 500, message: error });
 			}
 			if (!result || result.length !== 1) {
-				reject("Error: user does not exist");
+				reject({ code: 200, message: "Error: user does not exist" });
 			}
 			resolve(result[0]);
 		});
@@ -36,10 +36,10 @@ export function getUserByEmail(email: string): Promise<user> {
 		const sql = `SELECT * FROM user WHERE email = '${email}'`;
 		dataBase.query(sql, (error: string, result: user[]) => {
 			if (error) {
-				throw error;
+				reject({ code: 500, message: error });
 			}
 			if (!result || result.length !== 1) {
-				reject("Error: user does not exist");
+				reject({ code: 200, message: "Error: user does not exist" });
 			}
 			resolve(result[0]);
 		});
@@ -51,12 +51,12 @@ export function changePassword(id: number, password: string): Promise<string> {
 		const sql = `UPDATE user SET password = '${password}' WHERE id = ${id}`;
 		dataBase.query(sql, async (error: string, result) => {
 			if (error) {
-				throw error;
+				reject({ code: 500, message: error });
 			}
 			if (result.affectedRows) {
 				resolve("Password has beeen change");
 			}
-			reject("Error: password not change");
+			reject({ code: 400, message: "Error: password not change" });
 		});
 	});
 }
@@ -64,14 +64,17 @@ export function changePassword(id: number, password: string): Promise<string> {
 export function changeEmail(id: number, email: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const sql = `UPDATE user SET email = '${email}' WHERE id = ${id}`;
-		dataBase.query(sql, async (error: string, result) => {
+		dataBase.query(sql, async (error, result) => {
 			if (error) {
-				reject("Error: email already exsist");
+				if (error.errno === 1062) {
+					reject({ code: 200, message: "Email already exsist" });
+				}
+				reject({ code: 500, message: error });
 			}
 			if (result && result.affectedRows) {
 				resolve("Email has been change");
 			}
-			reject("Error: email already exsist");
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -91,15 +94,18 @@ export function addUser(email: string, password: string): Promise<user> {
 			'${date}',
 			'${activationKey}'
 			WHERE NOT EXISTS(SELECT * FROM user WHERE email='${email}')`;
-		dataBase.query(sql, async (error: string, result) => {
+		dataBase.query(sql, async (error, result) => {
 			if (error) {
-				throw error;
+				if (error.errno === 1062) {
+					reject({ code: 200, message: "Email already exsist" });
+				}
+				reject({ code: 500, message: error });
 			}
 			if (result.affectedRows) {
 				const user = await getUserByEmail(email);
 				resolve(user);
 			}
-			reject("Error: email already exsist");
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -109,12 +115,12 @@ export async function activateUser(id: number): Promise<string> {
 		const sql = `UPDATE user SET activated = TRUE WHERE id = ${id}`;
 		dataBase.query(sql, async (error: string, result) => {
 			if (error) {
-				throw error;
+				reject({ code: 500, message: error });
 			}
 			if (result.affectedRows) {
 				resolve("User activated");
 			}
-			reject("Error: user has not been activated");
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -124,12 +130,12 @@ export async function deleteUser(id: number): Promise<string> {
 		const sql = `DELETE FROM user WHERE id = ${id}`;
 		dataBase.query(sql, (error: string, result) => {
 			if (error) {
-				throw error;
+				reject({ code: 500, message: error });
 			}
 			if (result.affectedRows) {
 				resolve("User delete");
 			}
-			reject("Error: user has been deleted");
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }

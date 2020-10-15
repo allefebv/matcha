@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 11:31:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:28:07 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ import {
 	addProfile, getAllProfile, getProfileByUserId, getProfileByUsername,
 	updateProfile
 } from '../model/profileRepositories';
-import { jwtVerify } from '../services/jwt';
-import { shapingProfile } from '../services/shapingProfile';
-import { profileValidation } from '../services/validation';
+import { shapingProfile } from '../services/formatter/shapingProfile';
+import { jwtVerify } from '../services/validation/jwt';
+import { addProfileValidation } from '../services/validation/profileValidation';
 
 export async function getProfileController(req: Request, res: Response) {
 	try {
@@ -27,7 +27,7 @@ export async function getProfileController(req: Request, res: Response) {
 		const profileShaping = await shapingProfile(profile);
 		res.status(200).json(profileShaping);
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -42,7 +42,7 @@ export async function getProfileByUsernameController(
 		);
 		res.status(200).json(profile);
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
@@ -52,8 +52,8 @@ export async function getAllProfileController(req: Request, res: Response) {
 		try {
 			const profileList = await getAllProfile(jwt.decoded.id);
 			res.status(200).json(profileList);
-		} catch {
-			res.status(200).send(null);
+		} catch (error) {
+			res.status(error.code).send(error.message);
 		}
 	}
 }
@@ -61,21 +61,21 @@ export async function getAllProfileController(req: Request, res: Response) {
 export async function addProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		await profileValidation(req.body);
+		await addProfileValidation(req.body);
 		const profile = await addProfile(req.body, jwt.decoded.id);
 		res.status(200).json(profile);
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }
 
 export async function updateProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		await profileValidation(req.body);
+		await addProfileValidation(req.body);
 		const profile = await updateProfile(req.body, jwt.decoded.id);
 		res.status(200).json(profile);
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(error.code).send(error.message);
 	}
 }

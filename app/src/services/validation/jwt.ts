@@ -6,15 +6,14 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:46 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:47 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 13:58:42 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { rejects } from 'assert';
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { user } from '../../types/types';
+import { user } from '../../../types/types';
 
 export const JWT_SIGN_SECRET = "p4msh40n39f7nf037rhg0sa24gt90374gohdgwh3i8";
 
@@ -48,7 +47,7 @@ export async function jwtVerify(
 				isLogin = error ? false : true;
 
 				if (isLogin === false) {
-					reject("Token invalid");
+					reject({ code: 401, message: "Error: unauthorized token invalid" });
 				}
 				resolve({
 					isLogin: isLogin,

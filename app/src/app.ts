@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 12:47:25 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 13:54:54 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ async function initMiddelware() {
 	app.use(express.static("images", { extensions: ["png", "jpg", "jpeg"] }));
 	app.use(cors(corsOptions));
 	app.use(bodyParser.json());
+	app.use(function (error, req, res, next) {
+		if (error instanceof SyntaxError) {
+			res.status(400).send("Error: JSON syntax");
+		} else {
+			next();
+		}
+	});
 }
 
 function initDatabase() {

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/09/30 11:01:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:06:22 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ import {
 import {
 	getProfileByUserId, getProfileByUsername
 } from '../model/profileRepositories';
-import { jwtVerify } from '../services/jwt';
+import { jwtVerify } from '../services/validation/jwt';
 
 export async function addNotificationController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
@@ -31,11 +31,11 @@ export async function addNotificationController(req: Request, res: Response) {
 			req.body.notification
 		);
 		if (notification) {
-			res.status(200).send('Notification add');
+			res.status(200).send("Notification add");
 			return;
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function deleteNotificationController(
@@ -46,11 +46,11 @@ export async function deleteNotificationController(
 	if (jwt && jwt.isLogin) {
 		const isDelete = await deleteNotification(req.body.id, jwt.decoded.id);
 		if (isDelete) {
-			res.status(200).send('Notification add');
+			res.status(200).send("Notification add");
 			return;
 		}
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
 
 export async function getNotificationController(req: Request, res: Response) {
@@ -71,5 +71,5 @@ export async function getNotificationController(req: Request, res: Response) {
 		res.status(200).send(notificationList);
 		return;
 	}
-	res.status(400).send('An error occured');
+	res.status(400).send("An error occured");
 }
