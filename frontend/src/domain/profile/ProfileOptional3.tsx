@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/13 14:37:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 01:18:40 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
-
-import { Iprofile } from "../../types/types";
-import * as constants from "../../services/constants";
-import { throttle } from "lodash";
-import { renameKey } from "../../services/utils";
 import { connect, ConnectedProps } from "react-redux";
 import {
 	actionUser_setProfile,
 	actionUser_usagelocation,
 } from "../../store/user/action";
+import { autocompleteLocationAPI } from "../../services/apiCalls";
+import { Iaddress } from "../../types/types";
+import { throttle } from "lodash";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
+	currentGeolocation: state.user.currentGeolocation,
+	usagelocation: state.user.usagelocation,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
@@ -36,77 +36,36 @@ type Props = {
 	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
-	profile: Iprofile;
 } & ReduxProps;
 
-export function ProfileOptional3(props: Props) {
-	const [value, setValue] = useState<any>(null);
+function ProfileOptional3Component(props: Props) {
+	const [value, setValue] = useState<any>(props.usagelocation);
 	const [options, setOptions] = useState<Array<any>>([]);
 	const [inputValue, setInputValue] = useState("");
 	const [prevent, setPrevent] = useState(false);
 
-	const getOptions = useCallback(
-		throttle((input: string, location: any) => {
-			fetch(
-				constants.URI_AUTOCOMPLETE_API +
-					constants.LOCATION_IQ_API_KEY +
-					"&q=" +
-					encodeURIComponent(input) +
-					"&" +
-					constants.PARAMETERS_AUTOCOMPLETE_API
-			)
-				.then((response) => response.json())
-				.then((json) => {
-					if (json.error) {
-						return;
-					}
-					const jsonTmp = createAddressFromJson(json);
-					jsonTmp.unshift(location);
-					setOptions(jsonTmp);
-				});
-		}, 1300),
-		[]
-	);
-
-	const createAddressFromJson = (json: Array<any>) => {
-		return json
-			.map((entry: any) => {
-				return Object.entries(entry)
-					.filter((subEntry) => subEntry[0] === "address")
-					.map((subEntry: any) => {
-						const array = Object.entries(subEntry[1]).filter(
-							(subSub) =>
-								subSub[0] === "name" ||
-								subSub[0] === "country" ||
-								subSub[0] === "postcode" ||
-								subSub[0] === "country_code"
-						);
-						array.push(["isFromGeolocation", false]);
-						let obj = Object.fromEntries(array);
-						obj = renameKey(obj, "name", "city");
-						obj = renameKey(obj, "country_code", "countryCode");
-						obj = renameKey(obj, "postcode", "postCode");
-						return obj;
-					});
-			})
-			.map((entry) => entry[0]);
+	const autocomplete = async (input: string) => {
+		const address = await autocompleteLocationAPI(input);
+		if (address) {
+			address.unshift(props.currentGeolocation);
+			setOptions(address);
+		}
 	};
+	const throttledAutocomplete = throttle(autocomplete, 1100);
+	const MemoizedThrottledAutocomplete = useCallback(throttledAutocomplete, []);
 
 	useEffect(() => {
-		if (inputValue && props.profile.location) {
-			getOptions(inputValue, props.profile.location.geoLocation);
+		if (inputValue) {
+			MemoizedThrottledAutocomplete(inputValue);
 		}
-	}, [inputValue, props.profile, getOptions]);
+	}, [inputValue]);
 
 	useEffect(() => {
-		if (
-			props.profile.location &&
-			props.profile.location.geoLocation &&
-			!options.length
-		) {
-			setOptions([props.profile.location.geoLocation]);
+		setOptions([props.currentGeolocation]);
+		if (value) {
+			props.setDisabled(false);
 		}
-	}, [options, props.profile.location]);
+	}, []);
 
 	const handleInputChange = (
 		event: React.ChangeEvent<{}>,
@@ -119,17 +78,19 @@ export function ProfileOptional3(props: Props) {
 		setInputValue(newInputValue);
 	};
 
-	function handleValueChange(event: React.ChangeEvent<{}>, newValue: any) {
+	function handleValueChange(
+		e: React.ChangeEvent<{}>,
+		newValue: Iaddress | null
+	) {
 		setValue(newValue);
 		setPrevent(true);
-		const tmpProfile = props.profile;
-		tmpProfile.geoLocationAuthorization = tmpProfile.location.usageLocation
-			?.isFromGeolocation
-			? true
-			: false;
-		props.dispatch(actionUser_setProfile(tmpProfile));
-		props.dispatch(actionUser_usagelocation(newValue));
 		if (newValue) {
+			const tmpProfile = props.profile;
+			tmpProfile.geoLocationAuthorization = newValue.isFromGeolocation
+				? true
+				: false;
+			props.dispatch(actionUser_setProfile({ profile: tmpProfile }));
+			props.dispatch(actionUser_usagelocation({ usagelocation: newValue }));
 			props.setDisabled(false);
 		} else {
 			props.setDisabled(true);
@@ -158,11 +119,7 @@ export function ProfileOptional3(props: Props) {
 						getOptionLabel={(option) => {
 							if (option !== null) {
 								return (
-									option.postCode +
-									", " +
-									option.city +
-									", " +
-									option.country
+									option.postCode + ", " + option.city + ", " + option.country
 								);
 							}
 							return "";
@@ -177,9 +134,7 @@ export function ProfileOptional3(props: Props) {
 								<Grid item container xs={2}>
 									{option !== null ? (
 										option.isFromGeolocation ? (
-											<MyLocationIcon
-												style={{ color: "#16F02D" }}
-											/>
+											<MyLocationIcon style={{ color: "#16F02D" }} />
 										) : (
 											<LocationOnIcon />
 										)
@@ -214,3 +169,5 @@ export function ProfileOptional3(props: Props) {
 		</React.Fragment>
 	);
 }
+
+export const ProfileOptional3 = withReduxProps(ProfileOptional3Component);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:11:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/14 15:26:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ const AccountMenuComponent = (props: Props) => {
 
 	function handleLogout() {
 		handleClose();
-		props.dispatch(actionUser_logout({ user: null, token: null }));
+		props.dispatch(actionUser_logout());
 		history.push(constants.LANDING_ROUTE);
 	}
 

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:11:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/14 15:27:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../../services/constants";
 import { deleteAPI } from "../../services/apiCalls";
-import { actionUser_signin } from "../../store/user/action";
+import { actionUser_logout } from "../../store/user/action";
 import { useHistory } from "react-router-dom";
 
 const withReduxProps = connect((state: any) => ({
@@ -60,7 +60,7 @@ function DeleteAccountDialogComponent(props: Props) {
 		};
 
 		deleteAPI(details, props.loggedIn).then(() => {
-			props.dispatch(actionUser_signin({ user: null, token: null }));
+			props.dispatch(actionUser_logout());
 			history.push(constants.LANDING_ROUTE);
 		});
 	};

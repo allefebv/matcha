@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 14:57:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/14 18:34:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ import {
 	actionUser_setImages,
 } from "./action";
 import { getType } from "typesafe-actions";
+import { Iimgs } from "../../types/types";
 
 const initialState = {
 	isLoggedIn: false,
@@ -31,8 +32,14 @@ const initialState = {
 	signupToken: null,
 	currentGeolocation: null,
 	usagelocation: null,
-	tagList: null,
-	imgs: null,
+	tagList: [],
+	imgs: {
+		img0: null,
+		img1: null,
+		img2: null,
+		img3: null,
+		img4: null,
+	} as Iimgs,
 };
 
 export function userReducer(
@@ -83,7 +90,7 @@ export function userReducer(
 		case getType(actionUser_setImages):
 			return {
 				...state,
-				tagList: action.payload.tagList,
+				imgs: action.payload.imgs,
 			};
 		default:
 			return state;

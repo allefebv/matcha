@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 22:01:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/14 18:45:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@ export const URI_UPDATE_EMAIL = "/user/changeEmail";
 export const URI_MODIFY_PASSWORD = "/user/changePassword";
 export const URI_DELETE_ACCOUNT = "/user/deleteUser";
 export const URI_GET_PROFILE = "/profile/getProfile";
-export const URI_POST_PICTURES = "/profile/handleImages";
+export const URI_POST_PICTURES = "/images/handleImages";
 export const URI_HANDLE_GEOLOCATION = "/location/handleGeoLocation";
-export const URI_HANDLE_PROFILE = "/profile/handleProfile";
+export const URI_HANDLE_USAGELOCATION = "/location/handleUsageLocation";
+export const URI_CREATE_PROFILE = "/profile/addProfile";
+export const URI_UPDATE_PROFILE = "/profile/updateProfile";
 export const URI_POST_TAGS = "/tag/addTagProfile";
 export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
+export const URI_GET_TAG_AUTOCOMPLETE = "/tag/getTagAutocomplete";
 
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
 export const URI_REVERSE_GEOCODING_API =

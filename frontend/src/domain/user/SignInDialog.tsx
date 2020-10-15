@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 18:31:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/14 22:27:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ import { connect, ConnectedProps } from "react-redux";
 import {
 	actionUser_signin,
 	actionUser_setProfile,
+	actionUser_setTagList,
+	actionUser_usagelocation,
 } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 
@@ -81,25 +83,37 @@ function SignInDialogComponent(props: Props) {
 			email: email,
 			password: password,
 		};
-		signinAPI(details).then(async ({ user, token }) => {
-			if (user.activated) {
-				const profile = await getProfileAPI(token).catch((error) =>
-					console.log(error.message)
-				);
-				if (profile) {
-					props.dispatch(actionUser_setProfile({ profile: profile.profile }));
+		signinAPI(details)
+			.then(async ({ user, token }) => {
+				if (user.activated) {
+					const response: any = await getProfileAPI(token).catch((error) =>
+						console.log(error.message)
+					);
+					if (response) {
+						props.dispatch(
+							actionUser_setProfile({ profile: response.profile })
+						);
+						props.dispatch(actionUser_setTagList({ tagList: response.tag }));
+					}
+					props.dispatch(actionUser_signin({ user, token }));
+					props.dispatch(
+						actionUser_usagelocation({ usagelocation: response.location })
+					);
+				} else {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: "Please check your emails to activate your account",
+							type: "error",
+						})
+					);
+					handleClose();
 				}
-				props.dispatch(actionUser_signin({ user, token }));
-			} else {
+			})
+			.catch((error) => {
 				props.dispatch(
-					actionUi_showSnackbar({
-						message: "Please check your emails to activate your account",
-						type: "error",
-					})
+					actionUi_showSnackbar({ message: error.message, type: "error" })
 				);
-			}
-			handleClose();
-		});
+			});
 	};
 
 	return (

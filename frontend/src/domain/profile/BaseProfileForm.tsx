@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 22:26:09 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/15 11:49:16 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ import { Grid, TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
 import {
-	handleProfileAPI,
+	createProfileAPI,
 	handleGeoLocationAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
@@ -27,6 +27,7 @@ import {
 import { DatePicker } from "@material-ui/pickers";
 import { useGeolocation } from "../../services/useGeolocation";
 import { Iprofile } from "../../types/types";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -39,32 +40,15 @@ type Props = {
 } & ReduxProps;
 
 function BaseProfileFormComponent(props: Props) {
-	const geolocation = useGeolocation();
 	const [dob, setDob] = useState<Date | null>(null);
-	const date = new Date();
-
-	const [profile, setProfile] = useState<Iprofile>({
+	const [profile, setProfile] = useState({
 		firstname: "",
 		lastname: "",
 		username: "",
-		dob: null,
-		gender: null,
-		sexualOrientation: "bisexual",
-		bio: null,
-		geoLocationAuthorization: false,
-		location: {
-			usageLocation: null,
-			geoLocation: null,
-		},
-		tagList: null,
-		imgs: {
-			img0: null,
-			img1: null,
-			img2: null,
-			img3: null,
-			img4: null,
-		},
+		dob: null as null | number,
 	});
+	const geolocation = useGeolocation();
+	const date = new Date();
 
 	function handleChangeDob(date: Date | null) {
 		if (date) {
@@ -77,9 +61,6 @@ function BaseProfileFormComponent(props: Props) {
 
 	useEffect(() => {
 		if (geolocation) {
-			const tmpProfile = { ...profile };
-			tmpProfile.location.geoLocation = geolocation;
-			setProfile(tmpProfile);
 			props.dispatch(
 				actionUser_geolocation({
 					geolocation: geolocation,
@@ -91,13 +72,14 @@ function BaseProfileFormComponent(props: Props) {
 	}, [geolocation]);
 
 	async function submitProfile() {
-		const body = Object.fromEntries(
-			Object.entries(profile).filter(
-				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
-			)
-		);
-		return handleProfileAPI(body, props.loggedIn).then((json: any) => {
+		return createProfileAPI(profile, props.loggedIn).then((json: any) => {
 			props.dispatch(actionUser_setProfile({ profile: json }));
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: "Your profile has been created",
+					type: "success",
+				})
+			);
 		});
 	}
 

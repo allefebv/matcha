@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:35:59 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 19:57:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:26:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ export const useGeolocation = () => {
 							country: json.address.country,
 							isFromGeolocation: true,
 							lat: parseInt(json.lat),
-							lon: parseInt(json.lon),
+							lng: parseInt(json.lon),
 						});
 					}
 				})

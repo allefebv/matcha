@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/13 14:59:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/15 16:12:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,28 @@ import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
 import {
 	postPicturesAPI,
-	handleProfileAPI,
+	updateProfileAPI,
 	postTagsAPI,
+	handleUsageLocationAPI,
+	handleGeoLocationAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { useGeolocation } from "../../services/useGeolocation";
 import {
 	actionUser_geolocation,
 	actionUser_setProfile,
+	actionUser_usagelocation,
 } from "../../store/user/action";
+import { Iimgs } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
 	profile: state.user.profile,
-	imgs: state.user.imgs,
+	imgs: state.user.imgs as Iimgs,
 	tagList: state.user.tagList,
+	usagelocation: state.user.usagelocation,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -57,15 +62,13 @@ function ExtendedProfileStepperComponent(props: Props) {
 	}
 
 	useEffect(() => {
-		if (geolocation !== null) {
-			const tmpProfile = { ...props.profile };
-			tmpProfile.location.geoLocation = geolocation;
-			props.dispatch(actionUser_setProfile(tmpProfile));
+		if (geolocation) {
 			props.dispatch(
 				actionUser_geolocation({
 					geolocation: geolocation,
 				})
 			);
+			handleGeoLocationAPI(geolocation, props.loggedIn);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
@@ -89,33 +92,44 @@ function ExtendedProfileStepperComponent(props: Props) {
 			})
 		);
 
+		for (var pair of data.entries()) {
+			console.log(pair[0] + " - " + pair[1]);
+		}
+
 		if (Object.values(props.imgs).some((value) => value !== null)) {
 			return postPicturesAPI(data, props.loggedIn).then(() => {});
 		}
 	}
 
 	async function submitProfile() {
-		const body = Object.fromEntries(
-			Object.entries(props.profile).filter(
-				(entry) => !["imgs", "tagList", "location"].includes(entry[0])
-			)
-		);
-		return handleProfileAPI(body, props.loggedIn);
+		return updateProfileAPI(props.profile, props.loggedIn)
+			.then()
+			.catch((error: Error) => console.log(error));
 	}
 
-	function submitTags() {
-		//TODO: hardcoded tags
-		return postTagsAPI({}, props.loggedIn)
+	async function submitTags() {
+		return postTagsAPI({ tagList: [...props.tagList] }, props.loggedIn)
 			.then(() => {})
 			.catch((error) => {});
 	}
 
+	async function submitUsageLocation() {
+		return handleUsageLocationAPI(props.usagelocation, props.loggedIn).then(
+			(response) => {
+				props.dispatch(actionUser_usagelocation({ usagelocation: response }));
+			}
+		);
+	}
+
 	const handleSubmit = async () => {
 		setLoading(true);
-		await Promise.all([submitProfile()]);
+		await Promise.all([
+			submitProfile(),
+			submitTags(),
+			submitPictures(),
+			submitUsageLocation(),
+		]);
 		setLoading(false);
-		// submitPictures();
-		// submitTags()
 	};
 
 	const handleNext = () => {
@@ -130,7 +144,9 @@ function ExtendedProfileStepperComponent(props: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		props.dispatch(actionUser_setProfile({ ...profile, [name]: value }));
+		props.dispatch(
+			actionUser_setProfile({ profile: { ...props.profile, [name]: value } })
+		);
 	};
 
 	function getStepContent() {
@@ -163,9 +179,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 					/>
 				);
 			default:
-				return (
-					<Typography color="primary">All steps completed</Typography>
-				);
+				return <Typography color="primary">All steps completed</Typography>;
 		}
 	}
 
@@ -195,11 +209,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 						{getStepContent()}
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<Button
-							disabled={activeStep === 0}
-							onClick={handleBack}
-							fullWidth
-						>
+						<Button disabled={activeStep === 0} onClick={handleBack} fullWidth>
 							Back
 						</Button>
 					</Grid>
@@ -208,16 +218,12 @@ function ExtendedProfileStepperComponent(props: Props) {
 							variant="contained"
 							color="primary"
 							onClick={
-								activeStep === steps.length - 1
-									? handleSubmit
-									: handleNext
+								activeStep === steps.length - 1 ? handleSubmit : handleNext
 							}
 							fullWidth
 							disabled={disabled}
 						>
-							{activeStep === steps.length - 1
-								? "Finish"
-								: "Continue"}
+							{activeStep === steps.length - 1 ? "Finish" : "Continue"}
 						</Button>
 					</Grid>
 				</React.Fragment>
