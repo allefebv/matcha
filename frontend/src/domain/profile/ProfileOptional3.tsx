@@ -6,14 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/16 01:18:40 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 10:16:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Grid, TextField, Typography } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 import { connect, ConnectedProps } from "react-redux";
@@ -24,6 +24,7 @@ import {
 import { autocompleteLocationAPI } from "../../services/apiCalls";
 import { Iaddress } from "../../types/types";
 import { throttle } from "lodash";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -32,20 +33,26 @@ const withReduxProps = connect((state: any) => ({
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	activeStep: number;
-	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
 } & ReduxProps;
 
 function ProfileOptional3Component(props: Props) {
-	const [value, setValue] = useState<any>(props.usagelocation);
-	const [options, setOptions] = useState<Array<any>>([]);
+	const [value, setValue] = useState<Iaddress | null>(props.usagelocation);
+	const [options, setOptions] = useState<Iaddress[]>([]);
 	const [inputValue, setInputValue] = useState("");
 	const [prevent, setPrevent] = useState(false);
 
 	const autocomplete = async (input: string) => {
-		const address = await autocompleteLocationAPI(input);
+		const address = await autocompleteLocationAPI(input).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 		if (address) {
 			address.unshift(props.currentGeolocation);
 			setOptions(address);
@@ -61,11 +68,13 @@ function ProfileOptional3Component(props: Props) {
 	}, [inputValue]);
 
 	useEffect(() => {
-		setOptions([props.currentGeolocation]);
+		if (props.currentGeolocation) {
+			setOptions([props.currentGeolocation]);
+		}
 		if (value) {
 			props.setDisabled(false);
 		}
-	}, []);
+	}, [props.currentGeolocation]);
 
 	const handleInputChange = (
 		event: React.ChangeEvent<{}>,
@@ -97,6 +106,47 @@ function ProfileOptional3Component(props: Props) {
 		}
 	}
 
+	function getOptionLabel(option: Iaddress) {
+		if (option !== null) {
+			return option.postCode + ", " + option.city + ", " + option.country;
+		}
+		return "";
+	}
+
+	function getOptionIcon(option: Iaddress) {
+		if (option) {
+			return option.isFromGeolocation ? (
+				<MyLocationIcon style={{ color: "#16F02D" }} />
+			) : (
+				<LocationOnIcon />
+			);
+		}
+		return null;
+	}
+
+	function renderOption(option: Iaddress) {
+		return (
+			<Grid container justify="center" alignItems="center" wrap="nowrap">
+				<Grid item container xs={2}>
+					{getOptionIcon(option)}
+				</Grid>
+				<Grid item xs={10}>
+					<Typography noWrap>
+						{option !== null
+							? option.isFromGeolocation
+								? "Use my location"
+								: option.postCode + ", " + option.city + ", " + option.country
+							: null}
+					</Typography>
+				</Grid>
+			</Grid>
+		);
+	}
+
+	const renderInput = (params: AutocompleteRenderInputParams) => (
+		<TextField {...params} label="Location" variant="filled" margin="dense" />
+	);
+
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
@@ -114,55 +164,12 @@ function ProfileOptional3Component(props: Props) {
 						value={value}
 						onChange={handleValueChange}
 						onInputChange={handleInputChange}
-						//TODO: dirty
-						getOptionSelected={(option, value) => true}
-						getOptionLabel={(option) => {
-							if (option !== null) {
-								return (
-									option.postCode + ", " + option.city + ", " + option.country
-								);
-							}
-							return "";
-						}}
-						renderOption={(option) => (
-							<Grid
-								container
-								justify="center"
-								alignItems="center"
-								wrap="nowrap"
-							>
-								<Grid item container xs={2}>
-									{option !== null ? (
-										option.isFromGeolocation ? (
-											<MyLocationIcon style={{ color: "#16F02D" }} />
-										) : (
-											<LocationOnIcon />
-										)
-									) : null}
-								</Grid>
-								<Grid item xs={10}>
-									<Typography noWrap>
-										{option !== null
-											? option.isFromGeolocation
-												? "Use my location"
-												: option.postCode +
-												  ", " +
-												  option.city +
-												  ", " +
-												  option.country
-											: null}
-									</Typography>
-								</Grid>
-							</Grid>
-						)}
-						renderInput={(params) => (
-							<TextField
-								{...params}
-								label="Location"
-								variant="filled"
-								margin="dense"
-							/>
-						)}
+						getOptionSelected={(option, value) =>
+							option && option.city === value.city
+						}
+						getOptionLabel={getOptionLabel}
+						renderOption={renderOption}
+						renderInput={renderInput}
 					></Autocomplete>
 				</Grid>
 			</Grid>

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 18:13:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 10:34:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ export function fetchApi<T>(url: string, args: fetchArgs): Promise<T> {
 			.then((response) => {
 				const contentType = response.headers.get("content-type");
 				if (contentType && contentType.indexOf("application/json") !== -1) {
+					console.log("helle");
 					resolve(response.json());
 				} else {
 					resolve();

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:20:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:06:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,15 @@ const LandingPageComponent = (props: Props) => {
 						})
 					);
 				})
-				.catch((error) => console.log(error.message));
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);

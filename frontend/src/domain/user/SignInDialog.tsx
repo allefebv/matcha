@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/14 22:27:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 09:35:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ import {
 	actionUser_usagelocation,
 } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { getProfileHydrateRedux } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -86,19 +87,8 @@ function SignInDialogComponent(props: Props) {
 		signinAPI(details)
 			.then(async ({ user, token }) => {
 				if (user.activated) {
-					const response: any = await getProfileAPI(token).catch((error) =>
-						console.log(error.message)
-					);
-					if (response) {
-						props.dispatch(
-							actionUser_setProfile({ profile: response.profile })
-						);
-						props.dispatch(actionUser_setTagList({ tagList: response.tag }));
-					}
+					await getProfileHydrateRedux(props.dispatch, token);
 					props.dispatch(actionUser_signin({ user, token }));
-					props.dispatch(
-						actionUser_usagelocation({ usagelocation: response.location })
-					);
 				} else {
 					props.dispatch(
 						actionUi_showSnackbar({
@@ -110,9 +100,14 @@ function SignInDialogComponent(props: Props) {
 				}
 			})
 			.catch((error) => {
+				console.log(error);
 				props.dispatch(
-					actionUi_showSnackbar({ message: error.message, type: "error" })
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
 				);
+				console.log(error.message);
 			});
 	};
 

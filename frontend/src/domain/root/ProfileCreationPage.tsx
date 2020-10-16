@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/13 13:33:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 09:13:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@ import { Button, CircularProgress, Grid } from "@material-ui/core";
 import { BaseProfileForm } from "../profile/BaseProfileForm";
 import { Redirect } from "react-router-dom";
 import * as constants from "../../services/constants";
-import { isProfileEmpty } from "../../services/utils";
+import { isProfileEmpty } from "../../services/profileUtils";
 import { ExtendedProfileStepper } from "../profile/ExtendedProfileStepper";
-import { SettingsBackupRestoreOutlined } from "@material-ui/icons";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
-	profile: state.user.profile,
+	isProfileEmpty: isProfileEmpty(
+		state.user.profile,
+		state.user.usagelocation,
+		state.user.tagList
+	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
@@ -33,7 +36,6 @@ type Props = {
 } & ReduxProps;
 
 const ProfileCreationPageComponent = (props: Props) => {
-	const [loading, setLoading] = useState(false);
 	const [redirect, setRedirect] = useState<string | null>(null);
 	const [next, setNext] = useState("");
 
@@ -54,9 +56,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 		}
 	}, []);
 
-	const handleExtended = (
-		event: React.MouseEvent<HTMLButtonElement>
-	): void => {
+	const handleExtended = (event: React.MouseEvent<HTMLButtonElement>): void => {
 		setNext("extended");
 	};
 
@@ -108,14 +108,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 					justify="center"
 					alignItems="center"
 				>
-					{isProfileEmpty(props.profile) ? (
-						<BaseProfileForm handleLoad={setLoading} />
-					) : (
-						getComponent()
-					)}
-				</Grid>
-				<Grid item>
-					{loading && <CircularProgress size={80} color="primary" />}
+					{props.isProfileEmpty ? <BaseProfileForm /> : getComponent()}
 				</Grid>
 			</React.Fragment>
 		);

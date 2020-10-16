@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:10:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 10:30:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ import { BrowserRouter } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { Grid } from "@material-ui/core";
+import { Grid, Paper } from "@material-ui/core";
 import { Router } from "./Router";
 import { GlobalSnackbar } from "../../component/GlobalSnackbar";
 
@@ -43,8 +43,8 @@ const AppComponent = (props: Props) => {
 			>
 				<Grid
 					item
+					xs={11}
 					container
-					xs={12}
 					style={{ height: "8%", zIndex: 10 }}
 					justify="space-between"
 				>

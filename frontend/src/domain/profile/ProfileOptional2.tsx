@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 15:53:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 10:34:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ import { ProfilePictures } from "./ProfilePictures";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_setTagList } from "../../store/user/action";
 import { getTagAutocompleteAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -27,10 +28,10 @@ const withReduxProps = connect((state: any) => ({
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	activeStep: number;
-	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
+	imgs: (string | null)[];
+	setImgs: React.Dispatch<React.SetStateAction<(string | null)[]>>;
 } & ReduxProps;
 
 function ProfileOptional2Component(props: Props) {
@@ -58,10 +59,17 @@ function ProfileOptional2Component(props: Props) {
 		if (!(inputValue === "")) {
 			getTagAutocompleteAPI(details, props.isLoggedIn)
 				.then((tagList) => {
-					console.log(tagList);
 					setOptions(tagList);
 				})
-				.catch((error) => console.log(error.message));
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
 		}
 	}
 
@@ -72,9 +80,9 @@ function ProfileOptional2Component(props: Props) {
 		setInputValue(newInputValue);
 	};
 
-	// useEffect(() => {
-	// 	TagAutocomplete();
-	// }, [inputValue]);
+	useEffect(() => {
+		TagAutocomplete();
+	}, [inputValue]);
 
 	useEffect(() => {
 		if (profileHasTags() && props.profile.bio) {
@@ -87,7 +95,7 @@ function ProfileOptional2Component(props: Props) {
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
-				<ProfilePictures />
+				<ProfilePictures imgs={props.imgs} setImgs={props.setImgs} />
 			</Grid>
 			<Grid item xs={12}>
 				<Typography color="primary">About you</Typography>

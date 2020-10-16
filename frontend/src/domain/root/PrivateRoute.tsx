@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:03 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:10:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 09:13:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,15 @@ import { Redirect, Route } from "react-router-dom";
 
 import * as constants from "../../services/constants";
 import { connect, ConnectedProps } from "react-redux";
-import { isProfileEmpty } from "../../services/utils";
+import { isProfileEmpty } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	isProfileEmpty: isProfileEmpty(state.user.profile),
+	isProfileEmpty: isProfileEmpty(
+		state.user.profile,
+		state.user.usagelocation,
+		state.user.tagList
+	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {

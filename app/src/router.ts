@@ -3,46 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   router.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 12:16:56 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/16 14:45:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Application, Request, Response } from 'express';
+import { Application, Request, Response } from "express";
 
-import { handleImageController } from './controller/imageController';
+import { handleImageController } from "./controller/imageController";
 import {
-	addlikedProfileController, deletelikedProfileController,
-	getProfileLikeController, getProfileMatchController
-} from './controller/likeController';
+	addlikedProfileController,
+	deletelikedProfileController,
+	getProfileLikeController,
+	getProfileMatchController,
+} from "./controller/likeController";
 import {
-	getGeoLocationController, getUsageLocationController,
-	handleGeoLocationController, handleUsageLocationController
-} from './controller/locationController';
+	getGeoLocationController,
+	getUsageLocationController,
+	handleGeoLocationController,
+	handleUsageLocationController,
+} from "./controller/locationController";
 import {
-	addNotificationController, getNotificationController
-} from './controller/notificationController';
+	addNotificationController,
+	getNotificationController,
+} from "./controller/notificationController";
 import {
-	addProfileController, getAllProfileController, getProfileByUsernameController,
-	getProfileController, updateProfileController
-} from './controller/profileController';
+	addProfileController,
+	getAllProfileController,
+	getProfileByUsernameController,
+	getProfileController,
+	updateProfileController,
+} from "./controller/profileController";
+import { recommendationController } from "./controller/recommendationController";
 import {
-	recommendationController
-} from './controller/recommendationController';
+	addTagProfileController,
+	deleteTagProfileController,
+	getTagAutocompleteController,
+} from "./controller/tagController";
 import {
-	addTagProfileController, deleteTagProfileController,
-	getTagAutocompleteController
-} from './controller/tagController';
+	activateNewEmailController,
+	activateUserController,
+	addUserController,
+	changeEmailController,
+	changePasswordController,
+	deleteUserController,
+	loginUserController,
+	resetPasswordController,
+} from "./controller/userController";
 import {
-	activateNewEmailController, activateUserController, addUserController,
-	changeEmailController, changePasswordController, deleteUserController,
-	loginUserController, resetPasswordController
-} from './controller/userController';
-import {
-	addViewController, getViewController
-} from './controller/viewController';
+	addViewController,
+	getViewController,
+} from "./controller/viewController";
 
 function userRouter(app: Application) {
 	app.post("/user/activateUser", (req: Request, res: Response) =>
@@ -140,7 +153,7 @@ function imagesController(app: Application) {
 	);
 
 	app.get("/images/*", (req: Request, res: Response) =>
-		res.status(200).send("The requested image does not exist")
+		res.status(200).send(null)
 	);
 }
 

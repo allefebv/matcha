@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { connect, ConnectedProps } from "react-redux";
-import { isProfileComplete } from "../services/utils";
+import { isProfileComplete } from "../services/profileUtils";
 import { ExtendedProfileDialog } from "../domain/profile/ExtendedProfileDialog";
 import { makeStyles } from "@material-ui/core";
 
 const withReduxProps = connect((state: any) => ({
-	profile: state.user.profile,
+	isProfileComplete: isProfileComplete(
+		state.user.profile,
+		state.user.usagelocation,
+		state.user.tagList
+	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
@@ -15,24 +19,21 @@ type Props = {
 } & ReduxProps;
 
 const useStyles = makeStyles({
-	button: (profile) => {
+	button: (isProfileComplete) => {
 		return {
-			color: isProfileComplete(profile) ? "inherit" : "red",
+			color: isProfileComplete ? "inherit" : "red",
 		};
 	},
 });
 
 function ToggleGroupComponent(props: Props) {
 	const [view, setView] = useState("Matches");
-	const classes = useStyles(props.profile);
+	const classes = useStyles(props.isProfileComplete);
 	const [open, setOpen] = useState(false);
 
 	function handleChange(e: React.MouseEvent<HTMLElement>, nextView: string) {
 		if (nextView !== null) {
-			if (
-				nextView === "Preselection" &&
-				!isProfileComplete(props.profile)
-			) {
+			if (nextView === "Preselection" && !props.isProfileComplete) {
 				setOpen(true);
 				return;
 			}
