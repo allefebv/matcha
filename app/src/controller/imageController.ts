@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 15:37:08 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/16 14:29:06 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,12 @@ export async function handleImageController(req: Request, res: Response) {
 		tabImg.map((img) => {
 			const mimetype = img[1].mimetype.split("/");
 			const path =
-				"./images/" + profile.username + "/" + img[0] + "." + mimetype[1];
+				"./public/images/" +
+				profile.username +
+				"/" +
+				img[0] +
+				"." +
+				mimetype[1];
 			img[1].mv(path);
 		});
 		res.status(200).send("Images add");

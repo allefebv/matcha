@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/15 13:56:46 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 13:56:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/16 15:54:26 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ export function locationValidation(body: location) {
 	return new Promise((resolve, reject) => {
 		if (
 			!body ||
-			!body.isFromGeolocation ||
+			typeof body.isFromGeolocation !== "boolean" ||
 			!body.city ||
 			!body.country ||
 			!body.countryCode ||
-			!body.lat ||
-			!body.lng ||
+			typeof body.lat !== "number" ||
+			typeof body.lng !== "number" ||
 			!body.postCode
 		) {
 			reject({ code: 400, message: "Error: mandatory parameters are missing" });

@@ -6,7 +6,7 @@ frontend/.pnp
 frontend/.pnp.js
 
 app/node_modules
-app/images
+app/public/images
 
 script/createUser/node_modules
 script/handleDatabase/node_modules
@@ -24,7 +24,7 @@ script/handleDatabase/node_modules
 .env.production.local
 
 npm-debug.log*
-yarn-debug.log*
+yarn-debug.log
 yarn-error.log*
 
 .vscode
