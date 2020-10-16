@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 15:53:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:07:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ import { ProfilePictures } from "./ProfilePictures";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_setTagList } from "../../store/user/action";
 import { getTagAutocompleteAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -61,7 +62,15 @@ function ProfileOptional2Component(props: Props) {
 					console.log(tagList);
 					setOptions(tagList);
 				})
-				.catch((error) => console.log(error.message));
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
 		}
 	}
 
@@ -72,9 +81,9 @@ function ProfileOptional2Component(props: Props) {
 		setInputValue(newInputValue);
 	};
 
-	// useEffect(() => {
-	// 	TagAutocomplete();
-	// }, [inputValue]);
+	useEffect(() => {
+		TagAutocomplete();
+	}, [inputValue]);
 
 	useEffect(() => {
 		if (profileHasTags() && props.profile.bio) {

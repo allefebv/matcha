@@ -6,21 +6,21 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/14 22:05:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:04:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
 import { getProfileAPI } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { ProfilePictures } from "../profile/ProfilePictures";
 import {
 	actionUser_setProfile,
 	actionUser_setTagList,
 	actionUser_usagelocation,
 } from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -42,7 +42,13 @@ const UserProfilePageComponent = (props: Props) => {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

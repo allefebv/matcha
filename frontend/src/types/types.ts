@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 17:07:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 18:45:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,7 @@ export interface user {
 }
 
 export interface Iimgs {
-	img0: string | null;
-	img1: string | null;
-	img2: string | null;
-	img3: string | null;
-	img4: string | null;
+	[index: number]: string | null;
 }
 
 export interface Iprofile {
@@ -58,7 +54,6 @@ export interface Iprofile {
 	geoLocationAuthorization: boolean;
 	location: Ilocation;
 	tagList: string[] | null;
-	imgs: Iimgs;
 }
 
 export interface IgetProfile {

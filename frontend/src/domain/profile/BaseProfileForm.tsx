@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 11:49:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:06:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,39 @@ function BaseProfileFormComponent(props: Props) {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn);
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
 
 	async function submitProfile() {
-		return createProfileAPI(profile, props.loggedIn).then((json: any) => {
-			props.dispatch(actionUser_setProfile({ profile: json }));
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: "Your profile has been created",
-					type: "success",
-				})
-			);
-		});
+		return createProfileAPI(profile, props.loggedIn)
+			.then((json: any) => {
+				props.dispatch(actionUser_setProfile({ profile: json }));
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: "Your profile has been created",
+						type: "success",
+					})
+				);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	}
 
 	const handleSubmit = async () => {

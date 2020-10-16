@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:38:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/04 22:23:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 16:44:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 
-import { Avatar, IconButton, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles } from "@material-ui/core";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
 interface Props {
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 			props.id === 0 ? "min(15vh, 6vw)" : "min(12vh, 5vw)",
 		height: (props: Props) =>
 			props.id === 0 ? "min(15vh, 6vw)" : "min(12vh, 5vw)",
-		"& img:hover": {
+		"&:hover": {
 			opacity: 0.6,
 		},
 		borderRadius: "50%",
@@ -51,7 +51,7 @@ export const CustomAvatar = (props: Props) => {
 	return (
 		<React.Fragment>
 			<input
-				name={"img" + props.id.toString()}
+				name={props.id.toString()}
 				className={classes.input}
 				accept="image/*"
 				type="file"
@@ -65,9 +65,9 @@ export const CustomAvatar = (props: Props) => {
 					onClick={showFileUpload}
 				/>
 			) : (
-				<IconButton className={classes.avatar} onClick={showFileUpload}>
+				<Avatar className={classes.avatar} onClick={showFileUpload}>
 					<PhotoCameraIcon />
-				</IconButton>
+				</Avatar>
 			)}
 		</React.Fragment>
 	);

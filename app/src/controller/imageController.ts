@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 13:04:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 13:49:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ export async function handleImageController(req: Request, res: Response) {
 		const profile = await getProfileByUserId(jwt.decoded.id);
 		const tabImg = [];
 
-		console.log("Hello ?", req.files);
 		for (let i in req.files) {
 			console.log(i);
 			if (tabNameimg.includes(i)) {

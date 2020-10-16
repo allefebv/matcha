@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:11:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:07:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../../services/constants";
 import { modifyEmailAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -69,11 +70,15 @@ function ModifyEmailDialogComponent(props: Props) {
 			password: password,
 		};
 
-		modifyEmailAPI(details, props.loggedIn)
-			.then(() => {})
-			.catch((error) => {
-				setEmailError(true);
-			});
+		modifyEmailAPI(details, props.loggedIn).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 	};
 
 	return (

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 18:34:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 18:43:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,7 @@ const initialState = {
 	currentGeolocation: null,
 	usagelocation: null,
 	tagList: [],
-	imgs: {
-		img0: null,
-		img1: null,
-		img2: null,
-		img3: null,
-		img4: null,
-	} as Iimgs,
+	imgs: [null, null, null, null] as Iimgs,
 };
 
 export function userReducer(

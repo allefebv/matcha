@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 16:12:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 18:58:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ import {
 	actionUser_setProfile,
 	actionUser_usagelocation,
 } from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Iimgs } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
@@ -43,7 +44,7 @@ const withReduxProps = connect((state: any) => ({
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
 	profile: state.user.profile,
-	imgs: state.user.imgs as Iimgs,
+	imgs: state.user.imgs as (string | null)[],
 	tagList: state.user.tagList,
 	usagelocation: state.user.usagelocation,
 }));
@@ -68,7 +69,15 @@ function ExtendedProfileStepperComponent(props: Props) {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn);
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
@@ -76,14 +85,14 @@ function ExtendedProfileStepperComponent(props: Props) {
 	async function submitPictures() {
 		const data = new FormData();
 		await Promise.all(
-			Object.entries(props.imgs).map(async (entry) => {
-				if (entry[1] !== null) {
-					await fetch(entry[1])
+			props.imgs.map(async (img, index) => {
+				if (img !== null) {
+					await fetch(img)
 						.then((response) => response.blob())
 						.then((blob) => {
 							data.append(
-								entry[0],
-								new File([blob], entry[0], {
+								"img" + index,
+								new File([blob], "img" + index, {
 									type: "image/jpg",
 								})
 							);
@@ -97,28 +106,58 @@ function ExtendedProfileStepperComponent(props: Props) {
 		}
 
 		if (Object.values(props.imgs).some((value) => value !== null)) {
-			return postPicturesAPI(data, props.loggedIn).then(() => {});
+			return postPicturesAPI(data, props.loggedIn).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 		}
 	}
 
 	async function submitProfile() {
-		return updateProfileAPI(props.profile, props.loggedIn)
-			.then()
-			.catch((error: Error) => console.log(error));
+		return updateProfileAPI(props.profile, props.loggedIn).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 	}
 
 	async function submitTags() {
-		return postTagsAPI({ tagList: [...props.tagList] }, props.loggedIn)
-			.then(() => {})
-			.catch((error) => {});
+		return postTagsAPI({ tagList: [...props.tagList] }, props.loggedIn).catch(
+			(error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			}
+		);
 	}
 
 	async function submitUsageLocation() {
-		return handleUsageLocationAPI(props.usagelocation, props.loggedIn).then(
-			(response) => {
+		return handleUsageLocationAPI(props.usagelocation, props.loggedIn)
+			.then((response) => {
 				props.dispatch(actionUser_usagelocation({ usagelocation: response }));
-			}
-		);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	}
 
 	const handleSubmit = async () => {
