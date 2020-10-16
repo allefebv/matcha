@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 13:54:54 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/16 12:12:38 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ async function initMiddelware() {
 		optionsSuccessStatus: 200,
 		credentials: true,
 	};
-	app.use(express.static("images", { extensions: ["png", "jpg", "jpeg"] }));
+	app.use(express.static("public", { extensions: ["png", "jpg", "jpeg"] }));
 	app.use(cors(corsOptions));
 	app.use(bodyParser.json());
 	app.use(function (error, req, res, next) {

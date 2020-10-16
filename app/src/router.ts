@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:59:12 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/16 12:16:56 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,10 @@ function imagesController(app: Application) {
 	app.post("/images/handleImages", (req: Request, res: Response) =>
 		handleImageController(req, res)
 	);
+
+	app.get("/images/*", (req: Request, res: Response) =>
+		res.status(200).send("The requested image does not exist")
+	);
 }
 
 function recommendationRouter(app: Application) {
@@ -174,6 +178,6 @@ export function router(app: Application) {
 
 	app.use((req: Request, res: Response) => {
 		res.setHeader("Content-Type", "text/plain");
-		res.status(404).json({ code: 404, error: "Page not found" });
+		res.status(404).send("Page not found");
 	});
 }
