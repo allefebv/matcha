@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 14:00:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 11:41:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { signupAPI } from "../services/apiCalls";
-import * as constants from "../services/constants";
+import { signupAPI } from "../../services/apiCalls";
+import * as constants from "../../services/constants";
 
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signup } from "../store/user/action";
+import { actionUser_signup } from "../../store/user/action";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
@@ -42,12 +43,13 @@ function SignUpDialogComponent(props: Props) {
 	};
 
 	const handleClose = () => {
+		setEmailError(false);
 		setOpen(false);
 		setPassword("");
 		setPasswordConfirm("");
+		setEmail("");
 		setPasswordError(false);
 		setPasswordConfirmError(false);
-		setEmailError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -60,7 +62,9 @@ function SignUpDialogComponent(props: Props) {
 	}
 
 	function handleBlurEmail(e: React.FocusEvent<HTMLInputElement>) {
-		setEmailError(!isEmailValid(email));
+		if (email !== "") {
+			setEmailError(!isEmailValid(email));
+		}
 	}
 
 	function isEmailValid(email: string | null) {
@@ -99,14 +103,24 @@ function SignUpDialogComponent(props: Props) {
 		signupAPI(details)
 			.then(({ user, token }) => {
 				props.dispatch(actionUser_signup({ user, token }));
-				handleClose();
+				props.dispatch(
+					actionUi_showSnackbar({
+						message:
+							"Your account has been created, please check your emails to activate it.",
+						type: "success",
+					})
+				);
 			})
 			.catch((error) => {
-				setEmailError(true);
-				setPasswordError(true);
-				setPasswordConfirmError(true);
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
 				console.log(error.message);
 			});
+		handleClose();
 	};
 
 	return (

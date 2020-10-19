@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/09 16:05:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:10:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Grid } from "@material-ui/core";
 import { Router } from "./Router";
-import { GlobalSnackbar } from "../component/GlobalSnackbar";
+import { GlobalSnackbar } from "../../component/GlobalSnackbar";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,

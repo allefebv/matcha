@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 16:18:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:10:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import "./index.css";
-import { App } from "./root/App";
+import { App } from "./domain/root/App";
 import * as serviceWorker from "./serviceWorker";
 import { store, persistor } from "./store/store";
 

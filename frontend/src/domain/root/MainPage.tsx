@@ -6,25 +6,31 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/09/28 16:24:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/13 12:27:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
-import { SliderDouble } from "../component/SliderDouble";
-import { CategoryFilterSort } from "../component/CategoryFilterSort";
+import React, { useState, useEffect } from "react";
+import { SliderDouble } from "../../component/SliderDouble";
+import { CategoryFilterSort } from "../search/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
 import { Grid, TextField } from "@material-ui/core";
-import { ProfileCard } from "../component/ProfileCard";
-import { ToggleGroup } from "../component/ToggleGroup";
+import { ProfileCard } from "../../component/ProfileCard";
+import { ToggleGroup } from "../../component/ToggleGroup";
 
 interface Props {}
 
 export const MainPage = (props: Props) => {
+	const [modal, setModal] = useState(false);
+
+	useEffect(() => {
+		console.log("here :" + modal);
+	}, [modal]);
+
 	return (
 		<React.Fragment>
 			<Grid item style={{ alignSelf: "center" }}>
-				<ToggleGroup />
+				<ToggleGroup toggleModal={setModal} />
 			</Grid>
 			<Grid
 				item
@@ -57,7 +63,9 @@ export const MainPage = (props: Props) => {
 								options={["John", "Lennon", "Toto"]}
 								getOptionLabel={(option) => option}
 								filterSelectedOptions
-								renderInput={(params) => <TextField {...params} />}
+								renderInput={(params) => (
+									<TextField {...params} />
+								)}
 							/>
 						</CategoryFilterSort>
 					</Grid>
@@ -72,7 +80,7 @@ export const MainPage = (props: Props) => {
 					style={{
 						backgroundColor: "indigo",
 						overflow: "scroll",
-						maxHeight: "80%"
+						maxHeight: "80%",
 					}}
 				>
 					<Grid item xs={12} sm={6} md={4}>

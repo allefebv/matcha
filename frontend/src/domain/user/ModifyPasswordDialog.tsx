@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 20:13:40 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/12 16:11:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
-import * as constants from "../services/constants";
-import { modifyPasswordAPI } from "../services/apiCalls";
+import * as constants from "../../services/constants";
+import { modifyPasswordAPI } from "../../services/apiCalls";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
