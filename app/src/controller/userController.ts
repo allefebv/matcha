@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:20:23 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 10:39:23 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ export async function addUserController(req: Request, res: Response) {
 		await addUserValidation(req.body);
 		const password = hashPassword(req.body.password);
 		const newUser = await addUser(req.body.email, password);
-
+		/*
 		await activatedUserMailer(
 			newUser,
 			`${req.body.redirectUrl}?activationKey=${newUser.activationKey}&id=${newUser.id}`
 		);
-
+*/
 		res.status(200).json({
 			user: {
 				email: newUser.email,

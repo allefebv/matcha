@@ -6,14 +6,15 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:26:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 18:16:42 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
+import { userProfile } from 'types/types';
 
 import {
-	getProfileBySexualOriantation, getProfileByUserId
+	getCompleteProfileByUserId, getProfileBySexualOriantation, getProfileByUserId
 } from '../model/profileRepositories';
 import {
 	recommendationAlgorithm
@@ -28,22 +29,26 @@ export async function recommendationController(req: Request, res: Response) {
 	const jwt = await jwtVerify(req.headers.token, res);
 	if (jwt && jwt.isLogin) {
 		try {
-			const profileResult = [];
-			const profile = await getProfileByUserId(jwt.decoded.id);
-			let profileList = await getProfileBySexualOriantation(
-				jwt.decoded.id,
-				profile.sexualOrientation
+			const userProfile: userProfile = shapingProfile(
+				await getCompleteProfileByUserId(jwt.decoded.id)
 			);
-			profileList = await locationAlgorithm(profile, profileList, 100);
-			profileList = await recommendationAlgorithm(profileList);
-			await Promise.all(
-				profileList.map(async (profile) => {
-					profileResult.push(await shapingProfile(profile));
-				})
+			const profileRecoList = await getProfileBySexualOriantation(
+				userProfile.profile.userId,
+				userProfile.profile.sexualOrientation
 			);
-			res.send(profileResult);
-		} catch {
-			res.send("an error occured");
+			const profileListLocation = await locationAlgorithm(
+				userProfile.location,
+				profileRecoList,
+				100
+			);
+			const algoList = await recommendationAlgorithm(
+				profileListLocation,
+				userProfile
+			);
+
+			res.status(200).json(algoList);
+		} catch (error) {
+			res.status(400).json(error);
 		}
 	}
 }

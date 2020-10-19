@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 15:47:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 11:44:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ export function createUser(
 			body: JSON.stringify({
 				email: email,
 				password: "Matcha1234",
+				redirectUrl: "null",
 			}),
 		};
 
@@ -144,14 +145,15 @@ export function createLocation(infoApi: any, token: string): Promise<location> {
 					token: token,
 				},
 				body: JSON.stringify({
+					isFromGeolocation: false,
 					city: infoApi.location.city as string,
 					postCode: result.results[0].components.postcode
 						? result.results[0].components.postcode.toString()
 						: null,
 					countryCode: result.results[0].components.country_code,
 					country: result.results[0].components.country,
-					lat: result.results[0].geometry.lat as number,
-					lng: result.results[0].geometry.lng as number,
+					lat: parseFloat(result.results[0].geometry.lat),
+					lng: parseFloat(result.results[0].geometry.lng),
 				}),
 			};
 

@@ -6,14 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:28:07 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 17:22:30 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 
+import { userProfile } from '../../types/types';
 import {
-	addProfile, getAllProfile, getProfileByUserId, getProfileByUsername,
+	addProfile, getAllProfile, getCompleteProfileByUserId,
+	getCompleteProfileByUsername, getProfileByUserId, getProfileByUsername,
 	updateProfile
 } from '../model/profileRepositories';
 import { shapingProfile } from '../services/formatter/shapingProfile';
@@ -23,9 +25,10 @@ import { addProfileValidation } from '../services/validation/profileValidation';
 export async function getProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profile = await getProfileByUserId(jwt.decoded.id);
-		const profileShaping = await shapingProfile(profile);
-		res.status(200).json(profileShaping);
+		const profile = await getCompleteProfileByUserId(jwt.decoded.id);
+		if (profile) {
+			res.status(200).json(shapingProfile(profile));
+		}
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -37,10 +40,12 @@ export async function getProfileByUsernameController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profile = await shapingProfile(
-			await getProfileByUsername(req.query.username.toString())
+		const profile = await getCompleteProfileByUsername(
+			req.query.username.toString()
 		);
-		res.status(200).json(profile);
+		if (profile) {
+			res.status(200).json(shapingProfile(profile));
+		}
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

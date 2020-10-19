@@ -6,29 +6,37 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 15:55:41 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 17:22:03 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { profile } from '../../../types/types';
+import { location, profile, tag } from '../../../types/types';
 import { getUsageLocation } from '../../model/locationRepositories';
 import { getTagProfile } from '../../model/tagProfileRepositories';
 
-export function shapingProfile(profile: profile) {
-	return new Promise(async (resolve) => {
-		const tagProfileList = await getTagProfile(profile.userId);
-		const location = await getUsageLocation(profile.userId);
-		location.isFromGeolocation = location.isFromGeolocation ? true : false;
-		const listTag: string[] = [];
-		if (tagProfileList && tagProfileList.length) {
-			await Promise.all(
-				tagProfileList.map((tag) => {
-					if (!listTag.includes(tag.tag)) {
-						listTag.push(tag.tag);
-					}
-				})
-			);
-		}
-		resolve({ profile: profile, tag: listTag, location: location });
-	});
+export function shapingProfile(profile) {
+	return {
+		profile: {
+			userId: profile.userId,
+			dob: profile.dob,
+			popularityScore: profile.popularityScore,
+			username: profile.username,
+			firstname: profile.firstname,
+			lastname: profile.lastname,
+			gender: profile.gender,
+			sexualOrientation: profile.sexualOrientation,
+			geoLocationAuthorization: profile.geoLocationAuthorization ? true : false,
+			bio: profile.bio,
+		},
+		location: {
+			isFromGeolocation: profile.isFromGeolocation ? true : false,
+			city: profile.city,
+			postCode: profile.postCode,
+			countryCode: profile.countryCode,
+			country: profile.country,
+			lat: profile.lat,
+			lng: profile.lng,
+		},
+		tag: profile.tag.split(","),
+	};
 }

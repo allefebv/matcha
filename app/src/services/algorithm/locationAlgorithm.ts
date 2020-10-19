@@ -6,11 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:26:58 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 18:02:45 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { profile, pts } from '../../../types/types';
+import { location, profile, pts } from '../../../types/types';
 import { getUsageLocation } from '../../model/locationRepositories';
 
 const EARTH_RAY = 6367445;
@@ -31,29 +31,24 @@ const calculateLocation = (profileLocation: pts, profileCompare: pts) =>
 		radianConversion(profileCompare.lng)
 	);
 
-export function locationAlgorithm(
-	profileLocation: profile,
-	profileList: profile[],
+export async function locationAlgorithm(
+	profileLocation: location,
+	profileRecoList: any[],
 	distanceInKm: number
-): Promise<profile[]> {
-	return new Promise(async (resolve) => {
-		let profileFilter: profile[] = [];
-		const locationProfile = await getUsageLocation(profileLocation.userId);
-		await Promise.all(
-			profileList.map(async (profileCompare) => {
-				const locationProfileCompare = await getUsageLocation(
-					profileCompare.userId
-				);
+) {
+	return await Promise.all(
+		profileRecoList.filter((profileReco) => {
+			if (profileReco.lat && profileReco.lng) {
 				const result =
 					calculateLocation(
-						{ lat: locationProfile.lat, lng: locationProfile.lng },
-						{ lat: locationProfileCompare.lat, lng: locationProfileCompare.lng }
+						{ lat: profileLocation.lat, lng: profileLocation.lng },
+						{
+							lat: profileReco.lat,
+							lng: profileReco.lng,
+						}
 					) / 1000;
-				if (result < distanceInKm) {
-					profileFilter.push(profileCompare);
-				}
-			})
-		);
-		resolve(profileFilter);
-	});
+				return result < distanceInKm;
+			}
+		})
+	);
 }

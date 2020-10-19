@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 12:34:47 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 15:43:20 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ export function getUserById(id: number): Promise<user> {
 		});
 	});
 }
-
+// SELECT * FROM profile JOIN tagProfile ON tagProfile.profileId = profile.userId JOIN tag ON tagProfile.tagId = tag.id JOIN usageLocation ON profile.userId = usageLocation.userId WHERE profile.sexualOrientation = 'bisexual'
 export function getUserByEmail(email: string): Promise<user> {
 	return new Promise((resolve, reject) => {
 		const sql = `SELECT * FROM user WHERE email = '${email}'`;

@@ -6,12 +6,94 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 12:26:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/19 17:16:53 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { profile } from '../../types/types';
 import { dataBase } from '../app';
+
+export function getCompleteProfileByUserId(id: number): Promise<any> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		SELECT
+		profile.*,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation,
+		GROUP_CONCAT( tag.tag SEPARATOR ',' ) AS tag
+	FROM
+		profile
+		JOIN usageLocation ON usageLocation.userId = profile.userId
+		JOIN tagProfile ON tagProfile.profileId = profile.userId
+		JOIN tag ON tagProfile.tagId = tag.id
+	WHERE
+		profile.userId = '${id}'
+	GROUP BY
+		profile.userId,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation`;
+		dataBase.query(sql, (error: string, result: profile[]) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (!result || result.length !== 1) {
+				reject({ code: 200, message: "Profile does not exist" });
+			}
+			resolve(result[0]);
+		});
+	});
+}
+
+export function getCompleteProfileByUsername(username: string): Promise<any> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		SELECT
+		profile.*,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation,
+		GROUP_CONCAT( tag.tag SEPARATOR ',' ) AS tag
+	FROM
+		profile
+		JOIN usageLocation ON usageLocation.userId = profile.userId
+		JOIN tagProfile ON tagProfile.profileId = profile.userId
+		JOIN tag ON tagProfile.tagId = tag.id
+	WHERE
+		profile.username = '${username}'
+	GROUP BY
+		profile.userId,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation`;
+		dataBase.query(sql, (error: string, result: profile[]) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (!result || result.length !== 1) {
+				reject({ code: 200, message: "Profile does not exist" });
+			}
+			resolve(result[0]);
+		});
+	});
+}
 
 export function getProfileByUserId(id: number): Promise<profile | null> {
 	return new Promise((resolve, reject) => {
@@ -63,9 +145,37 @@ export function getAllProfile(id: number): Promise<profile[] | null> {
 export function getProfileBySexualOriantation(
 	id: number,
 	sexualOriantation: string
-): Promise<profile[] | null> {
+): Promise<any> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM profile WHERE sexualOrientation = '${sexualOriantation}' AND userId != ${id}`;
+		const sql = `
+	SELECT
+		profile.*,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation,
+		GROUP_CONCAT( tag.tag SEPARATOR ',' ) AS tag
+	FROM
+		profile
+		JOIN usageLocation ON usageLocation.userId = profile.userId
+		JOIN tagProfile ON tagProfile.profileId = profile.userId
+		JOIN tag ON tagProfile.tagId = tag.id
+	WHERE
+		profile.sexualOrientation = '${sexualOriantation}'
+	AND
+		profile.userId != ${id}
+	GROUP BY
+		profile.userId,
+		usageLocation.city,
+		usageLocation.country,
+		usageLocation.countryCode,
+		usageLocation.lat,
+		usageLocation.lng,
+		usageLocation.postCode,
+		usageLocation.isFromGeolocation`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -76,6 +186,7 @@ export function getProfileBySexualOriantation(
 			resolve(result);
 		});
 	});
+	0 - 9;
 }
 
 export function addProfile(profile: profile, userId: number): Promise<profile> {
