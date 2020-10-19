@@ -3,44 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   userController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2020/10/19 10:39:23 by jfleury          ###   ########.fr       */
-=======
-/*   Updated: 2020/10/15 15:34:17 by allefebv         ###   ########.fr       */
->>>>>>> 9370c27be68f4fcd2a5fa302696e5465a6c7aad4
+/*   Updated: 2020/10/19 18:32:07 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 import {
-	activateUser,
-	addUser,
-	changeEmail,
-	changePassword,
-	deleteUser,
-	getUserByEmail,
-	getUserById,
-} from "../model/userRepositories";
-import { generatePassword } from "../services/generateString";
+	activateUser, addUser, changeEmail, changePassword, deleteUser,
+	getUserByEmail, getUserById
+} from '../model/userRepositories';
+import { generatePassword } from '../services/generateString';
 import {
-	activatedUserMailer,
-	newEmailMailer,
-	newPasswordMailer,
-} from "../services/mailer";
-import { generateTokenForUser, jwtVerify } from "../services/validation/jwt";
-import { checkPassword, hashPassword } from "../services/validation/password";
+	activatedUserMailer, newEmailMailer, newPasswordMailer
+} from '../services/mailer';
+import { generateTokenForUser, jwtVerify } from '../services/validation/jwt';
+import { checkPassword, hashPassword } from '../services/validation/password';
 import {
-	addUserValidation,
-	changeEmailValidation,
-	changePasswordValidation,
-	deleteUserValidation,
-	loginUserValidation,
-	resetPasswordValidation,
-} from "../services/validation/userValidation";
+	addUserValidation, changeEmailValidation, changePasswordValidation,
+	deleteUserValidation, loginUserValidation, resetPasswordValidation
+} from '../services/validation/userValidation';
 
 export async function loginUserController(req: Request, res: Response) {
 	try {
