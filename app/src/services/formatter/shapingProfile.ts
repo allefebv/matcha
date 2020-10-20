@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 17:22:03 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 18:13:41 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ export function shapingProfile(profile) {
 			lat: profile.lat,
 			lng: profile.lng,
 		},
-		tag: profile.tag.split(","),
+		tag: profile.tag ? profile.tag.split(",") : null,
 	};
 }

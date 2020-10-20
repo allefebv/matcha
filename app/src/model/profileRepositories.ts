@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 11:57:45 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 16:49:29 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,36 @@ export function getCompleteProfileByUserId(id: number): Promise<any> {
 	return new Promise((resolve, reject) => {
 		const sql = `
 		SELECT
-		profile.*,
-		usageLocation.city,
-		usageLocation.country,
-		usageLocation.countryCode,
-		usageLocation.lat,
-		usageLocation.lng,
-		usageLocation.postCode,
-		usageLocation.isFromGeolocation,
-		GROUP_CONCAT( tag.tag SEPARATOR ',' ) AS tag
-	FROM
-		profile
-		JOIN usageLocation ON usageLocation.userId = profile.userId
-		JOIN tagProfile ON tagProfile.profileId = profile.userId
-		JOIN tag ON tagProfile.tagId = tag.id
-	WHERE
-		profile.userId = '${id}'
-	GROUP BY
-		profile.userId,
-		usageLocation.city,
-		usageLocation.country,
-		usageLocation.countryCode,
-		usageLocation.lat,
-		usageLocation.lng,
-		usageLocation.postCode,
-		usageLocation.isFromGeolocation`;
+			profile.*,
+			usageLocation.city,
+			usageLocation.country,
+			usageLocation.countryCode,
+			usageLocation.lat,
+			usageLocation.lng,
+			usageLocation.postCode,
+			usageLocation.isFromGeolocation,
+			GROUP_CONCAT( tag.tag SEPARATOR ',' ) AS tag
+		FROM
+			profile
+		LEFT JOIN 
+			usageLocation ON usageLocation.userId = profile.userId
+		LEFT JOIN 
+			tagProfile ON tagProfile.profileId = profile.userId
+		LEFT JOIN 
+			tag ON tagProfile.tagId = tag.id
+		WHERE
+			profile.userId = ${id}
+		GROUP BY
+			profile.userId,
+			usageLocation.city,
+			usageLocation.country,
+			usageLocation.countryCode,
+			usageLocation.lat,
+			usageLocation.lng,
+			usageLocation.postCode,
+			usageLocation.isFromGeolocation`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
+			console.log(result);
 			if (error) {
 				reject({ code: 500, message: error });
 			}
