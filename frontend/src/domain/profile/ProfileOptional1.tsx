@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/14 11:39:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/19 12:02:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ const withReduxProps = connect((state: any) => ({
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	activeStep: number;
-	steps: number[];
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setDisabled: (value: React.SetStateAction<boolean>) => void;
 } & ReduxProps;

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/15 16:12:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 09:26:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,26 @@ import Typography from "@material-ui/core/Typography";
 import { ProfileOptional1 } from "./ProfileOptional1";
 import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
-import {
-	postPicturesAPI,
-	updateProfileAPI,
-	postTagsAPI,
-	handleUsageLocationAPI,
-	handleGeoLocationAPI,
-} from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { useGeolocation } from "../../services/useGeolocation";
 import {
 	actionUser_geolocation,
 	actionUser_setProfile,
-	actionUser_usagelocation,
 } from "../../store/user/action";
-import { Iimgs } from "../../types/types";
+import {
+	submitPictures,
+	updateProfile,
+	submitTags,
+	submitUsageLocation,
+} from "../../services/profileUtils";
+import { useGeolocation } from "../../services/useGeolocation";
+import { handleGeoLocationAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
 	profile: state.user.profile,
-	imgs: state.user.imgs as Iimgs,
 	tagList: state.user.tagList,
 	usagelocation: state.user.usagelocation,
 }));
@@ -53,13 +51,17 @@ type Props = {} & ReduxProps;
 function ExtendedProfileStepperComponent(props: Props) {
 	const [activeStep, setActiveStep] = useState(0);
 	const steps = getSteps();
-	const geolocation = useGeolocation();
 	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);
+	const [imgs, setImgs] = useState<(string | null)[]>([
+		null,
+		null,
+		null,
+		null,
+		null,
+	]);
 
-	function getSteps() {
-		return [0, 1, 2];
-	}
+	const geolocation = useGeolocation();
 
 	useEffect(() => {
 		if (geolocation) {
@@ -68,66 +70,30 @@ function ExtendedProfileStepperComponent(props: Props) {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn);
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
 
-	async function submitPictures() {
-		const data = new FormData();
-		await Promise.all(
-			Object.entries(props.imgs).map(async (entry) => {
-				if (entry[1] !== null) {
-					await fetch(entry[1])
-						.then((response) => response.blob())
-						.then((blob) => {
-							data.append(
-								entry[0],
-								new File([blob], entry[0], {
-									type: "image/jpg",
-								})
-							);
-						});
-				}
-			})
-		);
-
-		for (var pair of data.entries()) {
-			console.log(pair[0] + " - " + pair[1]);
-		}
-
-		if (Object.values(props.imgs).some((value) => value !== null)) {
-			return postPicturesAPI(data, props.loggedIn).then(() => {});
-		}
-	}
-
-	async function submitProfile() {
-		return updateProfileAPI(props.profile, props.loggedIn)
-			.then()
-			.catch((error: Error) => console.log(error));
-	}
-
-	async function submitTags() {
-		return postTagsAPI({ tagList: [...props.tagList] }, props.loggedIn)
-			.then(() => {})
-			.catch((error) => {});
-	}
-
-	async function submitUsageLocation() {
-		return handleUsageLocationAPI(props.usagelocation, props.loggedIn).then(
-			(response) => {
-				props.dispatch(actionUser_usagelocation({ usagelocation: response }));
-			}
-		);
+	function getSteps() {
+		return [0, 1, 2];
 	}
 
 	const handleSubmit = async () => {
 		setLoading(true);
 		await Promise.all([
-			submitProfile(),
-			submitTags(),
-			submitPictures(),
-			submitUsageLocation(),
+			updateProfile(props.profile, props.loggedIn, props.dispatch),
+			submitTags(props.tagList, props.loggedIn, props.dispatch),
+			submitPictures(imgs, props.loggedIn, props.dispatch),
+			submitUsageLocation(props.usagelocation, props.loggedIn, props.dispatch),
 		]);
 		setLoading(false);
 	};
@@ -154,8 +120,6 @@ function ExtendedProfileStepperComponent(props: Props) {
 			case 0:
 				return (
 					<ProfileOptional1
-						activeStep={activeStep}
-						steps={steps}
 						handleChange={handleChange}
 						setDisabled={setDisabled}
 					/>
@@ -163,17 +127,15 @@ function ExtendedProfileStepperComponent(props: Props) {
 			case 1:
 				return (
 					<ProfileOptional2
-						activeStep={activeStep}
-						steps={steps}
 						handleChange={handleChange}
 						setDisabled={setDisabled}
+						imgs={imgs}
+						setImgs={setImgs}
 					/>
 				);
 			case 2:
 				return (
 					<ProfileOptional3
-						activeStep={activeStep}
-						steps={steps}
 						handleChange={handleChange}
 						setDisabled={setDisabled}
 					/>

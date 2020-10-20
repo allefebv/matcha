@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 17:07:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/19 18:14:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ export interface Iaddress {
 	isFromGeolocation: boolean;
 	lat: number | null;
 	lng: number | null;
+	userId?: number;
 }
 
 export interface Icoordinates {
@@ -38,33 +39,20 @@ export interface user {
 	activated: boolean;
 	activationKey: string;
 }
-
-export interface Iimgs {
-	img0: string | null;
-	img1: string | null;
-	img2: string | null;
-	img3: string | null;
-	img4: string | null;
+export interface IextendedProfile extends IbaseProfile {
+	userId: number;
+	popularityScore: number;
+	geoLocationAuthorization: number;
+	gender: string | null;
+	sexualOrientation: string | null;
+	bio: string | null;
 }
 
-export interface Iprofile {
-	dob: number | null;
+export interface IbaseProfile {
 	username: string;
 	firstname: string;
 	lastname: string;
-	gender: string | null;
-	sexualOrientation: string;
-	bio: string | null;
-	geoLocationAuthorization: boolean;
-	location: Ilocation;
-	tagList: string[] | null;
-	imgs: Iimgs;
-}
-
-export interface IgetProfile {
-	profile: any;
-	tags: any;
-	location: any;
+	dob: number | null;
 }
 
 export interface like {

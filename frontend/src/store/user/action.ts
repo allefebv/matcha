@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/14 15:26:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/19 11:23:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { user, Iimgs } from "../../types/types";
+import { user } from "../../types/types";
 import { createAction } from "typesafe-actions";
 
 export const actionUser_signin = createAction("USER.USERSIGNIN")<{
@@ -45,6 +45,6 @@ export const actionUser_setTagList = createAction("USER.SETTAGLIST")<{
 	tagList: string[];
 }>();
 
-export const actionUser_setImages = createAction("USER.SETIMAGES")<{
-	imgs: Iimgs;
-}>();
+// export const actionUser_setImages = createAction("USER.SETIMAGES")<{
+// 	imgs: any;
+// }>();

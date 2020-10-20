@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/13 11:41:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 11:23:16 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,11 +125,7 @@ function SignUpDialogComponent(props: Props) {
 
 	return (
 		<div>
-			<Button
-				variant="outlined"
-				color="primary"
-				onClick={handleClickOpen}
-			>
+			<Button variant="outlined" onClick={handleClickOpen}>
 				Sign up
 			</Button>
 			<Dialog
@@ -150,9 +146,7 @@ function SignUpDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={
-								emailError && constants.EMAIL_HELPER_ERROR
-							}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
 							onBlur={handleBlurEmail}
 						/>
 						<TextField
@@ -164,9 +158,7 @@ function SignUpDialogComponent(props: Props) {
 							value={password}
 							onChange={handlePassword}
 							error={passwordError}
-							helperText={
-								passwordError && constants.PASSWORD_HELPER_ERROR
-							}
+							helperText={passwordError && constants.PASSWORD_HELPER_ERROR}
 						/>
 						<TextField
 							margin="dense"
@@ -178,8 +170,7 @@ function SignUpDialogComponent(props: Props) {
 							onChange={handlePasswordConfirm}
 							error={passwordConfirmError}
 							helperText={
-								passwordConfirmError &&
-								constants.PASSWORD_CONFIRM_HELPER_ERROR
+								passwordConfirmError && constants.PASSWORD_CONFIRM_HELPER_ERROR
 							}
 						/>
 					</DialogContent>

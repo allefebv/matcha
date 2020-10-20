@@ -1,6 +1,6 @@
 import { fetchApi } from "./fetchApi";
 import * as constants from "../services/constants";
-import { user, Iaddress } from "../types/types";
+import { user, Iaddress, IextendedProfile } from "../types/types";
 import { throttle } from "lodash";
 
 export const signupAPI = (details: Object) => {
@@ -45,7 +45,26 @@ export const deleteAPI = (details: Object, token: string) => {
 };
 
 export const getProfileAPI = (token: string) => {
-	return fetchApi(constants.URL + constants.URI_GET_PROFILE, {
+	return fetchApi<{
+		profile: IextendedProfile;
+		tag: string[] | [];
+		location: Iaddress | null;
+	}>(constants.URL + constants.URI_GET_PROFILE, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
+};
+
+export const getRecommendationAPI = (token: string) => {
+	return fetchApi<{
+		profile: IextendedProfile;
+		tag: string[] | [];
+		location: Iaddress | null;
+	}>(constants.URL + constants.URI_GET_PROFILE, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",

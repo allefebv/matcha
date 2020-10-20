@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/14 15:27:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/16 14:07:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ import * as constants from "../../services/constants";
 import { deleteAPI } from "../../services/apiCalls";
 import { actionUser_logout } from "../../store/user/action";
 import { useHistory } from "react-router-dom";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -59,10 +60,20 @@ function DeleteAccountDialogComponent(props: Props) {
 			password: password,
 		};
 
-		deleteAPI(details, props.loggedIn).then(() => {
-			props.dispatch(actionUser_logout());
-			history.push(constants.LANDING_ROUTE);
-		});
+		deleteAPI(details, props.loggedIn)
+			.then(() => {
+				props.dispatch(actionUser_logout());
+				history.push(constants.LANDING_ROUTE);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	};
 
 	return (

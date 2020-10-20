@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/12 16:10:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 14:33:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,22 @@ import DateFnsUtils from "@date-io/date-fns";
 const theme = createMuiTheme({
 	palette: {
 		type: "dark",
+	},
+	overrides: {
+		MuiCssBaseline: {
+			"@global": {
+				"*::-webkit-scrollbar": {
+					width: "1em",
+				},
+				"*::-webkit-scrollbar-track": {
+					"-webkit-box-shadow": "inset 0 0 5px rgb(10,10,0)",
+				},
+				"*::-webkit-scrollbar-thumb": {
+					backgroundColor: "rgba(0,0,0,.1)",
+					outline: "1px solid slategrey",
+				},
+			},
+		},
 	},
 });
 
