@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 17:22:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 12:02:55 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ export async function getProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const profile = await getCompleteProfileByUserId(jwt.decoded.id);
-		if (profile) {
-			res.status(200).json(shapingProfile(profile));
-		}
+		res.status(200).json(shapingProfile(profile));
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -43,9 +41,7 @@ export async function getProfileByUsernameController(
 		const profile = await getCompleteProfileByUsername(
 			req.query.username.toString()
 		);
-		if (profile) {
-			res.status(200).json(shapingProfile(profile));
-		}
+		res.status(200).json(shapingProfile(profile));
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

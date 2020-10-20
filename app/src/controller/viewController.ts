@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:06:26 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 14:58:56 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,13 @@ import {
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function getViewController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
 		const viewList = await getView(jwt.decoded.id);
-		if (viewList) {
-			res.status(200).json(viewList);
-			return;
-		}
+		res.status(200).json(viewList);
+	} catch (error) {
+		res.status(400).send("ERROR_OCCURED");
 	}
-	res.status(400).send("ERROR_OCCURED");
 }
 
 export async function addViewController(req: Request, res: Response) {

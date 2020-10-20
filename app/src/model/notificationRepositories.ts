@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 12:26:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ export function addNotification(
 	notifierProfileId: number,
 	notification: string
 ): Promise<boolean> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO notificationProfile (
 			profileNotifedId,
 			notifierProfileId,
@@ -30,12 +30,14 @@ export function addNotification(
 			'${Date.now()}',
 			'${notification}'
 		)`;
-		dataBase.query(sql, (error: string) => {
+		dataBase.query(sql, (error, result) => {
 			if (error) {
-				console.log(error);
-				resolve(false);
+				reject({ code: 500, message: error });
 			}
-			resolve(true);
+			if (result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -44,25 +46,36 @@ export function deleteNotification(
 	id: number,
 	profileNotifedId: number
 ): Promise<boolean> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		const sql = `DELETE FROM notificationProfile WHERE id = ${id} AND profileNotifedId = ${profileNotifedId}`;
-		dataBase.query(sql, (error: string) => {
+		dataBase.query(sql, (error, result) => {
 			if (error) {
-				console.log(error);
-				resolve(false);
+				reject({ code: 500, message: error });
 			}
-			resolve(true);
+			if (result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
 
-export function getNotification(id: number): Promise<notification[] | null> {
-	return new Promise((resolve) => {
-		const sql = `SELECT * FROM notificationProfile WHERE profileNotifedId = ${id}`;
+export function getNotification(id: number): Promise<any[]> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		SELECT
+			notificationProfile.*,
+			profile.*
+		FROM 
+			notificationProfile
+		JOIN 
+			profile ON profile.userId = notificationProfile.notifierProfileId
+		WHERE
+			notificationProfile.profileNotifedId = ${id}
+		`;
 		dataBase.query(sql, (error: string, result: notification[]) => {
 			if (error) {
-				console.log(error);
-				resolve(null);
+				reject({ code: 500, message: error });
 			}
 			resolve(result);
 		});

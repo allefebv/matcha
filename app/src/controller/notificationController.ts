@@ -6,70 +6,83 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:06:22 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/20 14:44:30 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
+import { isNotEmittedStatement, isTypeNode } from 'typescript';
 
 import {
 	addNotification, deleteNotification, getNotification
 } from '../model/notificationRepositories';
 import {
-	getProfileByUserId, getProfileByUsername
+	getCompleteProfileByUsername, getProfileByUserId, getProfileByUsername
 } from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function addNotificationController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	const profileNotified = await getProfileByUsername(req.body.usernameNotified);
-
-	if (jwt && jwt.isLogin && profileNotified) {
-		const notification = await addNotification(
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
+		const profileNotified = await getCompleteProfileByUsername(
+			req.body.usernameNotified
+		);
+		await addNotification(
 			profileNotified.userId,
 			jwt.decoded.id,
 			req.body.notification
 		);
-		if (notification) {
-			res.status(200).send("Notification add");
-			return;
-		}
+
+		res.status(200).send("Notification add");
+	} catch (error) {
+		res.status(error.code).send(error.message);
 	}
-	res.status(400).send("An error occured");
 }
 
 export async function deleteNotificationController(
 	req: Request,
 	res: Response
 ) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		const isDelete = await deleteNotification(req.body.id, jwt.decoded.id);
-		if (isDelete) {
-			res.status(200).send("Notification add");
-			return;
-		}
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
+		await deleteNotification(req.body.id, jwt.decoded.id);
+		res.status(200).send("Notification delete");
+	} catch (error) {
+		res.status(error.code).send(error.message);
 	}
-	res.status(400).send("An error occured");
 }
 
 export async function getNotificationController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-
-	if (jwt && jwt.isLogin) {
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
 		const notificationListId = await getNotification(jwt.decoded.id);
-		const notificationList = [];
-		await Promise.all(
-			notificationListId.map(async (item) => {
-				notificationList.push({
-					notifierProfile: await getProfileByUserId(item.notifierProfileId),
-					date: item.date,
-					notification: item.notification,
-				});
-			})
-		);
-		res.status(200).send(notificationList);
-		return;
+		const resultList =
+			notificationListId &&
+			notificationListId.length &&
+			notificationListId.map((item) => {
+				return {
+					notifierProfile: {
+						dob: item.dob,
+						popularityScore: item.popularityScore,
+						username: item.username,
+						firstname: item.firstname,
+						lastname: item.lastname,
+						gender: item.gender,
+						sexualOrientation: item.sexualOrientation,
+						geoLocationAuthorization: item.geoLocationAuthorization
+							? true
+							: false,
+						bio: item.bio,
+					},
+					notification: {
+						date: item.date,
+						notification: item.notification,
+						isRead: item.isRead ? true : false,
+					},
+				};
+			});
+		res.status(200).send(resultList);
+	} catch (error) {
+		res.status(error.code).send(error.message);
 	}
-	res.status(400).send("An error occured");
 }
