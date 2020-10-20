@@ -6,70 +6,87 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/13 12:27:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 14:35:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SliderDouble } from "../../component/SliderDouble";
 import { CategoryFilterSort } from "../search/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
-import { Grid, TextField } from "@material-ui/core";
+import {
+	Drawer,
+	Grid,
+	IconButton,
+	makeStyles,
+	TextField,
+} from "@material-ui/core";
 import { ProfileCard } from "../../component/ProfileCard";
-import { ToggleGroup } from "../../component/ToggleGroup";
+import { KeyboardArrowRight } from "@material-ui/icons";
 
 interface Props {}
 
-export const MainPage = (props: Props) => {
-	const [modal, setModal] = useState(false);
+const useStyles = makeStyles({
+	drawer: {
+		width: "10vw",
+	},
+	scrollable: {
+		backgroundColor: "indigo",
+		overflow: "scroll",
+		overflowX: "hidden",
+		maxHeight: "90%",
+		alignSelf: "flex-end",
+	},
+});
 
-	useEffect(() => {
-		console.log("here :" + modal);
-	}, [modal]);
+export const MainPage = (props: Props) => {
+	const classes = useStyles();
+	const [open, setOpen] = useState(false);
+
+	const handleOpenDrawer = () => {
+		setOpen(true);
+	};
+
+	const handleCloseDrawer = () => {
+		setOpen(false);
+	};
 
 	return (
 		<React.Fragment>
-			<Grid item style={{ alignSelf: "center" }}>
-				<ToggleGroup toggleModal={setModal} />
-			</Grid>
+			<IconButton onClick={handleOpenDrawer}>
+				<KeyboardArrowRight />
+			</IconButton>
+			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
+				<div className={classes.drawer}>
+					<CategoryFilterSort label="Age">
+						<SliderDouble min={18} max={100} step={1} />
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Location">
+						<SliderDouble min={0} max={20000} step={1} />
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Popularity">
+						<SliderDouble min={0} max={40000} step={1} />
+					</CategoryFilterSort>
+					<CategoryFilterSort label="Tags">
+						<Autocomplete
+							multiple
+							options={["John", "Lennon", "Toto"]}
+							getOptionLabel={(option) => option}
+							filterSelectedOptions
+							renderInput={(params) => <TextField {...params} />}
+						/>
+					</CategoryFilterSort>
+				</div>
+			</Drawer>
 			<Grid
 				item
 				container
 				xs={10}
 				justify="center"
-				style={{ height: "100%" }}
+				alignItems="flex-end"
 				spacing={2}
+				className={classes.scrollable}
 			>
-				<Grid item container xs={8}>
-					<Grid item xs={3}>
-						<CategoryFilterSort label="Age">
-							<SliderDouble min={18} max={100} step={1} />
-						</CategoryFilterSort>
-					</Grid>
-					<Grid item xs={3}>
-						<CategoryFilterSort label="Location">
-							<SliderDouble min={0} max={20000} step={1} />
-						</CategoryFilterSort>
-					</Grid>
-					<Grid item xs={3}>
-						<CategoryFilterSort label="Popularity">
-							<SliderDouble min={0} max={40000} step={1} />
-						</CategoryFilterSort>
-					</Grid>
-					<Grid item xs={3}>
-						<CategoryFilterSort label="Tags">
-							<Autocomplete
-								multiple
-								options={["John", "Lennon", "Toto"]}
-								getOptionLabel={(option) => option}
-								filterSelectedOptions
-								renderInput={(params) => (
-									<TextField {...params} />
-								)}
-							/>
-						</CategoryFilterSort>
-					</Grid>
-				</Grid>
 				<Grid
 					container
 					item
@@ -77,11 +94,6 @@ export const MainPage = (props: Props) => {
 					alignContent="center"
 					spacing={3}
 					xs={10}
-					style={{
-						backgroundColor: "indigo",
-						overflow: "scroll",
-						maxHeight: "80%",
-					}}
 				>
 					<Grid item xs={12} sm={6} md={4}>
 						<ProfileCard />

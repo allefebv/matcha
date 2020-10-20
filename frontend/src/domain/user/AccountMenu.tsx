@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/14 15:26:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 11:17:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ const AccountMenuComponent = (props: Props) => {
 				<KeyboardArrowDownIcon
 					aria-controls="simple-menu"
 					aria-haspopup="true"
-					color="primary"
 				/>
 			</IconButton>
 			<Menu

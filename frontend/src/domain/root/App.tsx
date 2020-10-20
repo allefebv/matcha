@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 10:30:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 14:30:40 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ import { BrowserRouter } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { Grid, Paper } from "@material-ui/core";
+import { CssBaseline, Grid } from "@material-ui/core";
 import { Router } from "./Router";
 import { GlobalSnackbar } from "../../component/GlobalSnackbar";
 
@@ -26,7 +26,7 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const styleApp: React.CSSProperties = {
-	backgroundColor: "black",
+	backgroundColor: "grey",
 	zIndex: -1,
 	height: "100vh",
 };
@@ -34,6 +34,7 @@ const styleApp: React.CSSProperties = {
 const AppComponent = (props: Props) => {
 	return (
 		<BrowserRouter>
+			<CssBaseline />
 			<Grid
 				container
 				alignContent="stretch"
@@ -41,27 +42,19 @@ const AppComponent = (props: Props) => {
 				alignItems="center"
 				style={styleApp}
 			>
-				<Grid
-					item
-					xs={11}
-					container
-					style={{ height: "8%", zIndex: 10 }}
-					justify="space-between"
-				>
-					<Header />
-				</Grid>
+				<Header />
 				<Grid
 					item
 					container
 					xs={12}
-					style={{ height: "89%" }}
+					style={{ height: "100%" }}
 					justify="center"
 					alignItems="center"
 				>
 					<GlobalSnackbar />
 					<Router />
 				</Grid>
-				<Grid
+				{/* <Grid
 					item
 					container
 					xs={12}
@@ -70,7 +63,7 @@ const AppComponent = (props: Props) => {
 					alignItems="center"
 				>
 					<Footer />
-				</Grid>
+				</Grid> */}
 			</Grid>
 		</BrowserRouter>
 	);

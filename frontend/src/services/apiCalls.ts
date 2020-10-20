@@ -59,6 +59,21 @@ export const getProfileAPI = (token: string) => {
 	});
 };
 
+export const getRecommendationAPI = (token: string) => {
+	return fetchApi<{
+		profile: IextendedProfile;
+		tag: string[] | [];
+		location: Iaddress | null;
+	}>(constants.URL + constants.URI_GET_PROFILE, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
+};
+
 export const modifyEmailAPI = (details: Object, token: string) => {
 	return fetchApi(constants.URL + constants.URI_UPDATE_EMAIL, {
 		method: constants.POST_METHOD,
