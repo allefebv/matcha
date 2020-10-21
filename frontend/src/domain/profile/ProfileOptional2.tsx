@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/21 16:19:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:35:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ function ProfileOptional2Component(props: Props) {
 					imgs={props.imgs}
 					setImgs={props.setImgs}
 					modifiable
+					username={props.profile.username}
 				/>
 			</Grid>
 			<Grid item xs={12}>
@@ -117,9 +118,7 @@ function ProfileOptional2Component(props: Props) {
 				/>
 			</Grid>
 			<Grid item xs={12}>
-				<Typography color="primary">
-					List some of your interests
-				</Typography>
+				<Typography color="primary">List some of your interests</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Autocomplete
@@ -130,9 +129,7 @@ function ProfileOptional2Component(props: Props) {
 					filterSelectedOptions
 					onChange={handleChangeTags}
 					onInputChange={handleInputChange}
-					renderInput={(params) => (
-						<TextField {...params} fullWidth />
-					)}
+					renderInput={(params) => <TextField {...params} fullWidth />}
 					freeSolo
 				/>
 			</Grid>

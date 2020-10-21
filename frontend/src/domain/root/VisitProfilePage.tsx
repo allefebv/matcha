@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/21 16:23:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:50:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,14 @@ export const VisitProfilePage = (props: Props) => {
 				<ProfilePictures
 					imgs={[null, null, null, null, null]}
 					modifiable={false}
+					username={profile && profile.username}
 				/>
 				<Paper variant="outlined" className={classes.element}>
 					<Typography display="block">
 						Username {profile && profile.username}
 					</Typography>
-					<Typography>
-						Firstname {profile && profile.firstname}
-					</Typography>
-					<Typography>
-						Lastname {profile && profile.lastname}
-					</Typography>
+					<Typography>Firstname {profile && profile.firstname}</Typography>
+					<Typography>Lastname {profile && profile.lastname}</Typography>
 				</Paper>
 				<Paper>{tags && formatTags(tags)}</Paper>
 				<Paper>

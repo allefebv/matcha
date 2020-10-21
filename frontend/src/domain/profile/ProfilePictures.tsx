@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:31:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/21 16:22:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:35:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@ import { CustomAvatar } from "../../component/CustomAvatar";
 import { AvatarGroup } from "@material-ui/lab";
 import { connect, ConnectedProps } from "react-redux";
 
-const withReduxProps = connect((state: any) => ({
-	username: state.user.profile.username,
-}));
-type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	imgs: (string | null)[];
 	setImgs?: React.Dispatch<React.SetStateAction<(string | null)[]>>;
 	modifiable: boolean;
-} & ReduxProps;
+	username: string;
+};
 
-const ProfilePicturesComponent = (props: Props) => {
+export const ProfilePictures = (props: Props) => {
 	function handleChangeImg(e: React.ChangeEvent<HTMLInputElement>) {
 		if (props.modifiable) {
 			const { name, files } = e.currentTarget;
@@ -53,5 +50,3 @@ const ProfilePicturesComponent = (props: Props) => {
 
 	return <AvatarGroup>{images}</AvatarGroup>;
 };
-
-export const ProfilePictures = withReduxProps(ProfilePicturesComponent);

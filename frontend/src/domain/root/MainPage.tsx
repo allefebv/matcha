@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:33:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:35:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,20 @@ import { connect, ConnectedProps } from "react-redux";
 import { actionProfilesList_getRecco } from "../../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { getAge } from "../../services/profileUtils";
+import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
-		width: "15vw",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+	},
+	drawerContent: {
+		display: "flex",
+		flexDirection: "column",
+		alignSelf: "center",
+		justifySelf: "center",
+		width: "30vw",
 	},
 	scrollable: {
 		display: "flex",
@@ -116,38 +126,51 @@ const MainPageComponent = (props: Props) => {
 		computeRangeLimits();
 	}, []);
 
-	const computeRangeLimits = useCallback(() => {
-		let computedLimits = {
-			minTS: Number.POSITIVE_INFINITY,
-			maxTS: Number.NEGATIVE_INFINITY,
-			minPopularity: 100,
-			maxPopularity: 0,
-			maxDistance: 0,
-		} as Ilimits;
-
-		for (let profileTop of props.profilesRecco) {
-			const { profile } = profileTop.profile;
-			if (profile.dob < computedLimits.minTS) {
-				computedLimits.minTS = profile.dob;
-			}
-			if (profile.dob > computedLimits.maxTS) {
-				computedLimits.maxTS = profile.dob;
-			}
-			if (profile.popularityScore < computedLimits.minPopularity) {
-				computedLimits.minPopularity = profile.popularityScore;
-			}
-			if (profile.popularityScore > computedLimits.maxPopularity) {
-				computedLimits.maxPopularity = profile.popularityScore;
-			}
+	useEffect(() => {
+		if (props.profilesRecco) {
+			const tmp = props.profilesRecco.filter((profile) => {
+				return (
+					getAge(profile.profile.profile.dob) >= value[0] &&
+					getAge(profile.profile.profile.dob) <= value[1]
+				);
+			});
+			setFilteredProfilesRecco(tmp);
 		}
+	}, [props.profilesRecco, limits, value]);
 
-		console.log(computedLimits);
-		setLimits(computedLimits);
+	const computeRangeLimits = useCallback(() => {
+		if (props.profilesRecco) {
+			let computedLimits = {
+				minTS: Number.POSITIVE_INFINITY,
+				maxTS: Number.NEGATIVE_INFINITY,
+				minPopularity: 100,
+				maxPopularity: 0,
+				maxDistance: 0,
+			} as Ilimits;
+
+			for (let profileTop of props.profilesRecco) {
+				const { profile } = profileTop.profile;
+				if (profile.dob < computedLimits.minTS) {
+					computedLimits.minTS = profile.dob;
+				}
+				if (profile.dob > computedLimits.maxTS) {
+					computedLimits.maxTS = profile.dob;
+				}
+				if (profile.popularityScore < computedLimits.minPopularity) {
+					computedLimits.minPopularity = profile.popularityScore;
+				}
+				if (profile.popularityScore > computedLimits.maxPopularity) {
+					computedLimits.maxPopularity = profile.popularityScore;
+				}
+			}
+
+			setLimits(computedLimits);
+		}
 	}, [props.profilesRecco]);
 
 	const getCards = () => {
-		return props.profilesRecco
-			? props.profilesRecco.map(
+		return filteredProfilesRecco
+			? filteredProfilesRecco.map(
 					(profile: { profile: any; score: number }, index: number) => (
 						<Grid item xs={12} sm={6} lg={4} key={index}>
 							<ProfileCard profile={profile} />
@@ -155,6 +178,10 @@ const MainPageComponent = (props: Props) => {
 					)
 			  )
 			: null;
+	};
+
+	const handleChange = (event: any, newValue: number | number[]) => {
+		setValue(newValue as number[]);
 	};
 
 	return (
@@ -170,17 +197,37 @@ const MainPageComponent = (props: Props) => {
 					{getCards()}
 				</Grid>
 			</div>
-			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
-				<div className={classes.drawer}>
-					<CategoryFilterSort label="Age">
-						<SliderDouble min={18} max={100} step={1} />
-					</CategoryFilterSort>
+			<Drawer
+				anchor="left"
+				open={open}
+				onClose={handleCloseDrawer}
+				className={classes.drawer}
+			>
+				<div className={classes.drawerContent}>
+					{limits && limits.minTS && limits.maxTS && (
+						<CategoryFilterSort label="Age">
+							<MaterialDoubleSlider
+								min={getAge(limits.maxTS)}
+								max={getAge(limits.minTS)}
+								value={value}
+								handleChange={handleChange}
+							/>
+						</CategoryFilterSort>
+					)}
 					<CategoryFilterSort label="Location">
 						<SliderDouble min={0} max={20000} step={1} />
 					</CategoryFilterSort>
-					<CategoryFilterSort label="Popularity">
-						<SliderDouble min={0} max={40000} step={1} />
-					</CategoryFilterSort>
+					{/* 					{limits &&
+						limits.minPopularity &&
+						limits.maxPopularity &&
+						limits.maxPopularity !== limits.minPopularity && (
+							<CategoryFilterSort label="Popularity">
+								<MaterialDoubleSlider
+									min={limits.minPopularity}
+									max={limits.maxPopularity}
+								/>
+							</CategoryFilterSort>
+						)} */}
 					<CategoryFilterSort label="Tags">
 						<Autocomplete
 							multiple
