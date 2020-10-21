@@ -61,11 +61,16 @@ export const getProfileAPI = (token: string) => {
 };
 
 export const getRecommendationAPI = (token: string) => {
-	return fetchApi<{
-		profile: IextendedProfile;
-		tag: string[] | [];
-		location: Iaddress | null;
-	}>(constants.URL + constants.URI_GET_PROFILE, {
+	return fetchApi<
+		{
+			profile: {
+				profile: IextendedProfile;
+				tag: string[] | [];
+				location: Iaddress | null;
+			};
+			score: number;
+		}[]
+	>(constants.URL + constants.URI_GET_RECOMMENDATIONS, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",

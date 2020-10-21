@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 15:36:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:33:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ import PersonIcon from "@material-ui/icons/Person";
 import { SignInDialog } from "../user/SignInDialog";
 import { SignUpDialog } from "../user/SignUpDialog";
 import * as constants from "../../services/constants";
-import { ToggleGroup } from "../../component/ToggleGroup";
 
 const useStyles = makeStyles({
 	appBar: {

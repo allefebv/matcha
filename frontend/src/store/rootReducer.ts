@@ -2,6 +2,7 @@ import { AnyAction, combineReducers } from "redux";
 
 import { userReducer } from "./user/reducer";
 import { uiReducer } from "./ui/reducer";
+import { profilesListReducer } from "./profilesLists/reducer";
 
 export const rootReducer = (state: any, action: AnyAction) => {
 	if (action.type === "USER.USERLOGOUT") {
@@ -13,4 +14,5 @@ export const rootReducer = (state: any, action: AnyAction) => {
 const appReducer = combineReducers({
 	user: userReducer,
 	ui: uiReducer,
+	profilesList: profilesListReducer,
 });

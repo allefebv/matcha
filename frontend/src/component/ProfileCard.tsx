@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 17:07:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:09:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,18 @@ const useStyles = makeStyles({
 	},
 });
 
-export function ProfileCard() {
+type Props = {
+	profile: { profile: any; score: number };
+};
+
+export function ProfileCard(props: Props) {
 	const classes = useStyles();
+	const { profile } = props.profile;
+	const path = "http://localhost:3001/images/" + profile.username + "/img0";
 
 	return (
 		<Card className={classes.root}>
-			<CardMedia
-				className={classes.media}
-				image={require("../images/example_girl.jpg")}
-			/>
+			<CardMedia className={classes.media} image={path} />
 			<CardContent>
 				<Typography variant="body2" color="textSecondary" component="p">
 					My name is ruth and I like poneys

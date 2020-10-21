@@ -6,17 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 17:47:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:33:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SliderDouble } from "../../component/SliderDouble";
 import { CategoryFilterSort } from "../search/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
 import {
 	Drawer,
-	Grid,
 	IconButton,
 	makeStyles,
 	TextField,
@@ -25,8 +24,9 @@ import {
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
 import { ToggleGroup } from "../../component/ToggleGroup";
-
-interface Props {}
+import { getRecommendationAPI } from "../../services/apiCalls";
+import { connect, ConnectedProps } from "react-redux";
+import { actionProfilesList_getRecco } from "../../store/profilesLists/action";
 
 const useStyles = makeStyles({
 	drawer: {
@@ -58,7 +58,14 @@ const useStyles = makeStyles({
 	},
 });
 
-export const MainPage = (props: Props) => {
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+	profilesRecco: state.profilesList.recommendations,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
+
+const MainPageComponent = (props: Props) => {
 	const theme = useTheme();
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -71,6 +78,24 @@ export const MainPage = (props: Props) => {
 		setOpen(false);
 	};
 
+	const getRecommendationList = () => {
+		getRecommendationAPI(props.loggedIn).then((json: any[]) => {
+			props.dispatch(actionProfilesList_getRecco({ profiles: json }));
+		});
+	};
+
+	useEffect(() => {
+		getRecommendationList();
+	}, []);
+
+	const getCards = () => {
+		return props.profilesRecco.map(
+			(profile: { profile: any; score: number }) => (
+				<ProfileCard profile={profile} />
+			)
+		);
+	};
+
 	return (
 		<React.Fragment>
 			<div className={classes.main}>
@@ -80,31 +105,7 @@ export const MainPage = (props: Props) => {
 				<IconButton onClick={handleOpenDrawer}>
 					<KeyboardArrowRight />
 				</IconButton>
-				<div className={classes.cards}>
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-					<ProfileCard />
-				</div>
+				<div className={classes.cards}>{getCards()}</div>
 			</div>
 			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
 				<div className={classes.drawer}>
@@ -131,3 +132,5 @@ export const MainPage = (props: Props) => {
 		</React.Fragment>
 	);
 };
+
+export const MainPage = withReduxProps(MainPageComponent);
