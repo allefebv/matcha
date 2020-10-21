@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 09:31:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 10:55:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ export const getProfileLevel = (
 		!profile.sexualOrientation ||
 		!profile.bio ||
 		!location ||
+		!tagList ||
 		tagList.length === 0
 	) {
 		return 1;

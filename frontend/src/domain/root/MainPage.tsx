@@ -6,40 +6,67 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 14:35:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 12:22:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SliderDouble } from "../../component/SliderDouble";
 import { CategoryFilterSort } from "../search/CategoryFilterSort";
 import { Autocomplete } from "@material-ui/lab";
 import {
 	Drawer,
-	Grid,
 	IconButton,
 	makeStyles,
 	TextField,
+	useTheme,
 } from "@material-ui/core";
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
-
-interface Props {}
+import { ToggleGroup } from "../../component/ToggleGroup";
+import { getRecommendationAPI } from "../../services/apiCalls";
+import { connect, ConnectedProps } from "react-redux";
+import { actionProfilesList_getRecco } from "../../store/profilesLists/action";
 
 const useStyles = makeStyles({
 	drawer: {
-		width: "10vw",
+		width: "15vw",
 	},
 	scrollable: {
+		display: "flex",
 		backgroundColor: "indigo",
-		overflow: "scroll",
+	},
+	main: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+	},
+	toggleGroup: {
+		backgroundColor: "blue",
+	},
+	cards: {
+		postion: "absolute",
+		display: "flex",
+		top: "10vh",
+		height: "81.5vh",
+		width: "60vw",
+		flexWrap: "wrap",
+		backgroundColor: "pink",
+		justifyContent: "center",
+		overflowY: "scroll",
 		overflowX: "hidden",
-		maxHeight: "90%",
-		alignSelf: "flex-end",
 	},
 });
 
-export const MainPage = (props: Props) => {
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+	profilesRecco: state.profilesList.recommendations,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
+
+const MainPageComponent = (props: Props) => {
+	const theme = useTheme();
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 
@@ -51,11 +78,35 @@ export const MainPage = (props: Props) => {
 		setOpen(false);
 	};
 
+	const getRecommendationList = () => {
+		getRecommendationAPI(props.loggedIn).then((json: any[]) => {
+			props.dispatch(actionProfilesList_getRecco({ profiles: json }));
+		});
+	};
+
+	useEffect(() => {
+		getRecommendationList();
+	}, []);
+
+	const getCards = () => {
+		return props.profilesRecco.map(
+			(profile: { profile: any; score: number }) => (
+				<ProfileCard profile={profile} />
+			)
+		);
+	};
+
 	return (
 		<React.Fragment>
-			<IconButton onClick={handleOpenDrawer}>
-				<KeyboardArrowRight />
-			</IconButton>
+			<div className={classes.main}>
+				<div className={classes.toggleGroup}>
+					<ToggleGroup />
+				</div>
+				<IconButton onClick={handleOpenDrawer}>
+					<KeyboardArrowRight />
+				</IconButton>
+				<div className={classes.cards}>{getCards()}</div>
+			</div>
 			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
 				<div className={classes.drawer}>
 					<CategoryFilterSort label="Age">
@@ -78,58 +129,8 @@ export const MainPage = (props: Props) => {
 					</CategoryFilterSort>
 				</div>
 			</Drawer>
-			<Grid
-				item
-				container
-				xs={10}
-				justify="center"
-				alignItems="flex-end"
-				spacing={2}
-				className={classes.scrollable}
-			>
-				<Grid
-					container
-					item
-					justify="center"
-					alignContent="center"
-					spacing={3}
-					xs={10}
-				>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
-						<ProfileCard />
-					</Grid>
-				</Grid>
-			</Grid>
 		</React.Fragment>
 	);
 };
+
+export const MainPage = withReduxProps(MainPageComponent);

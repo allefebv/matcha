@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 14:59:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 11:37:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ export const URI_UPDATE_PROFILE = "/profile/updateProfile";
 export const URI_POST_TAGS = "/tag/addTagProfile";
 export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 export const URI_GET_TAG_AUTOCOMPLETE = "/tag/getTagAutocomplete";
+export const URI_GET_RECOMMENDATIONS = "/recommendation/getRecommendation";
 
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
 export const URI_REVERSE_GEOCODING_API =

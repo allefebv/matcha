@@ -21,13 +21,17 @@ type Props = {} & ReduxProps;
 const useStyles = makeStyles({
 	button: (isProfileComplete) => {
 		return {
-			color: isProfileComplete ? "inherit" : "red",
+			color: isProfileComplete ? "default" : "red",
 		};
+	},
+	toggleGroup: {
+		display: "flex",
+		justifySelf: "center",
 	},
 });
 
 function ToggleGroupComponent(props: Props) {
-	const [view, setView] = useState("Matches");
+	const [view, setView] = useState<string | null>(null);
 	const classes = useStyles(props.isProfileComplete);
 	const [open, setOpen] = useState(false);
 	const [redirect, setRedirect] = useState<string | null>(null);
@@ -39,41 +43,27 @@ function ToggleGroupComponent(props: Props) {
 				return;
 			}
 			setView(nextView);
-			if (
-				nextView === constants.SEARCH_ROUTE ||
-				nextView === constants.CHAT_ROUTE
-			) {
-				setRedirect(nextView);
-			}
 		}
 	}
 
-	useEffect(() => {
-		setRedirect(null);
-	}, [redirect]);
-
-	if (redirect !== null) {
-		return <Redirect to={redirect} />;
-	} else {
-		return (
-			<React.Fragment>
-				<ExtendedProfileDialog open={open} setOpen={setOpen} />
-				<ToggleButtonGroup
-					orientation="horizontal"
-					value={view}
-					onChange={handleChange}
-					exclusive
-				>
-					<ToggleButton value="Matches">Matches</ToggleButton>
-					<ToggleButton value="Preselection" className={classes.button}>
-						Preselection
-					</ToggleButton>
-					<ToggleButton value={constants.SEARCH_ROUTE}>Search</ToggleButton>
-					<ToggleButton value={constants.CHAT_ROUTE}>Chat</ToggleButton>
-				</ToggleButtonGroup>
-			</React.Fragment>
-		);
-	}
+	return (
+		<React.Fragment>
+			<ExtendedProfileDialog open={open} setOpen={setOpen} />
+			<ToggleButtonGroup
+				orientation="horizontal"
+				value={view}
+				onChange={handleChange}
+				exclusive
+				className={classes.toggleGroup}
+			>
+				<ToggleButton value="Matches">Matches</ToggleButton>
+				<ToggleButton value="Preselection" className={classes.button}>
+					Preselection
+				</ToggleButton>
+				<ToggleButton value={constants.SEARCH_ROUTE}>Search</ToggleButton>
+			</ToggleButtonGroup>
+		</React.Fragment>
+	);
 }
 
 export const ToggleGroup = withReduxProps(ToggleGroupComponent);

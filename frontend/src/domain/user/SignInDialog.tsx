@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 11:23:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 12:13:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,7 @@ import { getProfileAPI, signinAPI } from "../../services/apiCalls";
 import * as constants from "../../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionUser_signin,
-	actionUser_setProfile,
-	actionUser_setTagList,
-	actionUser_usagelocation,
-} from "../../store/user/action";
+import { actionUser_signin } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { getProfileHydrateRedux } from "../../services/profileUtils";
 
