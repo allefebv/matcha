@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/07 16:24:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/20 17:07:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 
 const useStyles = makeStyles({
-	root: {},
+	root: {
+		margin: 20,
+	},
 	media: {
 		height: 0,
 		paddingTop: "56%",
