@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:31:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 10:34:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 16:22:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,20 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	imgs: (string | null)[];
-	setImgs: React.Dispatch<React.SetStateAction<(string | null)[]>>;
+	setImgs?: React.Dispatch<React.SetStateAction<(string | null)[]>>;
+	modifiable: boolean;
 } & ReduxProps;
 
 const ProfilePicturesComponent = (props: Props) => {
 	function handleChangeImg(e: React.ChangeEvent<HTMLInputElement>) {
-		const { name, files } = e.currentTarget;
-		const img = files && URL.createObjectURL(files[0]);
-		const tmpImgs = [...props.imgs];
-		tmpImgs[parseInt(name)] = img;
-		props.setImgs(tmpImgs);
+		if (props.modifiable) {
+			const { name, files } = e.currentTarget;
+			const img = files && URL.createObjectURL(files[0]);
+			const tmpImgs = [...props.imgs];
+			tmpImgs[parseInt(name)] = img;
+			props.setImgs && props.setImgs(tmpImgs);
+		}
+		return;
 	}
 
 	const images = props.imgs.map((img, index) => {
@@ -41,7 +45,8 @@ const ProfilePicturesComponent = (props: Props) => {
 				key={"img" + index}
 				id={index}
 				src={img || path}
-				handleChange={handleChangeImg}
+				handleChange={props.modifiable ? handleChangeImg : undefined}
+				modifiable={props.modifiable}
 			/>
 		);
 	});

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 19:04:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 15:06:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/21 15:36:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ import * as constants from "../../services/constants";
 import { UserProfilePage } from "./UserProfilePage";
 import { ProfileCreationPage } from "./ProfileCreationPage";
 import { ChatPage } from "./ChatPage";
+import { VisitProfilePage } from "./VisitProfilePage";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -32,9 +33,23 @@ export class RouterComponent extends React.Component<Props> {
 	render() {
 		return (
 			<Switch>
-				<Route exact path={constants.LANDING_ROUTE} component={LandingPage} />
-				<PrivateRoute path={constants.SEARCH_ROUTE} component={MainPage} />
-				<PrivateRoute path={constants.CHAT_ROUTE} component={ChatPage} />
+				<Route
+					exact
+					path={constants.LANDING_ROUTE}
+					component={LandingPage}
+				/>
+				<PrivateRoute
+					path={constants.SEARCH_ROUTE}
+					component={MainPage}
+				/>
+				<PrivateRoute
+					path={constants.CHAT_ROUTE}
+					component={ChatPage}
+				/>
+				<PrivateRoute
+					path={constants.VISIT_PROFILE}
+					component={VisitProfilePage}
+				/>
 				<PrivateRoute
 					path={constants.ACCOUNT_SETTINGS_ROUTE}
 					component={AccountSettingsPage}

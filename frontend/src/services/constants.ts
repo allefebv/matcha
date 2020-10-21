@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:33:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:33:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ export const ACCOUNT_SETTINGS_ROUTE = "/account-settings";
 export const USER_PROFILE_ROUTE = "/my-profile";
 export const PROFILE_CREATION_ROUTE = "/profile-creation";
 export const CHAT_ROUTE = "/chat";
+export const VISIT_PROFILE = "/profile";
 
 export const EMAIL_HELPER_ERROR = "Invalid Email";
 export const PASSWORD_HELPER_ERROR =
