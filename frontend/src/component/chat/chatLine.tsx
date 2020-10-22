@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 11:02:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/22 14:26:55 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/22 15:57:47 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ const ChatLineComponent = (props: Props) => {
 					fontFamily: "Roboto",
 					color: "white",
 					flexDirection: "column",
+					overflowAnchor: "auto",
 				}}
 			>
 				<text
