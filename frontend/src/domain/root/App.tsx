@@ -3,21 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   App.tsx                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 17:33:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/22 10:23:15 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { connect, ConnectedProps } from "react-redux";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { CssBaseline, Grid, makeStyles } from "@material-ui/core";
-import { Router } from "./Router";
-import { GlobalSnackbar } from "../../component/GlobalSnackbar";
+import React, { useEffect } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
+
+import { CssBaseline, Grid, makeStyles } from '@material-ui/core';
+
+import { GlobalSnackbar } from '../../component/GlobalSnackbar';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { Router } from './Router';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -27,13 +30,14 @@ type Props = {} & ReduxProps;
 
 const styleApp: React.CSSProperties = {
 	backgroundColor: "grey",
-	zIndex: -1,
 	height: "100vh",
 };
 
 const useStyles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar,
 }));
+
+export const socket = socketIOClient("http://127.0.0.1:3001");
 
 const AppComponent = (props: Props) => {
 	const classes = useStyles();

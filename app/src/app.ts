@@ -6,24 +6,26 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 12:12:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/22 10:15:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { Socket } from 'dgram';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import { createConnection } from 'mysql';
-import path from 'path';
 
 import { router } from './router';
+import { socketRouter } from './socket';
 
 export let dataBase = null;
-let app: express.Application | null = null;
-export let transporter = null;
+let app: express.Application = null;
+const http = require("http");
+const socketIo = require("socket.io");
 
-async function initMiddelware() {
+function initMiddelware() {
 	app.use(
 		fileUpload({
 			createParentPath: true,
@@ -62,16 +64,18 @@ function initDatabase() {
 	});
 }
 
-function main() {
+async function main() {
 	app = express();
+	const server = http.createServer(app);
+	const io = socketIo(server);
 	initMiddelware();
 	initDatabase();
 	router(app);
+	socketRouter(io);
 
-	const port = 3001;
-	console.log("http://localhost:" + port);
-	console.log("http://127.0.0.1:" + port);
-	app.listen(port);
+	server.listen(3001, () => {
+		console.log(`Server started on port 3001`);
+	});
 }
 
 main();

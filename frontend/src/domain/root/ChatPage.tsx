@@ -3,17 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 15:05:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/22 11:48:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-interface Props {}
+import { ChatBox } from '../../component/chat/chatBox';
+import { ChatListProfile } from '../../component/chat/chatListProfile';
+import { socket } from './App';
 
-export const ChatPage = (props: Props) => {
-	return <div>Chat</div>;
+const withReduxProps = connect((state: any) => ({
+	profile: state.user.profile,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
+
+export const ChatPageComponent = (props: Props) => {
+	const [tabMatch, setTabMatch] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+	return (
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "row",
+				position: "absolute",
+				top: 0,
+				left: 0,
+				width: "100vw",
+				height: "100vh",
+			}}
+		>
+			<ChatListProfile tabMatch={tabMatch} />
+			<ChatBox userProfile={props.profile} />
+		</div>
+	);
 };
+
+export const ChatPage = withReduxProps(ChatPageComponent);
