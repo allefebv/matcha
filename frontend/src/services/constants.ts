@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 14:59:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/22 12:43:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ export const URI_UPDATE_EMAIL = "/user/changeEmail";
 export const URI_MODIFY_PASSWORD = "/user/changePassword";
 export const URI_DELETE_ACCOUNT = "/user/deleteUser";
 export const URI_GET_PROFILE = "/profile/getProfile";
+export const URI_GET_MATCHES = "/like/getProfileMatch";
 export const URI_POST_PICTURES = "/images/handleImages";
 export const URI_HANDLE_GEOLOCATION = "/location/handleGeoLocation";
 export const URI_HANDLE_USAGELOCATION = "/location/handleUsageLocation";

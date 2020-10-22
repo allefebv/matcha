@@ -74,6 +74,20 @@ export const getRecommendationAPI = (token: string) => {
 	});
 };
 
+export const getMatchesAPI = (token: string) => {
+	return fetchApi<{ profile: IextendedProfile }[]>(
+		constants.URL + constants.URI_GET_MATCHES,
+		{
+			method: constants.GET_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
+};
+
 export const modifyEmailAPI = (details: Object, token: string) => {
 	return fetchApi(constants.URL + constants.URI_UPDATE_EMAIL, {
 		method: constants.POST_METHOD,
