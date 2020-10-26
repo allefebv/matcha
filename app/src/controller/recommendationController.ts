@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 14:45:06 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 11:02:32 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,23 @@ export async function recommendationController(req: Request, res: Response) {
 		const userProfile: userProfile = shapingProfile(
 			await getCompleteProfileByUserId(jwt.decoded.id)
 		);
+		//console.log("userProfile = ", userProfile);
 		const profileRecoList = await getProfileBySexualOriantation(
 			userProfile.profile.userId,
 			userProfile.profile.sexualOrientation
 		);
+		//console.log("profileRecoList = ", profileRecoList);
 		const profileListLocation = await locationAlgorithm(
 			userProfile.location,
 			profileRecoList,
 			100
 		);
+		//console.log("profileListLocation = ", profileListLocation);
 		const algoList = await recommendationAlgorithm(
 			profileListLocation,
 			userProfile
 		);
-
+		//console.log("algoList = ", algoList);
 		res.status(200).json(algoList);
 	} catch (error) {
 		res.status(400).json(error);

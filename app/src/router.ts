@@ -3,59 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   router.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 14:45:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/23 13:51:34 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Application, Request, Response } from "express";
+import { Application, Request, Response } from 'express';
 
-import { handleImageController } from "./controller/imageController";
+import { handleImageController } from './controller/imageController';
 import {
-	addlikedProfileController,
-	deletelikedProfileController,
-	getProfileLikeController,
-	getProfileMatchController,
-} from "./controller/likeController";
+	addlikedProfileController, deletelikedProfileController,
+	getProfileLikeController, getProfileMatchController
+} from './controller/likeController';
 import {
-	getGeoLocationController,
-	getUsageLocationController,
-	handleGeoLocationController,
-	handleUsageLocationController,
-} from "./controller/locationController";
+	getGeoLocationController, getUsageLocationController,
+	handleGeoLocationController, handleUsageLocationController
+} from './controller/locationController';
+import { getMessageController } from './controller/messageController';
 import {
-	addNotificationController,
-	getNotificationController,
-} from "./controller/notificationController";
+	addNotificationController, getNotificationController
+} from './controller/notificationController';
 import {
-	addProfileController,
-	getAllProfileController,
-	getProfileByUsernameController,
-	getProfileController,
-	updateProfileController,
-} from "./controller/profileController";
-import { recommendationController } from "./controller/recommendationController";
+	addProfileController, getAllProfileController, getProfileByUsernameController,
+	getProfileController, updateProfileController
+} from './controller/profileController';
 import {
-	addTagProfileController,
-	deleteTagProfileController,
-	getTagAutocompleteController,
-} from "./controller/tagController";
+	recommendationController
+} from './controller/recommendationController';
 import {
-	activateNewEmailController,
-	activateUserController,
-	addUserController,
-	changeEmailController,
-	changePasswordController,
-	deleteUserController,
-	loginUserController,
-	resetPasswordController,
-} from "./controller/userController";
+	addTagProfileController, deleteTagProfileController,
+	getTagAutocompleteController
+} from './controller/tagController';
 import {
-	addViewController,
-	getViewController,
-} from "./controller/viewController";
+	activateNewEmailController, activateUserController, addUserController,
+	changeEmailController, changePasswordController, deleteUserController,
+	loginUserController, resetPasswordController
+} from './controller/userController';
+import {
+	addViewController, getViewController
+} from './controller/viewController';
 
 function userRouter(app: Application) {
 	app.post("/user/activateUser", (req: Request, res: Response) =>
@@ -178,6 +166,12 @@ function loactionRouter(app: Application) {
 	);
 }
 
+function messageRouter(app: Application) {
+	app.post("/message/getMessage", (req: Request, res: Response) =>
+		getMessageController(req, res)
+	);
+}
+
 export function router(app: Application) {
 	userRouter(app);
 	profileRouter(app);
@@ -188,6 +182,7 @@ export function router(app: Application) {
 	imagesController(app);
 	recommendationRouter(app);
 	loactionRouter(app);
+	messageRouter(app);
 
 	app.use((req: Request, res: Response) => {
 		res.setHeader("Content-Type", "text/plain");

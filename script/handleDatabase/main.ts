@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 11:18:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 10:56:17 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,22 @@ export async function addTableViewProfile() {
 	});
 }
 
+export async function addTableMessage() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE message (
+			sender					char(255) NOT NULL,
+			receiver				char(255) NOT NULL,
+			timestamp				TEXT NOT NULL,
+			message					TEXT NOT NULL
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log("Table message created");
+			resolve();
+		});
+	});
+}
+
 export async function dropTable(nameTable: string) {
 	return new Promise((resolve) => {
 		const sql = `DROP TABLE ${nameTable}`;
@@ -206,10 +222,11 @@ export async function dropTable(nameTable: string) {
 		});
 	});
 }
+
 async function main() {
 	initMysql();
 	//await dropTable("user");
-
+	/*
 	await addTableUser();
 
 	await addTableProfile();
@@ -220,5 +237,7 @@ async function main() {
 	await addTableTag();
 	await addTableTagProfile();
 	await addTableViewProfile();
+	*/
+	await addTableMessage();
 }
 main();

@@ -6,17 +6,19 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 09:44:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/22 12:14:07 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 13:24:00 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-let interval = null;
+import { addMMessage } from './model/messageRepositories';
 
 export function socketRouter(io) {
 	io.on("connection", (socket) => {
 		socket.on("chatMessage", (msg) => {
-			io.emit(msg.for, msg);
-			console.log("message: ", msg);
+			io.emit(msg.receiver, msg);
+			if (msg && msg.sender && msg.receiver && msg.timestamp && msg.message) {
+				addMMessage(msg.sender, msg.receiver, msg.timestamp, msg.message);
+			}
 		});
 	});
 }

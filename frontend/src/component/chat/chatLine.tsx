@@ -6,16 +6,20 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 11:02:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/22 15:57:47 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 10:50:12 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import { IextendedProfile } from '../../types/types';
 
 interface Props {
-	lineItem: { username: string; message: string; timestamp: number };
+	lineItem: {
+		username: string;
+		message: string;
+		timestamp: number;
+	};
 	userProfile: IextendedProfile;
 }
 
@@ -34,7 +38,7 @@ const ChatLineComponent = (props: Props) => {
 					overflowAnchor: "auto",
 				}}
 			>
-				<text
+				<div
 					style={{
 						display: "flex",
 						backgroundColor: "#3e50b5",
@@ -47,8 +51,8 @@ const ChatLineComponent = (props: Props) => {
 					}}
 				>
 					{props.lineItem.message}
-				</text>
-				<text
+				</div>
+				<div
 					style={{
 						marginRight: 10,
 						marginTop: 2,
@@ -60,7 +64,7 @@ const ChatLineComponent = (props: Props) => {
 					{new Date(props.lineItem.timestamp).getHours() +
 						":" +
 						new Date(props.lineItem.timestamp).getMinutes()}
-				</text>
+				</div>
 			</div>
 		);
 	} else {
@@ -68,26 +72,42 @@ const ChatLineComponent = (props: Props) => {
 			<div
 				style={{
 					display: "flex",
-					justifyContent: "flex-start",
-					marginLeft: 5,
+					alignItems: "flex-start",
+					marginRight: 5,
 					margin: 5,
+					fontFamily: "Roboto",
+					color: "black",
+					flexDirection: "column",
+					overflowAnchor: "auto",
 				}}
 			>
-				<text
+				<div
 					style={{
-						color: "black",
+						display: "flex",
 						backgroundColor: "lightGrey",
 						borderRadius: 16,
 						paddingTop: 5,
 						paddingBottom: 5,
 						paddingLeft: 10,
 						paddingRight: 10,
-						fontFamily: "Roboto",
+						fontSize: 15,
 					}}
 				>
 					{props.lineItem.message}
-					{props.lineItem.timestamp}
-				</text>
+				</div>
+				<div
+					style={{
+						marginLeft: 10,
+						marginTop: 2,
+						color: "black",
+						fontSize: 8,
+						textAlign: "start",
+					}}
+				>
+					{new Date(props.lineItem.timestamp).getHours() +
+						":" +
+						new Date(props.lineItem.timestamp).getMinutes()}
+				</div>
 			</div>
 		);
 	}

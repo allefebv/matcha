@@ -6,17 +6,19 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/22 17:03:03 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 16:41:58 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from 'react';
+import React from 'react';
 
+import { socket } from '../../domain/root/App';
 import { IextendedProfile } from '../../types/types';
 import { CustomAvatar } from '../CustomAvatar';
 
 interface Props {
 	tabMatch: IextendedProfile[];
+	userSelect: string | null;
 	setUserSelect: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -40,22 +42,25 @@ const ChatListProfileComponent = (props: Props) => {
 				}}
 			>
 				{props.tabMatch.map((item) => {
-					console.log(item);
 					return (
 						<div
+							key={item.userId + item.username}
 							style={{
 								display: "flex",
 								alignItems: "center",
 								height: 50,
 								width: "100%",
-								backgroundColor: "lightGrey",
+								backgroundColor:
+									item.username === props.userSelect ? "#3e50b5" : "lightGrey",
 							}}
-							onClick={() => props.setUserSelect(item.username)}
+							onClick={() => {
+								props.setUserSelect(item.username);
+							}}
 						>
 							<div style={{ marginLeft: 10 }}>
 								<CustomAvatar src={"undefined"} id={0} />
 							</div>
-							<text
+							<div
 								style={{
 									marginLeft: 10,
 									fontFamily: "Roboto",
@@ -64,7 +69,7 @@ const ChatListProfileComponent = (props: Props) => {
 								}}
 							>
 								{item.username}
-							</text>
+							</div>
 						</div>
 					);
 				})}

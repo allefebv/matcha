@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:07 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 18:02:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 12:30:32 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ export async function getTagAutocompleteController(
 	res: Response
 ) {
 	try {
-		//const jwt = await jwtVerify(req.headers.token, res);
+		await jwtVerify(req.headers.token, res);
 		await getTagAutocompleteValidation(req.body);
 		const tagList = await getTagAutocomplete(req.body.partial, req.body.limit);
 		const list = tagList.map((tag) => tag.tag);

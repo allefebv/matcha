@@ -249,3 +249,15 @@ export const autocompleteLocationAPI = async (input: string) => {
 		return createAddressFromBody(json);
 	});
 };
+
+export const getMessageAPI = async (details: Object, token: string) => {
+	return fetchApi<any[]>(constants.URL + constants.URI_GET_CHAT_MESSAGE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};

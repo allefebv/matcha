@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 18:28:46 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/23 11:04:14 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ export async function recommendationAlgorithm(
 
 	await Promise.all(
 		profileListLocation.map((profileLocation) => {
-			const tag = tagScore(profileLocation.tag.split(","), userProfile.tag);
+			const tag = userProfile.tag
+				? tagScore(profileLocation.tag.split(","), userProfile.tag)
+				: 0;
+
 			const popularityScore = profileScore(
 				profileLocation.popularityScore,
 				userProfile.profile
