@@ -6,7 +6,6 @@ frontend/.pnp
 frontend/.pnp.js
 
 app/node_modules
-app/public/images
 
 script/createUser/node_modules
 script/handleDatabase/node_modules
