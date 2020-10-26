@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 16:49:29 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 14:04:19 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ export function getCompleteProfileByUserId(id: number): Promise<any> {
 			usageLocation.postCode,
 			usageLocation.isFromGeolocation`;
 		dataBase.query(sql, (error: string, result: profile[]) => {
-			console.log(result);
 			if (error) {
 				reject({ code: 500, message: error });
 			}

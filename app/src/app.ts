@@ -6,24 +6,35 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/22 10:15:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 16:37:50 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { Socket } from 'dgram';
 import express from 'express';
 import fileUpload from 'express-fileupload';
+import http from 'http';
 import { createConnection } from 'mysql';
+import nodemailer from 'nodemailer';
+import socketIo from 'socket.io';
 
 import { router } from './router';
 import { socketRouter } from './socket';
 
 export let dataBase = null;
+export const transporter = nodemailer.createTransport({
+	host: "smtp.gmail.com",
+	port: 465,
+	pool: true,
+	secure: true,
+	auth: {
+		user: "project.matcha.42@gmail.com",
+		pass: "@Matacha1234",
+	},
+});
+
 let app: express.Application = null;
-const http = require("http");
-const socketIo = require("socket.io");
 
 function initMiddelware() {
 	app.use(

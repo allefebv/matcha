@@ -13,8 +13,10 @@
 	"dependencies": {
 		"@types/node-fetch": "^2.5.7",
 		"fs": "0.0.1-security",
+		"image-downloader": "^4.0.1",
 		"mysql": "^2.18.1",
 		"node-fetch": "^2.6.1",
+		"request": "^2.88.2",
 		"xmlhttprequest": "^1.8.0"
 	},
 	"devDependencies": {

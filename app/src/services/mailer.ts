@@ -3,48 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   mailer.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:53 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 23:16:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 16:37:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import nodemailer from "nodemailer";
-
-import { user } from "../../types/types";
-
-const transporter = nodemailer.createTransport({
-	host: "smtp.gmail.com",
-	port: 465,
-	pool: true,
-	secure: true,
-	auth: {
-		user: "project.matcha.42@gmail.com",
-		pass: "@Matacha1234",
-	},
-});
+import { user } from '../../types/types';
+import { transporter } from '../app';
 
 export async function activatedUserMailer(user: user, link: string) {
-	await transporter.sendMail({
-		to: user.email,
-		subject: "Matcha: Activate your account",
-		text: `Hello,\nFor activate your account click on this link: ${link}\n`,
-	});
+	try {
+		await transporter.sendMail({
+			to: user.email,
+			subject: "Matcha: Activate your account",
+			text: `Hello,\nFor activate your account click on this link: ${link}\n`,
+		});
+	} catch (error) {
+		console.log("Mailer = ", error);
+	}
 }
 
 export async function newPasswordMailer(user: user, password: string) {
-	await transporter.sendMail({
-		to: user.email,
-		subject: "Matcha: Reset password",
-		text: `Hello,\nYour new password is: ${password}\n`,
-	});
+	try {
+		await transporter.sendMail({
+			to: user.email,
+			subject: "Matcha: Reset password",
+			text: `Hello,\nYour new password is: ${password}\n`,
+		});
+	} catch (error) {
+		console.log("Mailer = ", error);
+	}
 }
 
 export async function newEmailMailer(email: string, link: string) {
-	await transporter.sendMail({
-		to: email,
-		subject: "Matcha: Activate your new email",
-		text: `Hello,\nTo activate your new email click here ${link}\n`,
-	});
+	try {
+		await transporter.sendMail({
+			to: email,
+			subject: "Matcha: Activate your new email",
+			text: `Hello,\nTo activate your new email click here ${link}\n`,
+		});
+	} catch (error) {
+		console.log("Mailer = ", error);
+	}
 }

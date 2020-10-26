@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 18:41:26 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 11:44:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 17:00:34 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ export function createUser(
 			body: JSON.stringify({
 				email: email,
 				password: "Matcha1234",
-				redirectUrl: "null",
+				redirectUrl: "scriptOrigin",
 			}),
 		};
 
