@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/21 10:55:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:53:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,12 @@ export const isProfileComplete = (
 	tagList: string[]
 ) => {
 	return getProfileLevel(profile, location, tagList) === 2;
+};
+
+export const getAge = (dob: number) => {
+	const diff = Date.now() - new Date(dob).getTime();
+	const age = new Date(diff);
+	return Math.abs(age.getUTCFullYear() - 1970);
 };
 
 export const submitPictures = async (
@@ -211,9 +217,12 @@ export const getProfileHydrateRedux = async (
 		.then((response: any) => {
 			if (response) {
 				dispatch(actionUser_setProfile({ profile: response.profile }));
-				dispatch(actionUser_setTagList({ tagList: response.tag }));
+				response.tag &&
+					dispatch(actionUser_setTagList({ tagList: response.tag }));
 				dispatch(
-					actionUser_usagelocation({ usagelocation: response.location })
+					actionUser_usagelocation({
+						usagelocation: response.location,
+					})
 				);
 			}
 		})

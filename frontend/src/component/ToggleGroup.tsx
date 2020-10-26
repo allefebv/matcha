@@ -1,12 +1,22 @@
-import React, { useEffect, useState } from "react";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ToggleGroup.tsx                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/23 18:11:34 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/23 19:49:52 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import React, { useState } from "react";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { connect, ConnectedProps } from "react-redux";
 import { isProfileComplete } from "../services/profileUtils";
 import { ExtendedProfileDialog } from "../domain/profile/ExtendedProfileDialog";
-import * as constants from "../services/constants";
 import { makeStyles } from "@material-ui/core";
-import { Redirect } from "react-router-dom";
 
 const withReduxProps = connect((state: any) => ({
 	isProfileComplete: isProfileComplete(
@@ -16,7 +26,10 @@ const withReduxProps = connect((state: any) => ({
 	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
-type Props = {} & ReduxProps;
+type Props = {
+	value: string | null;
+	setValue: React.Dispatch<React.SetStateAction<string | null>>;
+} & ReduxProps;
 
 const useStyles = makeStyles({
 	button: (isProfileComplete) => {
@@ -31,18 +44,19 @@ const useStyles = makeStyles({
 });
 
 function ToggleGroupComponent(props: Props) {
-	const [view, setView] = useState<string | null>(null);
 	const classes = useStyles(props.isProfileComplete);
 	const [open, setOpen] = useState(false);
-	const [redirect, setRedirect] = useState<string | null>(null);
 
-	function handleChange(e: React.MouseEvent<HTMLElement>, nextView: string) {
+	function handleChangeToggle(
+		e: React.MouseEvent<HTMLElement>,
+		nextView: string
+	) {
 		if (nextView !== null) {
 			if (nextView === "Preselection" && !props.isProfileComplete) {
 				setOpen(true);
 				return;
 			}
-			setView(nextView);
+			props.setValue(nextView);
 		}
 	}
 
@@ -51,8 +65,8 @@ function ToggleGroupComponent(props: Props) {
 			<ExtendedProfileDialog open={open} setOpen={setOpen} />
 			<ToggleButtonGroup
 				orientation="horizontal"
-				value={view}
-				onChange={handleChange}
+				value={props.value}
+				onChange={handleChangeToggle}
 				exclusive
 				className={classes.toggleGroup}
 			>
@@ -60,7 +74,7 @@ function ToggleGroupComponent(props: Props) {
 				<ToggleButton value="Preselection" className={classes.button}>
 					Preselection
 				</ToggleButton>
-				<ToggleButton value={constants.SEARCH_ROUTE}>Search</ToggleButton>
+				<ToggleButton value="Search">Search</ToggleButton>
 			</ToggleButtonGroup>
 		</React.Fragment>
 	);

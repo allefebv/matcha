@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 18:14:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 16:54:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ export interface Iaddress {
 	lat: number | null;
 	lng: number | null;
 	userId?: number;
+	distance?: number;
 }
 
 export interface Icoordinates {
@@ -46,6 +47,8 @@ export interface IextendedProfile extends IbaseProfile {
 	gender: string | null;
 	sexualOrientation: string | null;
 	bio: string | null;
+	age?: number | null;
+	tag?: string[];
 }
 
 export interface IbaseProfile {

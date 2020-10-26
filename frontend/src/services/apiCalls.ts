@@ -1,8 +1,8 @@
-import { throttle } from 'lodash';
+import { throttle } from "lodash";
 
-import * as constants from '../services/constants';
-import { Iaddress, IextendedProfile, user } from '../types/types';
-import { fetchApi } from './fetchApi';
+import * as constants from "../services/constants";
+import { Iaddress, IextendedProfile, user } from "../types/types";
+import { fetchApi } from "./fetchApi";
 
 export const signupAPI = (details: Object) => {
 	return fetchApi<{ user: user; token: string }>(
@@ -61,11 +61,16 @@ export const getProfileAPI = (token: string) => {
 };
 
 export const getRecommendationAPI = (token: string) => {
-	return fetchApi<{
-		profile: IextendedProfile;
-		tag: string[] | [];
-		location: Iaddress | null;
-	}>(constants.URL + constants.URI_GET_PROFILE, {
+	return fetchApi<
+		{
+			profile: {
+				profile: IextendedProfile;
+				tag: string[] | [];
+				location: Iaddress | null;
+			};
+			score: number;
+		}[]
+	>(constants.URL + constants.URI_GET_RECOMMENDATIONS, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
@@ -76,8 +81,21 @@ export const getRecommendationAPI = (token: string) => {
 };
 
 export const getMatchesAPI = (token: string) => {
+	return fetchApi<
+		{ profile: IextendedProfile; tag: string[] | []; location: Iaddress }[]
+	>(constants.URL + constants.URI_GET_MATCHES, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
+};
+
+export const getAllProfilesAPI = (token: string) => {
 	return fetchApi<IextendedProfile[]>(
-		constants.URL + constants.URI_GET_MATCHES,
+		constants.URL + constants.URI_GET_ALL_PROFILES,
 		{
 			method: constants.GET_METHOD,
 			headers: {

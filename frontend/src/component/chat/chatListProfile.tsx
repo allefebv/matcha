@@ -3,21 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   chatListProfile.tsx                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/23 16:41:58 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 16:56:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from 'react';
+import React from "react";
 
-import { socket } from '../../domain/root/App';
-import { IextendedProfile } from '../../types/types';
-import { CustomAvatar } from '../CustomAvatar';
+import { socket } from "../../domain/root/App";
+import { Iaddress, IextendedProfile } from "../../types/types";
+import { CustomAvatar } from "../CustomAvatar";
 
 interface Props {
-	tabMatch: IextendedProfile[];
+	tabMatch: {
+		profile: IextendedProfile;
+		tag: string[] | [];
+		location: Iaddress;
+	}[];
 	userSelect: string | null;
 	setUserSelect: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -44,21 +48,23 @@ const ChatListProfileComponent = (props: Props) => {
 				{props.tabMatch.map((item) => {
 					return (
 						<div
-							key={item.userId + item.username}
+							key={item.profile.userId + item.profile.username}
 							style={{
 								display: "flex",
 								alignItems: "center",
 								height: 50,
 								width: "100%",
 								backgroundColor:
-									item.username === props.userSelect ? "#3e50b5" : "lightGrey",
+									item.profile.username === props.userSelect
+										? "#3e50b5"
+										: "lightGrey",
 							}}
 							onClick={() => {
-								props.setUserSelect(item.username);
+								props.setUserSelect(item.profile.username);
 							}}
 						>
 							<div style={{ marginLeft: 10 }}>
-								<CustomAvatar src={"undefined"} id={0} />
+								<CustomAvatar modifiable={false} src={"undefined"} id={0} />
 							</div>
 							<div
 								style={{
@@ -68,7 +74,7 @@ const ChatListProfileComponent = (props: Props) => {
 									textAlign: "center",
 								}}
 							>
-								{item.username}
+								{item.profile.username}
 							</div>
 						</div>
 					);

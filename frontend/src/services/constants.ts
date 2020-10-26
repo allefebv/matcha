@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   constants.ts                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 09:41:52 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 15:56:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ export const URI_POST_TAGS = "/tag/addTagProfile";
 export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 export const URI_GET_TAG_AUTOCOMPLETE = "/tag/getTagAutocomplete";
 export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
+export const URI_GET_RECOMMENDATIONS = "/recommendation/getRecommendation";
+export const URI_GET_ALL_PROFILES = "/profile/getAllProfile";
 
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
 export const URI_REVERSE_GEOCODING_API =
@@ -50,6 +52,7 @@ export const ACCOUNT_SETTINGS_ROUTE = "/account-settings";
 export const USER_PROFILE_ROUTE = "/my-profile";
 export const PROFILE_CREATION_ROUTE = "/profile-creation";
 export const CHAT_ROUTE = "/chat";
+export const VISIT_PROFILE = "/profile";
 
 export const EMAIL_HELPER_ERROR = "Invalid Email";
 export const PASSWORD_HELPER_ERROR =
