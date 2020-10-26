@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:54 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 15:45:06 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:45:07 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ async function handleLocation(req: Request, res: Response, table: string) {
 					table === "GeoLocation"
 						? await getGeoLocation(jwt.decoded.id)
 						: await getUsageLocation(jwt.decoded.id);
-				console.log(location);
 				location.isFromGeolocation = location.isFromGeolocation ? true : false;
 				res.status(200).json(location);
 			} catch (error) {

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/23 13:51:34 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:44:15 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ import {
 	addNotificationController, getNotificationController
 } from './controller/notificationController';
 import {
-	addProfileController, getAllProfileController, getProfileByUsernameController,
-	getProfileController, updateProfileController
+	addProfileController, getProfileByUsernameController, getProfileController,
+	updateProfileController
 } from './controller/profileController';
 import {
-	recommendationController
+	allProfileController, recommendationController
 } from './controller/recommendationController';
 import {
 	addTagProfileController, deleteTagProfileController,
@@ -75,9 +75,6 @@ function userRouter(app: Application) {
 function profileRouter(app: Application) {
 	app.get("/profile/getProfile", (req: Request, res: Response) =>
 		getProfileController(req, res)
-	);
-	app.get("/profile/getAllProfile", (req: Request, res: Response) =>
-		getAllProfileController(req, res)
 	);
 	app.get("/profile/getProfileByUsername", (req: Request, res: Response) =>
 		getProfileByUsernameController(req, res)
@@ -139,7 +136,6 @@ function imagesController(app: Application) {
 	app.post("/images/handleImages", (req: Request, res: Response) =>
 		handleImageController(req, res)
 	);
-
 	app.get("/images/*", (req: Request, res: Response) =>
 		res.status(200).send(null)
 	);
@@ -148,6 +144,9 @@ function imagesController(app: Application) {
 function recommendationRouter(app: Application) {
 	app.get("/recommendation/getRecommendation", (req: Request, res: Response) =>
 		recommendationController(req, res)
+	);
+	app.get("/recommendation/getAllProfile", (req: Request, res: Response) =>
+		allProfileController(req, res)
 	);
 }
 

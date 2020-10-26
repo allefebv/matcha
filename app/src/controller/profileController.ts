@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 12:02:55 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:41:30 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@ import { Request, Response } from 'express';
 import { userProfile } from '../../types/types';
 import {
 	addProfile, getAllProfile, getCompleteProfileByUserId,
-	getCompleteProfileByUsername, getProfileByUserId, getProfileByUsername,
-	updateProfile
+	getCompleteProfileByUsername, getProfileBySexualOriantation,
+	getProfileByUserId, getProfileByUsername, updateProfile
 } from '../model/profileRepositories';
-import { shapingProfile } from '../services/formatter/shapingProfile';
+import {
+	shapingProfile, shapingProfileReco
+} from '../services/formatter/shapingProfile';
 import { jwtVerify } from '../services/validation/jwt';
 import { addProfileValidation } from '../services/validation/profileValidation';
 
@@ -44,18 +46,6 @@ export async function getProfileByUsernameController(
 		res.status(200).json(shapingProfile(profile));
 	} catch (error) {
 		res.status(error.code).send(error.message);
-	}
-}
-
-export async function getAllProfileController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		try {
-			const profileList = await getAllProfile(jwt.decoded.id);
-			res.status(200).json(profileList);
-		} catch (error) {
-			res.status(error.code).send(error.message);
-		}
 	}
 }
 

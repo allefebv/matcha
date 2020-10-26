@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   imageController.ts                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:41 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/16 20:18:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 12:45:10 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import { getProfileByUserId } from "../model/profileRepositories";
-import { jwtVerify } from "../services/validation/jwt";
+import { getProfileByUserId } from '../model/profileRepositories';
+import { jwtVerify } from '../services/validation/jwt';
 
 export async function handleImageController(req: Request, res: Response) {
 	const tabNameimg = ["img0", "img1", "img2", "img3", "img4"];
@@ -24,7 +24,6 @@ export async function handleImageController(req: Request, res: Response) {
 		const tabImg = [];
 
 		for (let i in req.files) {
-			console.log(i);
 			if (tabNameimg.includes(i)) {
 				tabImg.push([i, req.files[i]]);
 			}

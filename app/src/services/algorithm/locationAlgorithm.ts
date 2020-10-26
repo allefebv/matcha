@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 18:02:45 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:39:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ export async function locationAlgorithm(
 							lng: profileReco.lng,
 						}
 					) / 1000;
+				profileReco.distance = result;
 				return result < distanceInKm;
 			}
 		})

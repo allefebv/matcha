@@ -6,12 +6,14 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/23 11:04:14 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:31:17 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { location, profile, tag, userProfile } from '../../../types/types';
-import { shapingProfile } from '../formatter/shapingProfile';
+import {
+	shapingProfile, shapingProfileReco
+} from '../formatter/shapingProfile';
 
 function tagScore(tagReco: string[], tag: string[]): number {
 	let score = 0;
@@ -25,13 +27,11 @@ function tagScore(tagReco: string[], tag: string[]): number {
 }
 
 function profileScore(profileReco, profile): number {
-	if (profileReco.popularityScore > profile.popularityScore) {
-		return 50;
-	} else if (profileReco.popularityScore === profile.popularityScore) {
-		return 100;
-	} else {
-		return 0;
-	}
+	return profileReco - profile.popularityScore;
+}
+
+function distanceScore(profileReco): number {
+	return 100 - parseInt(profileReco.distance);
 }
 
 export async function recommendationAlgorithm(
@@ -51,10 +51,10 @@ export async function recommendationAlgorithm(
 				userProfile.profile
 			);
 
-			resultTab.push({
-				profile: shapingProfile(profileLocation),
-				score: tag * 3 + popularityScore,
-			});
+			const distance = distanceScore(profileLocation);
+
+			const score = tag * 3 + popularityScore * 2 + distance;
+			resultTab.push(shapingProfileReco(profileLocation, score));
 		})
 	);
 

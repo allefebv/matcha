@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/23 11:24:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 12:39:06 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,32 @@ export function shapingProfile(profile) {
 				lng: profile.lng,
 			},
 			tag: profile.tag ? profile.tag.split(",") : null,
+		};
+	}
+}
+
+export function shapingProfileReco(profile, score?) {
+	if (profile) {
+		return {
+			profile: {
+				username: profile.username,
+				firstname: profile.firstname,
+				lastname: profile.lastname,
+				dob: profile.dob,
+				gender: profile.gender,
+				sexualOrientation: profile.sexualOrientation,
+				popularityScore: profile.popularityScore,
+				bio: profile.bio,
+			},
+			location: {
+				country: profile.country,
+				countryCode: profile.countryCode,
+				city: profile.city,
+				postCode: profile.postCode,
+				distanceInKm: profile.distance,
+			},
+			tag: profile.tag ? profile.tag.split(",") : null,
+			score: score ? score : null,
 		};
 	}
 }
