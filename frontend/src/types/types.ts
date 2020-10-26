@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 18:14:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/24 16:41:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ export interface IextendedProfile extends IbaseProfile {
 	gender: string | null;
 	sexualOrientation: string | null;
 	bio: string | null;
+	age?: number | null;
+	tag?: string[];
 }
 
 export interface IbaseProfile {

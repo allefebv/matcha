@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:33:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:52:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
-const styleApp: React.CSSProperties = {
-	backgroundColor: "grey",
-	height: "100vh",
-};
-
 const useStyles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar,
+	main: {
+		marginTop: 64,
+		display: "flex",
+		flexGrow: 1,
+		height: "92vh",
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "cyan",
+	},
 }));
 
 export const socket = socketIOClient("http://127.0.0.1:3001");
@@ -46,7 +50,7 @@ const AppComponent = (props: Props) => {
 		<BrowserRouter>
 			{/* <CssBaseline /> */}
 			<Header />
-			<div style={{ marginTop: 80, backgroundColor: "green" }}>
+			<div className={classes.main}>
 				<GlobalSnackbar />
 				<Router />
 			</div>

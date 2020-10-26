@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 14:33:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/23 16:44:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ import DateFnsUtils from "@date-io/date-fns";
 
 const theme = createMuiTheme({
 	palette: {
-		type: "dark",
+		type: "light",
 	},
 	overrides: {
 		MuiCssBaseline: {

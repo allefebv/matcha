@@ -81,8 +81,26 @@ export const getRecommendationAPI = (token: string) => {
 };
 
 export const getMatchesAPI = (token: string) => {
+	return fetchApi<
+		{
+			profile: {
+				profile: IextendedProfile;
+				tag: string[] | [];
+			};
+		}[]
+	>(constants.URL + constants.URI_GET_MATCHES, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
+};
+
+export const getAllProfilesAPI = (token: string) => {
 	return fetchApi<IextendedProfile[]>(
-		constants.URL + constants.URI_GET_MATCHES,
+		constants.URL + constants.URI_GET_ALL_PROFILES,
 		{
 			method: constants.GET_METHOD,
 			headers: {

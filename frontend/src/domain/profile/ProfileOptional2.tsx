@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:35:51 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 15:52:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ type Props = {
 
 function ProfileOptional2Component(props: Props) {
 	const [inputValue, setInputValue] = useState("");
-	const [options, setOptions] = useState<string[]>([]);
+	const [options, setOptions] = useState<string[]>([""]);
 
 	function handleChangeTags(
 		e: React.ChangeEvent<{}>,
@@ -59,7 +59,9 @@ function ProfileOptional2Component(props: Props) {
 		if (!(inputValue === "")) {
 			getTagAutocompleteAPI(details, props.isLoggedIn)
 				.then((tagList) => {
-					setOptions(tagList);
+					if (tagList.length) {
+						setOptions(tagList);
+					}
 				})
 				.catch((error) => {
 					props.dispatch(
