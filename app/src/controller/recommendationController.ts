@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 12:52:34 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 18:27:56 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ export async function recommendationController(req: Request, res: Response) {
 			userProfile.profile.userId,
 			userProfile.profile.sexualOrientation
 		);
-		//console.log("profileRecoList = ", profileRecoList);
+		console.log("profileRecoList = ", profileRecoList);
 		const profileListLocation = await locationAlgorithm(
 			userProfile.location,
 			profileRecoList,
@@ -68,11 +68,13 @@ export async function allProfileController(req: Request, res: Response) {
 			userProfile.profile.sexualOrientation
 		);
 		//console.log("profileRecoList = ", profileRecoList);
+
 		const profileListLocation = await locationAlgorithm(
 			userProfile.location,
 			profileRecoList,
 			200
 		);
+
 		const allProfile = profileListLocation.map((profileLocation) =>
 			shapingProfileReco(profileLocation)
 		);

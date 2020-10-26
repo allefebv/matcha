@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 12:39:13 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 18:28:49 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,24 @@ export async function locationAlgorithm(
 	profileRecoList: any[],
 	distanceInKm: number
 ) {
-	return await Promise.all(
-		profileRecoList.filter((profileReco) => {
-			if (profileReco.lat && profileReco.lng) {
-				const result =
-					calculateLocation(
-						{ lat: profileLocation.lat, lng: profileLocation.lng },
-						{
-							lat: profileReco.lat,
-							lng: profileReco.lng,
-						}
-					) / 1000;
-				profileReco.distance = result;
-				return result < distanceInKm;
-			}
-		})
-	);
+	if (profileLocation.lat && profileLocation.lng) {
+		return await Promise.all(
+			profileRecoList.filter((profileReco) => {
+				if (profileReco.lat && profileReco.lng) {
+					const result =
+						calculateLocation(
+							{ lat: profileLocation.lat, lng: profileLocation.lng },
+							{
+								lat: profileReco.lat,
+								lng: profileReco.lng,
+							}
+						) / 1000;
+					profileReco.distance = result;
+					return result < distanceInKm;
+				}
+			})
+		);
+	} else {
+		return profileRecoList;
+	}
 }
