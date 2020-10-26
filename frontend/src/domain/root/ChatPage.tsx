@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/23 17:16:18 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/26 16:55:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
 
-import { ChatBox } from '../../component/chat/chatBox';
-import { ChatListProfile } from '../../component/chat/chatListProfile';
-import { socket } from '../../domain/root/App';
-import { getMatchesAPI } from '../../services/apiCalls';
-import { IextendedProfile } from '../../types/types';
+import { ChatBox } from "../../component/chat/chatBox";
+import { ChatListProfile } from "../../component/chat/chatListProfile";
+import { socket } from "../../domain/root/App";
+import { getMatchesAPI } from "../../services/apiCalls";
+import { Iaddress, IextendedProfile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -27,7 +27,9 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const ChatPageComponent = (props: Props) => {
-	const [tabMatch, setTableMatch] = useState<IextendedProfile[]>([]);
+	const [tabMatch, setTableMatch] = useState<
+		{ profile: IextendedProfile; tag: string[] | []; location: Iaddress }[]
+	>([]);
 	const [userSelect, setUserSelect] = useState<string | null>(null);
 	const [message, setMessage] = useState<{
 		sender: string;
@@ -40,7 +42,7 @@ const ChatPageComponent = (props: Props) => {
 			.then((item) => {
 				setTableMatch(item);
 				if (item && item.length) {
-					setUserSelect(item[0].username);
+					setUserSelect(item[0].profile.username);
 				}
 			})
 			.catch((error) => console.log(error));

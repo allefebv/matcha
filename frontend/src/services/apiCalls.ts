@@ -1,8 +1,8 @@
-import { throttle } from 'lodash';
+import { throttle } from "lodash";
 
-import * as constants from '../services/constants';
-import { Iaddress, IextendedProfile, user } from '../types/types';
-import { fetchApi } from './fetchApi';
+import * as constants from "../services/constants";
+import { Iaddress, IextendedProfile, user } from "../types/types";
+import { fetchApi } from "./fetchApi";
 
 export const signupAPI = (details: Object) => {
 	return fetchApi<{ user: user; token: string }>(
@@ -82,12 +82,7 @@ export const getRecommendationAPI = (token: string) => {
 
 export const getMatchesAPI = (token: string) => {
 	return fetchApi<
-		{
-			profile: {
-				profile: IextendedProfile;
-				tag: string[] | [];
-			};
-		}[]
+		{ profile: IextendedProfile; tag: string[] | []; location: Iaddress }[]
 	>(constants.URL + constants.URI_GET_MATCHES, {
 		method: constants.GET_METHOD,
 		headers: {
