@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 11:11:27 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:51:17 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ import {
 import { handleImageController } from './controller/imageController';
 import {
 	addlikedProfileController, deletelikedProfileController,
-	getProfileLikeController, getProfileMatchController
+	getProfileLikeController, getProfileMatchController, getStatueOfLikeController
 } from './controller/likeController';
 import {
 	getGeoLocationController, getUsageLocationController,
@@ -103,6 +103,9 @@ function likeRouter(app: Application) {
 	);
 	app.post("/like/deleteLikedProfile", (req: Request, res: Response) =>
 		deletelikedProfileController(req, res)
+	);
+	app.post("/like/getStatueOfLike", (req: Request, res: Response) =>
+		getStatueOfLikeController(req, res)
 	);
 }
 

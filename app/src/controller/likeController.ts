@@ -6,14 +6,15 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 09:43:43 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 16:34:46 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 
 import {
-	addLikedProfile, deleteLikedProfile, getProfileMatch, getUserHasBeenLikedById
+	addLikedProfile, deleteLikedProfile, getProfileMatch, getStatueOfLike,
+	getUserHasBeenLikedById
 } from '../model/likeRepositories';
 import { getProfileByUsername } from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
@@ -69,6 +70,29 @@ export async function getProfileLikeController(req: Request, res: Response) {
 				};
 			});
 		res.status(200).json(resultList);
+	} catch (error) {
+		res.status(error.code).send(error.message);
+	}
+}
+
+export async function getStatueOfLikeController(req: Request, res: Response) {
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
+		const profile = await getProfileByUsername(req.body.username);
+		const result = await getStatueOfLike(jwt.decoded.id, profile.userId);
+		if (result.length === 2) {
+			res.status(200).json({ iLike: true, heLike: true });
+			return;
+		} else if (result.length === 1) {
+			if (result[0].profileLikesId === jwt.decoded.id) {
+				res.status(200).json({ iLike: true, heLike: false });
+				return;
+			} else {
+				res.status(200).json({ iLike: false, heLike: true });
+				return;
+			}
+		}
+		res.status(200).json({ iLike: false, heLike: false });
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

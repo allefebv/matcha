@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:09 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 14:40:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:48:32 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,23 @@ export function getUserHasBeenLikedById(id: number): Promise<any[] | null> {
 		WHERE
 			likeProfile.profileLikesId = ${id}
 		`;
+		dataBase.query(sql, (error: string, result: like[]) => {
+			if (error) {
+				console.log(error);
+				resolve(null);
+			}
+			resolve(result);
+		});
+	});
+}
+
+export function getStatueOfLike(
+	id1: number,
+	id2: number
+): Promise<any[] | null> {
+	return new Promise((resolve) => {
+		const sql = `
+		SELECT * FROM likeProfile WHERE profileLikesId = ${id1} AND profileHasBeenLikedId = ${id2} OR profileLikesId = ${id2} AND profileHasBeenLikedId = ${id1}`;
 		dataBase.query(sql, (error: string, result: like[]) => {
 			if (error) {
 				console.log(error);
