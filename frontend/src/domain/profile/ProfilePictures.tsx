@@ -6,14 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:31:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:52:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 11:59:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React from "react";
 import { CustomAvatar } from "../../component/CustomAvatar";
 import { AvatarGroup } from "@material-ui/lab";
-import { connect, ConnectedProps } from "react-redux";
 
 type Props = {
 	imgs: (string | null)[];
@@ -26,7 +25,7 @@ export const ProfilePictures = (props: Props) => {
 	function handleChangeImg(e: React.ChangeEvent<HTMLInputElement>) {
 		if (props.modifiable) {
 			const { name, files } = e.currentTarget;
-			const img = files && URL.createObjectURL(files[0]);
+			const img = files && files[0] && URL.createObjectURL(files[0]);
 			const tmpImgs = [...props.imgs];
 			tmpImgs[parseInt(name)] = img;
 			props.setImgs && props.setImgs(tmpImgs);

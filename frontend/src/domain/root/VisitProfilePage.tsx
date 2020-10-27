@@ -6,32 +6,38 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:50:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 16:34:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Paper, makeStyles, Typography } from "@material-ui/core";
-import { getAge } from "../../services/profileUtils";
+import { Paper, makeStyles, Typography, Grid, Button } from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
+import { Iaddress, IextendedProfile, IlistProfiles } from "../../types/types";
+import {
+	visitProfileAPI,
+	blacklistProfileAPI,
+	likeProfileAPI,
+	unlikeProfileAPI,
+} from "../../services/apiCalls";
+import { connect, ConnectedProps } from "react-redux";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
-interface IlocationState {
-	state: {
-		profile: {
-			profile: any;
-			location: any;
-			tag: any;
-		};
-	};
-}
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+	blackList: state.user.blackList as string[],
+}));
 
-type Props = {};
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
+type Props = {} & ReduxProps;
 
 const useStyles = makeStyles((theme) => ({
 	main: {
 		display: "flex",
+		flexDirection: "column",
 		justifyContent: "center",
+		alignItems: "center",
 		height: "90vh",
 		backgroundColor: "cyan",
 	},
@@ -45,20 +51,101 @@ const useStyles = makeStyles((theme) => ({
 	element: {
 		display: "flex",
 		backgroundColor: "pink",
+		flexDirection: "column",
 	},
+	likeButton: {},
 }));
 
-export const VisitProfilePage = (props: Props) => {
-	const historyLocation = useLocation<any>();
+const VisitProfilePageComponent = (props: Props) => {
+	const historyLocation = useLocation<IlistProfiles>();
 	const classes = useStyles();
-	const [profile, setProfile] = useState<any>(null);
-	const [location, setLocation] = useState<any>(null);
-	const [tags, setTags] = useState<any>(null);
+	const [profile, setProfile] = useState<IextendedProfile | null>(null);
+	const [location, setLocation] = useState<Iaddress | null>(null);
+	const [tags, setTags] = useState<string[] | null>(null);
+	const [likeStatus, setLikeStatus] = useState<{
+		iLike: boolean;
+		heLikes: boolean;
+	}>();
+
+	const visitProfile = () => {
+		visitProfileAPI(
+			{ username: historyLocation.state.profile.username },
+			props.loggedIn
+		).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
+	};
+
+	const getLikeStatus = () => {
+		// getLikeStatusAPI(
+		// 	{ username: historyLocation.state.profile.username },
+		// 	props.loggedIn
+		// ).then((json: boolean[]) => {
+		// 	setLikeStatus(json);
+		// });
+	};
+
+	const blacklistProfile = () => {
+		blacklistProfileAPI(
+			{ username: historyLocation.state.profile.username },
+			props.loggedIn
+		).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
+	};
+
+	const toggleLikeProfile = () => {
+		if (likeStatus !== undefined && likeStatus.iLike === true) {
+			likeProfileAPI(
+				{ username: historyLocation.state.profile.username },
+				props.loggedIn
+			).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+		} else if (likeStatus !== undefined && likeStatus.iLike === false) {
+			unlikeProfileAPI(
+				{ username: historyLocation.state.profile.username },
+				props.loggedIn
+			).catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+		}
+	};
 
 	useEffect(() => {
-		setProfile(historyLocation.state.profile.profile);
-		setLocation(historyLocation.state.profile.location);
-		setTags(historyLocation.state.profile.tag);
+		if (historyLocation && historyLocation.state) {
+			props.blackList.filter(
+				(username) => historyLocation.state.profile.username
+			).length === 0 && visitProfile();
+			getLikeStatus();
+			setProfile(historyLocation.state.profile);
+			setLocation(historyLocation.state.location);
+			setTags(historyLocation.state.tag);
+		}
 	}, [historyLocation]);
 
 	const formatTags = (tags: string[]) => {
@@ -69,36 +156,83 @@ export const VisitProfilePage = (props: Props) => {
 		));
 	};
 
+	const getLikeButtonText = () => {
+		if (likeStatus) {
+			if (likeStatus.iLike === true) {
+				return "UNLIKE";
+			} else if (likeStatus.heLikes === true) {
+				return "LIKE BACK";
+			} else {
+				return "LIKE";
+			}
+		}
+	};
+
 	return (
 		<div className={classes.main}>
 			<Paper elevation={5} className={classes.paper}>
-				<ProfilePictures
-					imgs={[null, null, null, null, null]}
-					modifiable={false}
-					username={profile && profile.username}
-				/>
-				<Paper variant="outlined" className={classes.element}>
-					<Typography display="block">
-						Username {profile && profile.username}
-					</Typography>
-					<Typography>Firstname {profile && profile.firstname}</Typography>
-					<Typography>Lastname {profile && profile.lastname}</Typography>
-				</Paper>
-				<Paper>{tags && formatTags(tags)}</Paper>
-				<Paper>
-					<Typography variant="body1">
-						{profile && getAge(profile.dob)}
-					</Typography>
-				</Paper>
-				<Paper>
-					<Typography variant="body1">
-						{profile && profile.popularityScore}
-						{profile && profile.sexualOrientation}
-						{profile && profile.gender}
-						{profile && profile.bio}
-					</Typography>
-				</Paper>
+				{profile && (
+					<Grid direction="row">
+						<Grid item xs={12}>
+							<ProfilePictures
+								imgs={[null, null, null, null, null]}
+								modifiable={false}
+								username={profile.username}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<Paper variant="outlined" className={classes.element}>
+								<Typography display="block">
+									Username {profile.username}
+								</Typography>
+								<Typography>Firstname {profile.firstname}</Typography>
+								<Typography>Lastname {profile.lastname}</Typography>
+							</Paper>
+						</Grid>
+						<Grid item xs={12}>
+							<Paper>{tags && formatTags(tags)}</Paper>
+						</Grid>
+						<Grid item xs={12}>
+							<Paper>
+								<Typography variant="body1">{profile.age}</Typography>
+							</Paper>
+						</Grid>
+						<Grid item xs={12}>
+							<Paper variant="outlined" className={classes.element}>
+								<Typography variant="body1">
+									{profile.popularityScore}
+								</Typography>
+								<Typography variant="body1">
+									{profile.sexualOrientation}
+								</Typography>
+								<Typography variant="body1">{profile.gender}</Typography>
+								<Typography variant="body1">{profile.bio}</Typography>
+								<Typography variant="body1">
+									{location && location.distance}
+								</Typography>
+							</Paper>
+						</Grid>
+						<Grid item xs={4}>
+							<Button onClick={blacklistProfile}>BLOCK</Button>
+						</Grid>
+						<Grid item xs={4}>
+							<Button>REPORT</Button>
+						</Grid>
+						{likeStatus !== undefined && (
+							<Grid item xs={4}>
+								<Button
+									className={classes.likeButton}
+									onClick={toggleLikeProfile}
+								>
+									{getLikeButtonText()}
+								</Button>
+							</Grid>
+						)}
+					</Grid>
+				)}
 			</Paper>
 		</div>
 	);
 };
+
+export const VisitProfilePage = withReduxProps(VisitProfilePageComponent);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:52:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 18:16:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,18 @@ const HeaderComponent = (props: Props) => {
 
 					{props.loggedIn && (
 						<div className={classes.menuOptions}>
-							<Button startIcon={<ChatIcon />}>CHAT</Button>
-							<Button startIcon={<FavoriteIcon />}>EXPLORE</Button>
+							<Link
+								to={"/chat"}
+								style={{ color: "inherit", textDecoration: "inherit" }}
+							>
+								<Button startIcon={<ChatIcon />}>CHAT</Button>
+							</Link>
+							<Link
+								to={"/search"}
+								style={{ color: "inherit", textDecoration: "inherit" }}
+							>
+								<Button startIcon={<FavoriteIcon />}>EXPLORE</Button>
+							</Link>
 						</div>
 					)}
 					{!props.loggedIn && (

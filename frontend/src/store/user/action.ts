@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/19 11:23:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 15:25:59 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ export const actionUser_setTagList = createAction("USER.SETTAGLIST")<{
 	tagList: string[];
 }>();
 
-// export const actionUser_setImages = createAction("USER.SETIMAGES")<{
-// 	imgs: any;
-// }>();
+export const actionUser_setBlackList = createAction("USER.SETBLACKLIST")<{
+	blackList: string[];
+}>();

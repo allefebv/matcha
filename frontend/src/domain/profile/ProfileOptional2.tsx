@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:52:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 18:42:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { actionUser_setTagList } from "../../store/user/action";
 import { getTagAutocompleteAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { TagSearch } from "../../component/TagSearch";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -35,9 +36,6 @@ type Props = {
 } & ReduxProps;
 
 function ProfileOptional2Component(props: Props) {
-	const [inputValue, setInputValue] = useState("");
-	const [options, setOptions] = useState<string[]>([""]);
-
 	function handleChangeTags(
 		e: React.ChangeEvent<{}>,
 		value: string | string[],
@@ -51,48 +49,13 @@ function ProfileOptional2Component(props: Props) {
 		return !(!props.tagList || props.tagList.length === 0);
 	}
 
-	function TagAutocomplete() {
-		const details = {
-			partial: inputValue,
-			limit: 5,
-		};
-		if (!(inputValue === "")) {
-			getTagAutocompleteAPI(details, props.isLoggedIn)
-				.then((tagList) => {
-					if (tagList.length) {
-						setOptions(tagList);
-					}
-				})
-				.catch((error) => {
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
-				});
-		}
-	}
-
-	const handleInputChange = (
-		event: React.ChangeEvent<{}>,
-		newInputValue: string
-	) => {
-		setInputValue(newInputValue);
-	};
-
 	useEffect(() => {
-		TagAutocomplete();
-	}, [inputValue]);
-
-	useEffect(() => {
-		if (profileHasTags() && props.profile.bio) {
+		if (profileHasTags() && props.profile.bio && props.imgs[0]) {
 			props.setDisabled(false);
 		} else {
 			props.setDisabled(true);
 		}
-	}, [props.tagList]);
+	}, [props.tagList, props.profile.bio, props.imgs]);
 
 	return (
 		<React.Fragment>
@@ -123,16 +86,9 @@ function ProfileOptional2Component(props: Props) {
 				<Typography color="primary">List some of your interests</Typography>
 			</Grid>
 			<Grid item xs={12}>
-				<Autocomplete
-					multiple
-					options={options}
-					value={props.tagList}
-					getOptionLabel={(option) => "#" + option}
-					filterSelectedOptions
-					onChange={handleChangeTags}
-					onInputChange={handleInputChange}
-					renderInput={(params) => <TextField {...params} fullWidth />}
-					freeSolo
+				<TagSearch
+					handleChangeTags={handleChangeTags}
+					tagList={props.tagList}
 				/>
 			</Grid>
 		</React.Fragment>
