@@ -6,19 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 14:44:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 09:43:57 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
-import { isNotEmittedStatement, isTypeNode } from 'typescript';
 
 import {
 	addNotification, deleteNotification, getNotification
 } from '../model/notificationRepositories';
-import {
-	getCompleteProfileByUsername, getProfileByUserId, getProfileByUsername
-} from '../model/profileRepositories';
+import { getCompleteProfileByUsername } from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function addNotificationController(req: Request, res: Response) {

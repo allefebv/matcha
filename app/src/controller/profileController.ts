@@ -6,21 +6,17 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 12:41:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 09:44:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 
-import { userProfile } from '../../types/types';
 import {
-	addProfile, getAllProfile, getCompleteProfileByUserId,
-	getCompleteProfileByUsername, getProfileBySexualOriantation,
-	getProfileByUserId, getProfileByUsername, updateProfile
+	addProfile, getCompleteProfileByUserId, getCompleteProfileByUsername,
+	updateProfile
 } from '../model/profileRepositories';
-import {
-	shapingProfile, shapingProfileReco
-} from '../services/formatter/shapingProfile';
+import { shapingProfile } from '../services/formatter/shapingProfile';
 import { jwtVerify } from '../services/validation/jwt';
 import { addProfileValidation } from '../services/validation/profileValidation';
 

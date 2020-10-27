@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 18:27:56 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 09:44:24 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 import { userProfile } from 'types/types';
 
 import {
-	getCompleteProfileByUserId, getProfileBySexualOriantation, getProfileByUserId
+	getCompleteProfileByUserId, getProfileBySexualOriantation
 } from '../model/profileRepositories';
 import {
 	recommendationAlgorithm
@@ -24,8 +24,6 @@ import {
 	shapingProfile, shapingProfileReco
 } from '../services/formatter/shapingProfile';
 import { jwtVerify } from '../services/validation/jwt';
-
-// import { locationAlgorithm } from '../services/locationAlgorithm';
 
 export async function recommendationController(req: Request, res: Response) {
 	try {
