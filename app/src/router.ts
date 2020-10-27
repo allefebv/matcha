@@ -6,12 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 12:44:15 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 11:11:27 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Application, Request, Response } from 'express';
 
+import {
+	addProfileInBlackListController, deleteProfileInBlackListController,
+	getProfileBlackListController
+} from './controller/blackListController';
 import { handleImageController } from './controller/imageController';
 import {
 	addlikedProfileController, deletelikedProfileController,
@@ -171,6 +175,18 @@ function messageRouter(app: Application) {
 	);
 }
 
+function blackListRouter(app: Application) {
+	app.get("/blacklist/getProfileBlacklist", (req: Request, res: Response) =>
+		getProfileBlackListController(req, res)
+	);
+	app.post("/blacklist/addProfileBlacklist", (req: Request, res: Response) =>
+		addProfileInBlackListController(req, res)
+	);
+	app.post("/blacklist/deleteProfileBlacklist", (req: Request, res: Response) =>
+		deleteProfileInBlackListController(req, res)
+	);
+}
+
 export function router(app: Application) {
 	userRouter(app);
 	profileRouter(app);
@@ -182,6 +198,7 @@ export function router(app: Application) {
 	recommendationRouter(app);
 	loactionRouter(app);
 	messageRouter(app);
+	blackListRouter(app);
 
 	app.use((req: Request, res: Response) => {
 		res.setHeader("Content-Type", "text/plain");

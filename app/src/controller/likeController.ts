@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 14:42:44 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 09:43:43 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@ import { Request, Response } from 'express';
 import {
 	addLikedProfile, deleteLikedProfile, getProfileMatch, getUserHasBeenLikedById
 } from '../model/likeRepositories';
-import {
-	getProfileByUserId, getProfileByUsername
-} from '../model/profileRepositories';
+import { getProfileByUsername } from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function addlikedProfileController(req: Request, res: Response) {

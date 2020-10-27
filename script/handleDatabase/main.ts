@@ -6,7 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2020/10/26 15:43:01 by jfleury          ###   ########.fr       */
+=======
+/*   Updated: 2020/10/27 10:11:36 by jfleury          ###   ########.fr       */
+>>>>>>> 2633bf7c7eaef79bca387df005e5c29e4aed1823
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +216,22 @@ export async function addTableMessage() {
 	});
 }
 
+export async function addTableBlackList() {
+	return new Promise((resolve) => {
+		const sql = `CREATE TABLE blackList (
+			profileId							INTEGER NOT NULL,
+			profileBlockId						INTEGER NOT NULL,
+			FOREIGN KEY (profileId) 			REFERENCES profile(userId) ON DELETE CASCADE,
+			FOREIGN KEY (profileBlockId) 		REFERENCES profile(userId) ON DELETE CASCADE
+		)`;
+		dataBase.query(sql, (error: string) => {
+			if (error) throw error;
+			console.log("Table message created");
+			resolve();
+		});
+	});
+}
+
 export async function dropTable(nameTable: string) {
 	return new Promise((resolve) => {
 		const sql = `DROP TABLE ${nameTable}`;
@@ -237,5 +257,7 @@ async function main() {
 	await addTableTagProfile();
 	await addTableViewProfile();
 	await addTableMessage();
+	*/
+	await addTableBlackList();
 }
 main();

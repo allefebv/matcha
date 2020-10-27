@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:07 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/23 12:30:32 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 09:44:30 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 
 import { getProfileByUserId } from '../model/profileRepositories';
 import {
-	addTagProfile, deleteAllTagProfile, getTagProfile
+	addTagProfile, deleteAllTagProfile
 } from '../model/tagProfileRepositories';
 import { getTag, getTagAutocomplete } from '../model/tagRepositories';
 import { addNewTag } from '../services/addNewTag';
