@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 09:58:32 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 11:31:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 13:57:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ export async function getProfileBlackListController(
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const list = await getProfileBlackList(jwt.decoded.id);
-		const listFilter = list.length && list.map((item) => item.username);
-		res.status(200).json(listFilter);
+		res.status(200).json(list);
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

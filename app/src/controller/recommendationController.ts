@@ -6,13 +6,14 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 09:44:24 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:07:35 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 import { userProfile } from 'types/types';
 
+import { getProfileBlackList } from '../model/blackListRepositories';
 import {
 	getCompleteProfileByUserId, getProfileBySexualOriantation
 } from '../model/profileRepositories';
@@ -31,23 +32,23 @@ export async function recommendationController(req: Request, res: Response) {
 		const userProfile: userProfile = shapingProfile(
 			await getCompleteProfileByUserId(jwt.decoded.id)
 		);
-		//console.log("userProfile = ", userProfile);
 		const profileRecoList = await getProfileBySexualOriantation(
 			userProfile.profile.userId,
 			userProfile.profile.sexualOrientation
 		);
-		console.log("profileRecoList = ", profileRecoList);
+		const blackList = await getProfileBlackList(jwt.decoded.id);
+		const listRecoBlacklist = profileRecoList.filter((profile) => {
+			return !blackList.includes(profile.username);
+		});
 		const profileListLocation = await locationAlgorithm(
 			userProfile.location,
-			profileRecoList,
+			listRecoBlacklist,
 			100
 		);
-		//console.log("profileListLocation = ", profileListLocation);
 		const algoList = await recommendationAlgorithm(
 			profileListLocation,
 			userProfile
 		);
-		//console.log("algoList = ", algoList);
 		res.status(200).json(algoList);
 	} catch (error) {
 		res.status(400).json(error);
@@ -60,23 +61,22 @@ export async function allProfileController(req: Request, res: Response) {
 		const userProfile: userProfile = shapingProfile(
 			await getCompleteProfileByUserId(jwt.decoded.id)
 		);
-		//console.log("userProfile = ", userProfile);
 		const profileRecoList = await getProfileBySexualOriantation(
 			userProfile.profile.userId,
 			userProfile.profile.sexualOrientation
 		);
-		//console.log("profileRecoList = ", profileRecoList);
-
+		const blackList = await getProfileBlackList(jwt.decoded.id);
+		const listRecoBlacklist = profileRecoList.filter((profile) => {
+			return !blackList.includes(profile.username);
+		});
 		const profileListLocation = await locationAlgorithm(
 			userProfile.location,
-			profileRecoList,
+			listRecoBlacklist,
 			200
 		);
-
 		const allProfile = profileListLocation.map((profileLocation) =>
 			shapingProfileReco(profileLocation)
 		);
-
 		res.status(200).json(allProfile);
 	} catch (error) {
 		res.status(400).json(error);

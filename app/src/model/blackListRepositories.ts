@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 10:04:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 11:37:10 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 13:58:03 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ export function getOneProfileBlackList(
 export function getProfileBlackList(profileId: number): Promise<any[]> {
 	return new Promise((resolve, reject) => {
 		const sql = `SELECT 
-			profile.username
+				GROUP_CONCAT(profile.username SEPARATOR ',') AS username
 			FROM 
 				blackList
 			LEFT JOIN
@@ -44,7 +44,7 @@ export function getProfileBlackList(profileId: number): Promise<any[]> {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			resolve(result);
+			resolve(result[0].username.split(","));
 		});
 	});
 }

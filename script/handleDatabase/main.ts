@@ -257,7 +257,6 @@ async function main() {
 	await addTableTagProfile();
 	await addTableViewProfile();
 	await addTableMessage();
-	*/
 	await addTableBlackList();
 }
 main();
