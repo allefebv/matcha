@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 09:58:32 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 13:57:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:32:37 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ import {
 	addProfileBlackList, deleteProfileBlackList, getOneProfileBlackList,
 	getProfileBlackList
 } from '../model/blackListRepositories';
+import { deleteLikedProfile } from '../model/likeRepositories';
+import { deleteAllNotification } from '../model/notificationRepositories';
 import { getProfileByUsername } from '../model/profileRepositories';
+import { deleteViewProfile } from '../model/viewRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function getProfileBlackListController(
@@ -42,6 +45,15 @@ export async function addProfileInBlackListController(
 		await getOneProfileBlackList(jwt.decoded.id, profileBlock.userId);
 		await addProfileBlackList(jwt.decoded.id, profileBlock.userId);
 		res.status(200).json("Profile add to blacklist");
+		try {
+			await deleteLikedProfile(profileBlock.userId, jwt.decoded.id);
+		} catch (error) {}
+		try {
+			await deleteViewProfile(profileBlock.userId, jwt.decoded.id);
+		} catch (error) {}
+		try {
+			await deleteAllNotification(jwt.decoded.id, profileBlock.userId);
+		} catch (error) {}
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

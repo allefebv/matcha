@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/20 12:26:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:34:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,24 @@ export function deleteNotification(
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
 		const sql = `DELETE FROM notificationProfile WHERE id = ${id} AND profileNotifedId = ${profileNotifedId}`;
+		dataBase.query(sql, (error, result) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: "Error: an error occured" });
+		});
+	});
+}
+
+export function deleteAllNotification(
+	notifierProfield: number,
+	profileNotifiedId: number
+): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `DELETE FROM notificationProfile WHERE notifierProfileId = ${notifierProfield} AND profileNotifiedId = ${profileNotifiedId}`;
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:33 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/27 15:23:31 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,24 @@ export async function updateView(
 				resolve(false);
 			}
 			resolve(true);
+		});
+	});
+}
+
+export function deleteViewProfile(
+	profileLikedId: number,
+	profileHasBeenLikedId: number
+): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `DELETE FROM viewProfile WHERE profileSeenId = ${profileLikedId} AND viewerProfileId = ${profileHasBeenLikedId}`;
+		dataBase.query(sql, (error, result) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
