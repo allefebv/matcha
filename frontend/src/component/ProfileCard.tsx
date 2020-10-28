@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:52:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 11:31:59 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Button, CardMedia } from "@material-ui/core";
 import * as constants from "../services/constants";
 import { useHistory } from "react-router-dom";
-import { IextendedProfile } from "../types/types";
+import { IlistProfiles } from "../types/types";
 
 const useStyles = makeStyles({
 	root: {},
@@ -33,20 +33,19 @@ const useStyles = makeStyles({
 });
 
 type Props = {
-	profile: IextendedProfile;
+	entry: IlistProfiles;
 };
 
 export function ProfileCard(props: Props) {
-	const { username, age, bio } = props.profile;
+	const { username, age, bio } = props.entry.profile;
 	const classes = useStyles();
-	const path = "http://localhost:3001/images/" + username + "/img0";
+	const path = "http://localhost:3001/images/" + username + "img0";
 	const history = useHistory();
 
 	const handleRedirectProfile = () => {
-		console.log(props.profile);
 		history.push({
 			pathname: constants.VISIT_PROFILE,
-			state: props.profile,
+			state: props.entry,
 		});
 	};
 
@@ -68,7 +67,7 @@ export function ProfileCard(props: Props) {
 				<Typography variant="body2" color="textSecondary" component="p">
 					{bio}
 				</Typography>
-				{props.profile.tag && formatTags(props.profile.tag)}
+				{props.entry.tag && formatTags(props.entry.tag)}
 			</CardContent>
 			<CardActions disableSpacing>
 				<IconButton aria-label="add to favorites">

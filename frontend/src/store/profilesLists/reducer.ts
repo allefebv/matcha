@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 15:48:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/23 17:44:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 19:04:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@ import { AnyAction } from "redux";
 import {
 	actionProfilesList_getRecco,
 	actionProfilesList_getSearch,
+	actionProfilesList_getMatches,
 } from "./action";
 import { getType } from "typesafe-actions";
 
@@ -34,6 +35,11 @@ export function profilesListReducer(state = initialState, action: AnyAction) {
 			return {
 				...state,
 				search: action.payload.profiles,
+			};
+		case getType(actionProfilesList_getMatches):
+			return {
+				...state,
+				matches: action.payload.profiles,
 			};
 		default:
 			return state;

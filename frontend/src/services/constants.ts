@@ -6,29 +6,58 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:56:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 18:15:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 export const URL = "http://localhost:3001";
-export const URI_SIGNIN = "/user/loginUser";
+
+//user
 export const URI_SIGNUP = "/user/addUser";
 export const URI_UPDATE_EMAIL = "/user/changeEmail";
 export const URI_MODIFY_PASSWORD = "/user/changePassword";
+export const URI_SIGNIN = "/user/loginUser";
 export const URI_DELETE_ACCOUNT = "/user/deleteUser";
-export const URI_GET_PROFILE = "/profile/getProfile";
-export const URI_GET_MATCHES = "/like/getProfileMatch";
-export const URI_POST_PICTURES = "/images/handleImages";
-export const URI_HANDLE_GEOLOCATION = "/location/handleGeoLocation";
-export const URI_HANDLE_USAGELOCATION = "/location/handleUsageLocation";
+export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
+
+//profile
 export const URI_CREATE_PROFILE = "/profile/addProfile";
 export const URI_UPDATE_PROFILE = "/profile/updateProfile";
+export const URI_GET_PROFILE = "/profile/getProfile";
+
+//tag
 export const URI_POST_TAGS = "/tag/addTagProfile";
-export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 export const URI_GET_TAG_AUTOCOMPLETE = "/tag/getTagAutocomplete";
-export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
+
+//location
+export const URI_HANDLE_USAGELOCATION = "/location/handleUsageLocation";
+export const URI_HANDLE_GEOLOCATION = "/location/handleGeoLocation";
+
+//images
+export const URI_POST_PICTURES = "/images/handleImages";
+
+//reccomendation
 export const URI_GET_RECOMMENDATIONS = "/recommendation/getRecommendation";
-export const URI_GET_ALL_PROFILES = "/profile/getAllProfile";
+export const URI_GET_ALL_PROFILES = "/recommendation/getAllProfile";
+
+//notification
+
+//like
+export const URI_LIKE_PROFILE = "/like/addLikedProfile";
+export const URI_UNLIKE_PROFILE = "/like/deleteLikedProfile";
+export const URI_GET_MATCHES = "/like/getProfileMatch";
+export const URI_GET_PROFILE_LIKES = "/view/getView";
+
+//view / visit
+export const URI_VISIT_PROFILE = "/view/addView";
+export const URI_GET_PROFILE_VISITS = "/view/getView";
+
+//chat / messages
+export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
+
+//blacklist
+export const URI_BLACKLIST_PROFILE = "/blacklist/addProfileBlacklist";
+export const URI_GET_BLACKLIST = "/blacklist/getProfileBlacklist";
 
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
 export const URI_REVERSE_GEOCODING_API =

@@ -6,14 +6,18 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 16:15:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 18:22:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { Button, Grid } from "@material-ui/core";
 import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
-import { handleGeoLocationAPI } from "../../services/apiCalls";
+import {
+	getProfileLikesAPI,
+	getProfileVisitsAPI,
+	handleGeoLocationAPI,
+} from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import {
 	actionUser_geolocation,
@@ -24,7 +28,11 @@ import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";
 import { ProfileOptional2 } from "../profile/ProfileOptional2";
 import { ProfileOptional3 } from "../profile/ProfileOptional3";
-import { IbaseProfile, IextendedProfile } from "../../types/types";
+import {
+	IbaseProfile,
+	IextendedProfile,
+	IlistProfiles,
+} from "../../types/types";
 import {
 	getProfileHydrateRedux,
 	submitPictures,
@@ -46,6 +54,8 @@ type Props = {} & ReduxProps;
 const UserProfilePageComponent = (props: Props) => {
 	const [profile, setProfile] = useState<any>();
 	const [disabled, setDisabled] = useState(false);
+	const [profileVisits, setProfileVisits] = useState<IlistProfiles[]>();
+	const [profileLikes, setProfileLikes] = useState<IlistProfiles[]>();
 	const [imgs, setImgs] = useState<(string | null)[]>([
 		null,
 		null,
@@ -78,6 +88,8 @@ const UserProfilePageComponent = (props: Props) => {
 
 	useEffect(() => {
 		getProfileHydrateRedux(props.dispatch, props.loggedIn);
+		getProfileVisitsList();
+		getProfileLikesList();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -97,6 +109,38 @@ const UserProfilePageComponent = (props: Props) => {
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			submitUsageLocation(props.usagelocation, props.loggedIn, props.dispatch),
 		]);
+	};
+
+	const getProfileVisitsList = () => {
+		getProfileVisitsAPI(props.loggedIn)
+			.then((json) => {
+				setProfileVisits(json);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+	};
+
+	const getProfileLikesList = () => {
+		getProfileLikesAPI(props.loggedIn)
+			.then((json) => {
+				setProfileLikes(json);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	};
 
 	return (
@@ -160,10 +204,10 @@ const UserProfilePageComponent = (props: Props) => {
 				spacing={3}
 			>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					<ProfileCardsScroll />
+					<ProfileCardsScroll list={profileLikes} />
 				</Grid>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					<ProfileCardsScroll />
+					<ProfileCardsScroll list={profileVisits} />
 				</Grid>
 			</Grid>
 		</Grid>

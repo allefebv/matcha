@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:53:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 19:11:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { CategoryFilterSort } from "../search/CategoryFilterSort";
-import { Autocomplete, Pagination, PaginationItem } from "@material-ui/lab";
+import { Autocomplete, Pagination } from "@material-ui/lab";
 import {
 	Drawer,
 	IconButton,
@@ -21,6 +21,7 @@ import {
 	Grid,
 	Slider,
 	CircularProgress,
+	Typography,
 } from "@material-ui/core";
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
@@ -32,13 +33,15 @@ import {
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import {
+	actionProfilesList_getMatches,
 	actionProfilesList_getRecco,
 	actionProfilesList_getSearch,
 } from "../../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { getAge, isProfileComplete } from "../../services/profileUtils";
 import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
-import { IextendedProfile } from "../../types/types";
+import { IlistProfiles } from "../../types/types";
+import { TagSearch } from "../../component/TagSearch";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -102,8 +105,9 @@ const initialValuesLimits = {
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	profilesRecco: state.profilesList.recommendations as any[],
-	profilesSearch: state.profilesList.search as IextendedProfile[],
+	profilesRecco: state.profilesList.recommendations as IlistProfiles[],
+	profilesSearch: state.profilesList.search as IlistProfiles[],
+	profilesMatches: state.profilesList.matches as IlistProfiles[],
 	isProfileComplete: isProfileComplete(
 		state.user.profile,
 		state.user.usagelocation,
@@ -123,24 +127,29 @@ const MainPageComponent = (props: Props) => {
 	const [filterValues, setFilterValues] = React.useState<Ilimits>(
 		initialValuesLimits
 	);
-	const [currentProfilesList, setCurrentProfilesList] = useState<null | any[]>(
-		null
-	);
+	const [currentProfilesList, setCurrentProfilesList] = useState<
+		null | IlistProfiles[]
+	>(null);
 	const [filteredProfilesList, setFilteredProfilesList] = useState<
-		null | any[]
+		null | IlistProfiles[]
 	>(null);
 	const [loading, setLoading] = useState(false);
 	const [toggleList, setToggleList] = useState<string | null>(null);
 	const [pageIndex, setPageIndex] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
+	const [tagList, setTagList] = useState<string[]>();
 	const ITEMS_PER_PAGES = 20;
 
 	const getRecommendationList = () => {
 		getRecommendationAPI(props.loggedIn)
-			.then((json: any[]) => {
+			.then((json) => {
 				if (json && json.length) {
 					const withAge = json.map((entry) => {
-						entry.profile.profile.age = getAge(entry.profile.profile.dob);
+						if (entry.profile.dob) {
+							entry.profile.age = entry.profile.dob
+								? getAge(entry.profile.dob)
+								: null;
+						}
 						return entry;
 					});
 					props.dispatch(actionProfilesList_getRecco({ profiles: withAge }));
@@ -159,11 +168,13 @@ const MainPageComponent = (props: Props) => {
 
 	const getSearchList = () => {
 		getAllProfilesAPI(props.loggedIn)
-			.then((json: IextendedProfile[]) => {
+			.then((json) => {
 				if (json && json.length) {
-					const withAge = json.map((profile) => {
-						profile.age = profile.dob ? getAge(profile.dob) : null;
-						return profile;
+					const withAge = json.map((entry) => {
+						entry.profile.age = entry.profile.dob
+							? getAge(entry.profile.dob)
+							: null;
+						return entry;
 					});
 					props.dispatch(actionProfilesList_getSearch({ profiles: withAge }));
 				}
@@ -181,13 +192,15 @@ const MainPageComponent = (props: Props) => {
 
 	const getMatchesList = () => {
 		getMatchesAPI(props.loggedIn)
-			.then((json: any[]) => {
+			.then((json) => {
 				if (json && json.length) {
-					// const withAge = json.map((profile) => {
-					// 	profile.age = profile.dob ? getAge(profile.dob) : null;
-					// 	return profile;
-					// });
-					// props.dispatch(actionProfilesList_getSearch({ profiles: withAge }));
+					const withAge = json.map((entry) => {
+						entry.profile.age = entry.profile.dob
+							? getAge(entry.profile.dob)
+							: null;
+						return entry;
+					});
+					props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
 				}
 			})
 			.catch((error) => {
@@ -211,12 +224,20 @@ const MainPageComponent = (props: Props) => {
 	}, []);
 
 	useEffect(() => {
+		if (props.isProfileComplete && props.profilesRecco) {
+			setToggleList("Preselection");
+		} else if (!props.isProfileComplete && props.profilesSearch) {
+			setToggleList("Search");
+		}
+	}, [props.profilesRecco, props.profilesSearch]);
+
+	useEffect(() => {
 		if (toggleList === "Search") {
 			setCurrentProfilesList(props.profilesSearch);
 		} else if (toggleList === "Preselection") {
 			setCurrentProfilesList(props.profilesRecco);
 		} else if (toggleList === "Matches") {
-			setCurrentProfilesList(props.profilesRecco);
+			setCurrentProfilesList(props.profilesMatches);
 		}
 	}, [toggleList]);
 
@@ -234,32 +255,38 @@ const MainPageComponent = (props: Props) => {
 		}
 	}, [filteredProfilesList]);
 
-	const computeFilterLimits = (profilesArray: any[]) => {
+	const computeFilterLimits = (profilesArray: IlistProfiles[]) => {
 		if (profilesArray.length) {
-			const limitsArr = profilesArray.reduce((acc, profile) => {
-				const { age, popularityScore } = profile;
-				if (age) {
-					acc[0] = !acc[0] || acc[0] > age ? age : acc[0];
-					acc[1] = !acc[1] || acc[1] < age ? age : acc[1];
-				}
-				if (popularityScore) {
-					acc[2] =
-						!acc[2] || acc[2] > popularityScore ? popularityScore : acc[2];
-					acc[3] =
-						!acc[3] || acc[3] < popularityScore ? popularityScore : acc[3];
-				}
-				//TODO: distance
-				// acc[4] = 0;
-				return acc;
-			});
+			const limitsArr = profilesArray.reduce<number[]>(
+				(acc: number[], entry) => {
+					const { age, popularityScore } = entry.profile;
+					const { distance } = entry.location;
+					if (age) {
+						acc[0] = !acc[0] || acc[0] > age ? age : acc[0];
+						acc[1] = !acc[1] || acc[1] < age ? age : acc[1];
+					}
+					if (popularityScore) {
+						acc[2] =
+							!acc[2] || acc[2] > popularityScore ? popularityScore : acc[2];
+						acc[3] =
+							!acc[3] || acc[3] < popularityScore ? popularityScore : acc[3];
+					}
+					if (distance) {
+						acc[4] = !acc[4] || acc[4] < distance ? distance : acc[4];
+					}
+					return acc;
+				},
+				[]
+			);
 			const newLimits = {
 				...filterLimits,
 				minAge: limitsArr[0],
 				maxAge: limitsArr[1],
 				minPopularity: limitsArr[2],
 				maxPopularity: limitsArr[3],
-				// maxDistance: limitsArr[4],
+				maxDistance: limitsArr[4],
 			};
+			console.log(newLimits);
 			setFilterLimits(newLimits);
 			setFilterValues(newLimits);
 		}
@@ -267,14 +294,20 @@ const MainPageComponent = (props: Props) => {
 
 	const filterList = () => {
 		if (currentProfilesList && filterValues) {
-			const tmp = currentProfilesList.filter((profile) => {
-				const { age, popularityScore } = profile;
+			console.log(filterValues);
+			const tmp = currentProfilesList.filter((entry) => {
+				const { age, popularityScore } = entry.profile;
+				const distance = entry.location ? entry.location.distance : undefined;
+				const distanceFilter = distance
+					? distance <= filterValues.maxDistance
+					: true;
 				return (
 					age &&
 					age >= filterValues.minAge &&
 					age <= filterValues.maxAge &&
 					popularityScore >= filterValues.minPopularity &&
-					popularityScore <= filterValues.maxPopularity
+					popularityScore <= filterValues.maxPopularity &&
+					distanceFilter
 				);
 			});
 			setFilteredProfilesList(tmp);
@@ -326,9 +359,9 @@ const MainPageComponent = (props: Props) => {
 		if (filteredProfilesList) {
 			return filteredProfilesList
 				.slice(pageIndex * ITEMS_PER_PAGES, (pageIndex + 1) * ITEMS_PER_PAGES)
-				.map((profile: IextendedProfile, index: number) => (
+				.map((entry: IlistProfiles, index: number) => (
 					<Grid item xs={12} sm={6} lg={4} key={index}>
-						<ProfileCard profile={profile} />
+						<ProfileCard entry={entry} />
 					</Grid>
 				));
 		}
@@ -337,6 +370,44 @@ const MainPageComponent = (props: Props) => {
 
 	const changePage = (event: React.ChangeEvent<unknown>, page: number) => {
 		setPageIndex(page - 1);
+	};
+
+	function handleChangeTags(
+		e: React.ChangeEvent<{}>,
+		value: string | string[],
+		reason: string
+	) {
+		let tags = typeof value === "string" ? [value] : value;
+		console.log(tags);
+		setTagList(tags);
+	}
+
+	const renderList = () => {
+		return (
+			<React.Fragment>
+				<IconButton onClick={handleOpenDrawer}>
+					<KeyboardArrowRight />
+				</IconButton>
+				<Grid container className={classes.cards} spacing={5} justify="center">
+					{getCards()}
+					<Grid item xs={12}>
+						<Pagination
+							count={totalPages}
+							showFirstButton
+							showLastButton
+							className={classes.paginator}
+							onChange={changePage}
+						/>
+					</Grid>
+				</Grid>
+			</React.Fragment>
+		);
+	};
+
+	const renderNoMatches = () => {
+		return (
+			<Typography>Oh snap, you don't have any matches at the moment</Typography>
+		);
 	};
 
 	return (
@@ -351,29 +422,10 @@ const MainPageComponent = (props: Props) => {
 						color="primary"
 						className={classes.loading}
 					/>
+				) : toggleList === "Matches" && !currentProfilesList ? (
+					renderNoMatches()
 				) : (
-					<React.Fragment>
-						<IconButton onClick={handleOpenDrawer}>
-							<KeyboardArrowRight />
-						</IconButton>
-						<Grid
-							container
-							className={classes.cards}
-							spacing={5}
-							justify="center"
-						>
-							{getCards()}
-							<Grid item xs={12}>
-								<Pagination
-									count={totalPages}
-									showFirstButton
-									showLastButton
-									className={classes.paginator}
-									onChange={changePage}
-								/>
-							</Grid>
-						</Grid>
-					</React.Fragment>
+					renderList()
 				)}
 			</div>
 			<Drawer
@@ -403,23 +455,22 @@ const MainPageComponent = (props: Props) => {
 							/>
 						</CategoryFilterSort>
 					)}
-					<CategoryFilterSort label="Location">
-						<Slider
-							min={0}
-							max={filterLimits.maxDistance}
-							value={filterValues.maxDistance}
-							onChange={handleDistanceFilter}
-							valueLabelDisplay="auto"
-							aria-labelledby="range-slider"
-						/>
-					</CategoryFilterSort>
+					{filterLimits.maxDistance && (
+						<CategoryFilterSort label="Location">
+							<Slider
+								min={0}
+								max={filterLimits.maxDistance}
+								value={filterValues.maxDistance}
+								onChange={handleDistanceFilter}
+								valueLabelDisplay="auto"
+								aria-labelledby="range-slider"
+							/>
+						</CategoryFilterSort>
+					)}
 					<CategoryFilterSort label="Tags">
-						<Autocomplete
-							multiple
-							options={["John", "Lennon", "Toto"]}
-							getOptionLabel={(option) => option}
-							filterSelectedOptions
-							renderInput={(params) => <TextField {...params} />}
+						<TagSearch
+							handleChangeTags={handleChangeTags}
+							tagList={tagList || []}
 						/>
 					</CategoryFilterSort>
 				</div>

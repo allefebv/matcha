@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 16:54:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/27 10:38:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ export interface user {
 	activated: boolean;
 	activationKey: string;
 }
+
+export interface IlistProfiles {
+	profile: IextendedProfile;
+	tag: string[];
+	location: Iaddress;
+}
+
 export interface IextendedProfile extends IbaseProfile {
 	userId: number;
 	popularityScore: number;

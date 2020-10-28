@@ -1,7 +1,22 @@
-import { throttle } from "lodash";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   apiCalls.ts                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
+/*   Updated: 2020/10/27 18:14:51 by allefebv         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 import * as constants from "../services/constants";
-import { Iaddress, IextendedProfile, user } from "../types/types";
+import {
+	Iaddress,
+	IextendedProfile,
+	IlistProfiles,
+	user,
+} from "../types/types";
 import { fetchApi } from "./fetchApi";
 
 export const signupAPI = (details: Object) => {
@@ -61,29 +76,21 @@ export const getProfileAPI = (token: string) => {
 };
 
 export const getRecommendationAPI = (token: string) => {
-	return fetchApi<
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_GET_RECOMMENDATIONS,
 		{
-			profile: {
-				profile: IextendedProfile;
-				tag: string[] | [];
-				location: Iaddress | null;
-			};
-			score: number;
-		}[]
-	>(constants.URL + constants.URI_GET_RECOMMENDATIONS, {
-		method: constants.GET_METHOD,
-		headers: {
-			"Content-Type": "application/json",
-			token: token,
-		},
-		credentials: "include",
-	});
+			method: constants.GET_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
 };
 
 export const getMatchesAPI = (token: string) => {
-	return fetchApi<
-		{ profile: IextendedProfile; tag: string[] | []; location: Iaddress }[]
-	>(constants.URL + constants.URI_GET_MATCHES, {
+	return fetchApi<IlistProfiles[]>(constants.URL + constants.URI_GET_MATCHES, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
@@ -94,7 +101,7 @@ export const getMatchesAPI = (token: string) => {
 };
 
 export const getAllProfilesAPI = (token: string) => {
-	return fetchApi<IextendedProfile[]>(
+	return fetchApi<IlistProfiles[]>(
 		constants.URL + constants.URI_GET_ALL_PROFILES,
 		{
 			method: constants.GET_METHOD,
@@ -215,6 +222,93 @@ export const handleUsageLocationAPI = (details: Object, token: string) => {
 		},
 		credentials: "include",
 		body: details,
+	});
+};
+
+export const visitProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_VISIT_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
+export const getProfileVisitsAPI = (token: string) => {
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_GET_PROFILE_VISITS,
+		{
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
+};
+
+export const getProfileLikesAPI = (token: string) => {
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_GET_PROFILE_LIKES,
+		{
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
+};
+
+export const likeProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_LIKE_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
+export const unlikeProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_UNLIKE_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
+export const blacklistProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_BLACKLIST_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
+export const getBlackListAPI = (token: string) => {
+	return fetchApi<string[]>(constants.URL + constants.URI_GET_BLACKLIST, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
 	});
 };
 

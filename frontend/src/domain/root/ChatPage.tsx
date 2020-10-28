@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 16:55:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/26 18:31:00 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ const ChatPageComponent = (props: Props) => {
 	useEffect(() => {
 		getMatchesAPI(props.token)
 			.then((item) => {
-				setTableMatch(item);
 				if (item && item.length) {
+					setTableMatch(item);
 					setUserSelect(item[0].profile.username);
 				}
 			})
