@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 10:04:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 13:58:03 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/28 12:32:28 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,11 @@ export function getProfileBlackList(profileId: number): Promise<any[]> {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			resolve(result[0].username.split(","));
+			resolve(
+				result && result.length && result[0].username
+					? result[0].username.split(",")
+					: []
+			);
 		});
 	});
 }
@@ -65,7 +69,7 @@ export function addProfileBlackList(
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result.affectedRows) {
+			if (result && result.affectedRows) {
 				resolve(true);
 			}
 			reject({ code: 400, message: "Error: an error occured" });
@@ -83,7 +87,7 @@ export async function deleteProfileBlackList(
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result.affectedRows) {
+			if (result && result.affectedRows) {
 				resolve("User delete");
 			}
 			reject({ code: 400, message: "Error: an error occured" });

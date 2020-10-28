@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 11:42:21 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/28 11:14:34 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ import {
 } from '../model/profileRepositories';
 import { shapingProfile } from '../services/formatter/shapingProfile';
 import { jwtVerify } from '../services/validation/jwt';
-import { addProfileValidation } from '../services/validation/profileValidation';
+import {
+	addProfileValidation, getProfileByUsernameValidation
+} from '../services/validation/profileValidation';
 
 export async function getProfileController(req: Request, res: Response) {
 	try {
@@ -36,6 +38,7 @@ export async function getProfileByUsernameController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
+		await getProfileByUsernameValidation(req.query);
 		const profile = await getCompleteProfileByUsername(
 			req.query.username.toString()
 		);

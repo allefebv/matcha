@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/15 13:56:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 14:27:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/28 11:14:56 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,14 @@ export function addProfileValidation(body: profile) {
 			reject({ code: 400, message: "Error: sexualOriantation invalid" });
 		}
 		resolve();
+	});
+}
+
+export function getProfileByUsernameValidation(query: any) {
+	return new Promise((resolve, reject) => {
+		if (query && query.username) {
+			resolve();
+		}
+		reject({ code: 400, message: "Error: mandatory parameters are missing" });
 	});
 }

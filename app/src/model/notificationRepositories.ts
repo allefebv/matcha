@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 15:34:01 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/28 12:31:12 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ export function addNotification(
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result.affectedRows) {
+			if (result && result.affectedRows) {
 				resolve(true);
 			}
 			reject({ code: 400, message: "Error: an error occured" });
@@ -52,7 +52,7 @@ export function deleteNotification(
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result.affectedRows) {
+			if (result && result.affectedRows) {
 				resolve(true);
 			}
 			reject({ code: 400, message: "Error: an error occured" });
@@ -70,7 +70,7 @@ export function deleteAllNotification(
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result.affectedRows) {
+			if (result && result.affectedRows) {
 				resolve(true);
 			}
 			reject({ code: 400, message: "Error: an error occured" });
