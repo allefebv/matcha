@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 18:31:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/30 12:01:53 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { ChatBox } from "../../component/chat/chatBox";
-import { ChatListProfile } from "../../component/chat/chatListProfile";
-import { socket } from "../../domain/root/App";
-import { getMatchesAPI } from "../../services/apiCalls";
-import { Iaddress, IextendedProfile } from "../../types/types";
+import { ChatBox } from '../../component/chat/chatBox';
+import { ChatListProfile } from '../../component/chat/chatListProfile';
+import { socket } from '../../domain/root/App';
+import { getMatchesAPI } from '../../services/apiCalls';
+import { Iaddress, IextendedProfile } from '../../types/types';
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -61,7 +61,7 @@ const ChatPageComponent = (props: Props) => {
 	}
 
 	useEffect(() => {
-		socket.on(props.profile.username, callBack);
+		socket.on("message" + props.profile.username, callBack);
 	}, []);
 
 	useEffect(() => {

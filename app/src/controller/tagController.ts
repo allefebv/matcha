@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:07 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 09:44:30 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 12:07:08 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ export async function addTagProfileController(req: Request, res: Response) {
 		const jwt = await jwtVerify(req.headers.token, res);
 		await addTagValidation(req.body);
 		await getProfileByUserId(jwt.decoded.id);
-		await addNewTag(req.body.tagList);
+		const tagList = req.body.tagList.map((tag: string) => tag.toLowerCase());
+		await addNewTag(tagList);
 		await deleteAllTagProfile(jwt.decoded.id);
 		const result = await Promise.all(
 			req.body.tagList.map(async (item) => {
@@ -50,7 +51,10 @@ export async function getTagAutocompleteController(
 	try {
 		await jwtVerify(req.headers.token, res);
 		await getTagAutocompleteValidation(req.body);
-		const tagList = await getTagAutocomplete(req.body.partial, req.body.limit);
+		const tagList = await getTagAutocomplete(
+			req.body.partial.toString().toLowerCase(),
+			req.body.limit
+		);
 		const list = tagList.map((tag) => tag.tag);
 		res.status(200).json(list);
 	} catch (error) {
