@@ -6,16 +6,25 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:13 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/13 19:06:13 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 10:22:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { location, notification, profile } from '../../types/types';
+import { escape } from 'mysql';
+
+import { location } from '../../types/types';
 import { dataBase } from '../app';
 
 function getLocation(id: number, table: string): Promise<location> {
 	return new Promise((resolve) => {
-		const sql = `SELECT * FROM ${table} WHERE userId = ${id}`;
+		const sql = `
+		SELECT
+			*
+		FROM
+			${table} 
+		WHERE
+			userId = ${id}`;
+
 		dataBase.query(sql, (error: string, result: location[]) => {
 			if (error) {
 				console.log(error);
@@ -32,7 +41,8 @@ function addLocation(
 	table: string
 ): Promise<boolean> {
 	return new Promise((resolve) => {
-		const sql = `INSERT INTO ${table} (
+		const sql = `
+		INSERT INTO ${table} (
 			userId,
 			city,
 			postCode,
@@ -41,14 +51,15 @@ function addLocation(
 			lat,
 			lng
 		) VALUES (
-			${userId},
-			'${location.city}',
-			'${location.postCode}',
-			'${location.countryCode}',
-			'${location.country}',
-			${location.lat},
-			${location.lng}
+			${escape(userId)},
+			${escape(location.city)},
+			${escape(location.postCode)},
+			${escape(location.countryCode)},
+			${escape(location.country)},
+			${escape(location.lat)},
+			${escape(location.lng)}
 		)`;
+
 		dataBase.query(sql, (error: string) => {
 			if (error) {
 				console.log(error);
@@ -64,14 +75,19 @@ export function updateLocation(
 	table: string
 ): Promise<boolean> {
 	return new Promise((resolve) => {
-		const sql = `UPDATE ${table} SET
-		city = '${location.city}',
-		postCode = '${location.postCode}',
-		countryCode = '${location.countryCode}',
-		country = '${location.country}',
-		lat = ${location.lat},
-		lng = ${location.lng}
-		WHERE userId = ${userId}`;
+		const sql = `
+		UPDATE
+			${escape(table)}
+		SET
+			city = ${escape(location.city)},
+			postCode = ${escape(location.postCode)},
+			countryCode = ${escape(location.countryCode)},
+			country = ${escape(location.country)},
+			lat = ${escape(location.lat)},
+			lng = ${escape(location.lng)}
+		WHERE
+			userId = ${escape(userId)}`;
+
 		dataBase.query(sql, async (error: string) => {
 			if (error) {
 				console.log(error);

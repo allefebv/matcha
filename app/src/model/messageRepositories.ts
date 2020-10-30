@@ -6,9 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 12:07:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/23 13:52:29 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 10:28:53 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import { escape } from 'mysql';
 
 import { dataBase } from '../app';
 
@@ -25,11 +27,12 @@ export function addMMessage(
 			timestamp,
 			message
 		) VALUES (
-			'${sender}',
-			'${receiver}',
-			'${timestamp}',
-			'${message}'
+			${escape(sender)},
+			${escape(receiver)},
+			${escape(timestamp)},
+			${escape(message)}
 		)`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -47,7 +50,20 @@ export function getMessage(
 	username2: string
 ): Promise<any[]> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM message WHERE sender = '${username1}' and receiver = '${username2}' OR sender = '${username2}' and receiver = '${username1}'`;
+		const sql = `
+		SELECT
+			*
+		FROM
+			message
+		WHERE
+			sender = ${escape(username1)}
+		AND
+			receiver = ${escape(username2)}
+		OR
+			sender = ${escape(username2)}
+		AND
+			receiver = ${escape(username1)}`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });

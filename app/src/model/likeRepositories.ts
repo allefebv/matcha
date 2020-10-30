@@ -6,9 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:09 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 15:48:32 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 10:17:09 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import { escape } from 'mysql';
 
 import { like } from '../../types/types';
 import { dataBase } from '../app';
@@ -18,13 +20,15 @@ export function addLikedProfile(
 	profileHasBeenLikedId: number
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `INSERT INTO likeProfile (
+		const sql = `
+		INSERT INTO likeProfile (
 			profileLikesId,
 			profileHasBeenLikedId
 		) VALUES (
-			${profileLikedId},
-			${profileHasBeenLikedId}
+			${escape(profileLikedId)},
+			${escape(profileHasBeenLikedId)}
 		)`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -42,7 +46,14 @@ export function deleteLikedProfile(
 	profileHasBeenLikedId: number
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `DELETE FROM likeProfile WHERE profileLikesId = ${profileLikedId} AND profileHasBeenLikedId = ${profileHasBeenLikedId}`;
+		const sql = `
+		DELETE FROM
+			likeProfile
+		WHERE
+			profileLikesId = ${escape(profileLikedId)} 
+		AND
+			profileHasBeenLikedId = ${escape(profileHasBeenLikedId)}`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -66,8 +77,9 @@ export function getUserHasBeenLikedById(id: number): Promise<any[] | null> {
 		JOIN 
 			profile ON profile.userId = likeProfile.profileLikesId
 		WHERE
-			likeProfile.profileLikesId = ${id}
+			likeProfile.profileLikesId = ${escape(id)}
 		`;
+
 		dataBase.query(sql, (error: string, result: like[]) => {
 			if (error) {
 				console.log(error);
@@ -84,7 +96,19 @@ export function getStatueOfLike(
 ): Promise<any[] | null> {
 	return new Promise((resolve) => {
 		const sql = `
-		SELECT * FROM likeProfile WHERE profileLikesId = ${id1} AND profileHasBeenLikedId = ${id2} OR profileLikesId = ${id2} AND profileHasBeenLikedId = ${id1}`;
+		SELECT
+			*
+		FROM
+			likeProfile
+		WHERE
+			profileLikesId = ${escape(id1)} 
+		AND
+			profileHasBeenLikedId = ${escape(id2)}
+		OR
+			profileLikesId = ${escape(id2)}
+		AND
+			profileHasBeenLikedId = ${escape(id1)}`;
+
 		dataBase.query(sql, (error: string, result: like[]) => {
 			if (error) {
 				console.log(error);
@@ -98,23 +122,28 @@ export function getStatueOfLike(
 export function getProfileMatch(id: number): Promise<any[]> {
 	return new Promise((resolve, reject) => {
 		const sql = `
-		select
+		SELECT
 			A.profileLikesId A,
 			B.profileLikesId B,
 			profile.*
-		from
+		FROM
 			likeProfile as A
-		inner join 
+		INNER JOIN 
 			likeProfile as B
-		inner join
-			profile on profile.userId = B.profileLikesId on A.profileLikesId = B.profileHasBeenLikedId 
-		where 
+		INNER JOIN
+			profile 
+		ON 
+			profile.userId = B.profileLikesId
+		ON 
 			A.profileLikesId = B.profileHasBeenLikedId 
-			and 
+		WHERE 
+			A.profileLikesId = B.profileHasBeenLikedId 
+		AND 
 			B.profileLikesId = A.profileHasBeenLikedId 
-			and 
-			A.profileLikesId = ${id}
+		AND 
+			A.profileLikesId = ${escape(id)}
 		`;
+
 		dataBase.query(sql, (error: string, result: like[]) => {
 			if (error) {
 				reject(error);

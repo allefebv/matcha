@@ -6,9 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 10:04:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/28 12:32:28 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 10:07:35 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import { escape } from 'mysql';
 
 import { dataBase } from '../app';
 
@@ -17,7 +19,16 @@ export function getOneProfileBlackList(
 	profileBlockId: number
 ): Promise<any[]> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT * FROM blackList WHERE profileId = ${profileId} AND profileBlockId = ${profileBlockId}`;
+		const sql = `
+		SELECT
+			*
+		FROM
+			blackList
+		WHERE
+			profileId = ${escape(profileId)} 
+		AND
+			profileBlockId = ${escape(profileBlockId)}`;
+
 		dataBase.query(sql, (error: string, result: any[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -32,14 +43,16 @@ export function getOneProfileBlackList(
 
 export function getProfileBlackList(profileId: number): Promise<any[]> {
 	return new Promise((resolve, reject) => {
-		const sql = `SELECT 
-				GROUP_CONCAT(profile.username SEPARATOR ',') AS username
-			FROM 
-				blackList
-			LEFT JOIN
-				profile on profile.userId = blackList.profileBlockId
-			WHERE
-				profileId = ${profileId}`;
+		const sql = `
+		SELECT 
+			GROUP_CONCAT(profile.username SEPARATOR ',') AS username
+		FROM 
+			blackList
+		LEFT JOIN
+			profile on profile.userId = blackList.profileBlockId
+		WHERE
+			profileId = ${escape(profileId)}`;
+
 		dataBase.query(sql, (error: string, result: any[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -58,13 +71,15 @@ export function addProfileBlackList(
 	profileBlockId: number
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `INSERT INTO blackList (
+		const sql = `
+		INSERT INTO blackList (
 			profileId,
 			profileBlockId
 		) VALUES (
-			${profileId},
-			${profileBlockId}
+			${escape(profileId)},
+			${escape(profileBlockId)}
 		)`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -82,7 +97,14 @@ export async function deleteProfileBlackList(
 	profileBlockId: number
 ): Promise<string> {
 	return new Promise((resolve, reject) => {
-		const sql = `DELETE FROM blackList WHERE profileId = ${profileId} AND profileBlockId = ${profileBlockId}`;
+		const sql = `
+		DELETE FROM
+			blackList
+		WHERE
+			profileId = ${escape(profileId)}
+		AND
+			profileBlockId = ${escape(profileBlockId)}`;
+
 		dataBase.query(sql, (error: string, result) => {
 			if (error) {
 				reject({ code: 500, message: error });

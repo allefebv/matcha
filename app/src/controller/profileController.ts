@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/28 11:14:34 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/28 17:39:23 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ export async function getProfileByUsernameController(
 	res: Response
 ) {
 	try {
-		const jwt = await jwtVerify(req.headers.token, res);
+		await jwtVerify(req.headers.token, res);
 		await getProfileByUsernameValidation(req.query);
 		const profile = await getCompleteProfileByUsername(
 			req.query.username.toString()

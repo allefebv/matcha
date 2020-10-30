@@ -6,9 +6,11 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/28 12:31:12 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 10:32:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import { escape } from 'mysql';
 
 import { notification } from '../../types/types';
 import { dataBase } from '../app';
@@ -19,17 +21,19 @@ export function addNotification(
 	notification: string
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `INSERT INTO notificationProfile (
+		const sql = `
+		INSERT INTO notificationProfile (
 			profileNotifedId,
 			notifierProfileId,
 			date,
 			notification
 		) VALUES (
-			${profileNotifedId},
-			${notifierProfileId},
-			'${Date.now()}',
-			'${notification}'
+			${escape(profileNotifedId)},
+			${escape(notifierProfileId)},
+			${escape(Date.now())},
+			${escape(notification)}
 		)`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -47,7 +51,14 @@ export function deleteNotification(
 	profileNotifedId: number
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `DELETE FROM notificationProfile WHERE id = ${id} AND profileNotifedId = ${profileNotifedId}`;
+		const sql = `
+		DELETE FROM
+			notificationProfile
+		WHERE
+			id = ${escape(id)} 
+		AND
+			profileNotifedId = ${escape(profileNotifedId)}`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -65,7 +76,14 @@ export function deleteAllNotification(
 	profileNotifiedId: number
 ): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const sql = `DELETE FROM notificationProfile WHERE notifierProfileId = ${notifierProfield} AND profileNotifiedId = ${profileNotifiedId}`;
+		const sql = `
+		DELETE FROM
+			notificationProfile
+		WHERE
+			notifierProfileId = ${escape(notifierProfield)}
+		AND
+			profileNotifiedId = ${escape(profileNotifiedId)}`;
+
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
@@ -89,8 +107,9 @@ export function getNotification(id: number): Promise<any[]> {
 		JOIN 
 			profile ON profile.userId = notificationProfile.notifierProfileId
 		WHERE
-			notificationProfile.profileNotifedId = ${id}
+			notificationProfile.profileNotifedId = ${escape(id)}
 		`;
+
 		dataBase.query(sql, (error: string, result: notification[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
