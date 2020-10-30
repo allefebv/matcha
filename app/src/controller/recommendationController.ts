@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 15:07:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 15:58:36 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ export async function recommendationController(req: Request, res: Response) {
 		);
 		const profileRecoList = await getProfileBySexualOriantation(
 			userProfile.profile.userId,
-			userProfile.profile.sexualOrientation
+			userProfile.profile.sexualOrientation,
+			userProfile.profile.gender
 		);
 		const blackList = await getProfileBlackList(jwt.decoded.id);
 		const listRecoBlacklist = profileRecoList.filter((profile) => {
@@ -63,7 +64,8 @@ export async function allProfileController(req: Request, res: Response) {
 		);
 		const profileRecoList = await getProfileBySexualOriantation(
 			userProfile.profile.userId,
-			userProfile.profile.sexualOrientation
+			userProfile.profile.sexualOrientation,
+			userProfile.profile.gender
 		);
 		const blackList = await getProfileBlackList(jwt.decoded.id);
 		const listRecoBlacklist = profileRecoList.filter((profile) => {

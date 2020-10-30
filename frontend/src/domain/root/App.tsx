@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   App.tsx                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:52:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/30 12:30:46 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import socketIOClient from "socket.io-client";
+import React, { useEffect } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
 
-import { CssBaseline, Grid, makeStyles } from "@material-ui/core";
+import { CssBaseline, Grid, makeStyles } from '@material-ui/core';
 
-import { GlobalSnackbar } from "../../component/GlobalSnackbar";
-import { Footer } from "./Footer";
-import { Header } from "./Header";
-import { Router } from "./Router";
+import { GlobalSnackbar } from '../../component/GlobalSnackbar';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { Router } from './Router';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,

@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:26:27 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/30 16:00:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,17 @@ export function getAllProfile(id: number): Promise<profile[] | null> {
 
 export function getProfileBySexualOriantation(
 	id: number,
-	sexualOriantation: string
+	sexualOriantation: string,
+	gender: string
 ): Promise<any> {
 	return new Promise((resolve, reject) => {
+		let genderFilter = null;
+		if (sexualOriantation === "heterosexual" && gender === "male") {
+			genderFilter = "AND profile.gender = 'female'";
+		}
+		if (sexualOriantation === "heterosexual" && gender === "female") {
+			genderFilter = "AND profile.gender = 'male'";
+		}
 		const sql = `
 		SELECT
 			profile.*,
@@ -205,6 +213,7 @@ export function getProfileBySexualOriantation(
 			profile.sexualOrientation = ${escape(sexualOriantation)}
 		AND
 			profile.userId != ${escape(id)}
+		${genderFilter}
 		GROUP BY
 			profile.userId,
 			usageLocation.city,
