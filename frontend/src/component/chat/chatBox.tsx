@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   chatBox.tsx                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/30 12:00:32 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 15:22:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
 
-import { socket } from '../../domain/root/App';
-import { getMessageAPI } from '../../services/apiCalls';
-import { IextendedProfile } from '../../types/types';
-import { ChatLine } from './chatLine';
+import { socket } from "../../domain/root/App";
+import { getMessageAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
+import { Iprofile } from "../../types/types";
+import { ChatLine } from "./chatLine";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -24,7 +25,7 @@ const withReduxProps = connect((state: any) => ({
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	userProfile: IextendedProfile;
+	userProfile: Iprofile;
 	userSelect: string | null;
 	message: {
 		sender: string;
@@ -66,16 +67,26 @@ const ChatBoxComponent = (props: Props) => {
 			username1: props.profile.username,
 			username2: props.userSelect,
 		};
-		getMessageAPI(details, props.token).then((result) => {
-			const listResult = result.map((item) => {
-				return {
-					username: item.sender,
-					timestamp: parseInt(item.timestamp),
-					message: item.message,
-				};
+		getMessageAPI(details, props.token)
+			.then((result) => {
+				const listResult = result.map((item) => {
+					return {
+						username: item.sender,
+						timestamp: parseInt(item.timestamp),
+						message: item.message,
+					};
+				});
+				setListMessage(listResult);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
 			});
-			setListMessage(listResult);
-		});
 	}, [props.userSelect]);
 
 	useEffect(() => {

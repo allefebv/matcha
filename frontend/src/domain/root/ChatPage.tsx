@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/30 12:01:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 15:22:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
 
-import { ChatBox } from '../../component/chat/chatBox';
-import { ChatListProfile } from '../../component/chat/chatListProfile';
-import { socket } from '../../domain/root/App';
-import { getMatchesAPI } from '../../services/apiCalls';
-import { Iaddress, IextendedProfile } from '../../types/types';
+import { ChatBox } from "../../component/chat/chatBox";
+import { ChatListProfile } from "../../component/chat/chatListProfile";
+import { socket } from "../../domain/root/App";
+import { getMatchesAPI } from "../../services/apiCalls";
+import { Iaddress, Iprofile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -28,7 +28,7 @@ type Props = {} & ReduxProps;
 
 const ChatPageComponent = (props: Props) => {
 	const [tabMatch, setTableMatch] = useState<
-		{ profile: IextendedProfile; tag: string[] | []; location: Iaddress }[]
+		{ profile: Iprofile; tag: string[] | []; location: Iaddress }[]
 	>([]);
 	const [userSelect, setUserSelect] = useState<string | null>(null);
 	const [message, setMessage] = useState<{

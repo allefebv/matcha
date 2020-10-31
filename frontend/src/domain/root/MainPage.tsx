@@ -6,22 +6,20 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 19:11:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:48:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
-import { CategoryFilterSort } from "../search/CategoryFilterSort";
-import { Autocomplete, Pagination } from "@material-ui/lab";
+import { Pagination } from "@material-ui/lab";
 import {
 	Drawer,
-	IconButton,
 	makeStyles,
-	TextField,
 	Grid,
 	Slider,
 	CircularProgress,
 	Typography,
+	Button,
 } from "@material-ui/core";
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
@@ -42,19 +40,22 @@ import { getAge, isProfileComplete } from "../../services/profileUtils";
 import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
 import { IlistProfiles } from "../../types/types";
 import { TagSearch } from "../../component/TagSearch";
+import { SortingGroup } from "../../component/SortingGroup";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
 		display: "flex",
-		flexDirection: "column",
 		justifyContent: "center",
+		alignItems: "center",
+		width: "30vw",
+		height: "100vh",
+		overflow: "hidden",
+		backgroundColor: "orange",
 	},
 	drawerContent: {
 		display: "flex",
 		flexDirection: "column",
-		alignSelf: "center",
-		justifySelf: "center",
-		width: "30vw",
+		width: "60%",
 	},
 	main: {
 		display: "flex",
@@ -105,6 +106,7 @@ const initialValuesLimits = {
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
+	tagList: state.user.tagList as string[],
 	profilesRecco: state.profilesList.recommendations as IlistProfiles[],
 	profilesSearch: state.profilesList.search as IlistProfiles[],
 	profilesMatches: state.profilesList.matches as IlistProfiles[],
@@ -138,6 +140,8 @@ const MainPageComponent = (props: Props) => {
 	const [pageIndex, setPageIndex] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
 	const [tagList, setTagList] = useState<string[]>();
+	const [sortMethod, setSortMethod] = useState("");
+	const [sortAsc, setSortAsc] = useState(true);
 	const ITEMS_PER_PAGES = 20;
 
 	const getRecommendationList = () => {
@@ -260,7 +264,7 @@ const MainPageComponent = (props: Props) => {
 			const limitsArr = profilesArray.reduce<number[]>(
 				(acc: number[], entry) => {
 					const { age, popularityScore } = entry.profile;
-					const { distance } = entry.location;
+					const { distanceInKm } = entry.location;
 					if (age) {
 						acc[0] = !acc[0] || acc[0] > age ? age : acc[0];
 						acc[1] = !acc[1] || acc[1] < age ? age : acc[1];
@@ -271,8 +275,11 @@ const MainPageComponent = (props: Props) => {
 						acc[3] =
 							!acc[3] || acc[3] < popularityScore ? popularityScore : acc[3];
 					}
-					if (distance) {
-						acc[4] = !acc[4] || acc[4] < distance ? distance : acc[4];
+					if (distanceInKm) {
+						acc[4] =
+							!acc[4] || acc[4] < distanceInKm
+								? Math.floor(distanceInKm)
+								: acc[4];
 					}
 					return acc;
 				},
@@ -295,22 +302,122 @@ const MainPageComponent = (props: Props) => {
 	const filterList = () => {
 		if (currentProfilesList && filterValues) {
 			console.log(filterValues);
-			const tmp = currentProfilesList.filter((entry) => {
+			const filtered = currentProfilesList.filter((entry) => {
 				const { age, popularityScore } = entry.profile;
-				const distance = entry.location ? entry.location.distance : undefined;
+				const distance = entry.location
+					? entry.location.distanceInKm
+					: undefined;
 				const distanceFilter = distance
-					? distance <= filterValues.maxDistance
+					? Math.floor(distance) <= filterValues.maxDistance
+					: true;
+				const tagFilter = tagList
+					? tagList.every((x) => entry.tag.includes(x))
 					: true;
 				return (
 					age &&
 					age >= filterValues.minAge &&
 					age <= filterValues.maxAge &&
+					popularityScore &&
 					popularityScore >= filterValues.minPopularity &&
 					popularityScore <= filterValues.maxPopularity &&
-					distanceFilter
+					distanceFilter &&
+					tagFilter
 				);
 			});
-			setFilteredProfilesList(tmp);
+			console.log(getSortFunction()?.name, "METHOD: " + sortMethod);
+			const sorted = filtered.sort(getSortFunction());
+			setFilteredProfilesList(sorted);
+		}
+	};
+
+	const getSortFunction = () => {
+		let getFunction;
+		switch (sortMethod) {
+			case "Age":
+				getFunction = ageSort;
+				break;
+			case "Popularity":
+				getFunction = popularitySort;
+				break;
+			case "Distance":
+				getFunction = distanceSort;
+				break;
+			case "Shared Interests":
+				getFunction = tagsSort;
+				break;
+		}
+		return getFunction;
+	};
+
+	const ageSort = (a: IlistProfiles, b: IlistProfiles) => {
+		if (!a.profile.age && !b.profile.age) {
+			return 0;
+		} else if (!a.profile.age) {
+			return -1;
+		} else if (!b.profile.age) {
+			return 1;
+		} else if (a.profile.age < b.profile.age) {
+			return sortAsc ? -1 : 1;
+		} else {
+			return sortAsc ? 1 : -1;
+		}
+	};
+
+	const popularitySort = (a: IlistProfiles, b: IlistProfiles) => {
+		if (!a.profile.popularityScore && !b.profile.popularityScore) {
+			return 0;
+		} else if (!a.profile.popularityScore) {
+			return -1;
+		} else if (!b.profile.popularityScore) {
+			return 1;
+		} else if (a.profile.popularityScore < b.profile.popularityScore) {
+			return sortAsc ? -1 : 1;
+		} else {
+			return sortAsc ? 1 : -1;
+		}
+	};
+
+	const distanceSort = (a: IlistProfiles, b: IlistProfiles) => {
+		if (
+			(!a.location || !a.location.distanceInKm) &&
+			(!b.location || !b.location.distanceInKm)
+		) {
+			return 0;
+		} else if (!a.location || !a.location.distanceInKm) {
+			return -1;
+		} else if (!b.location || !b.location.distanceInKm) {
+			return 1;
+		} else if (a.location.distanceInKm < b.location.distanceInKm) {
+			return sortAsc ? -1 : 1;
+		} else {
+			return sortAsc ? 1 : -1;
+		}
+	};
+
+	const tagsSort = (a: IlistProfiles, b: IlistProfiles) => {
+		if (!a.tag && !b.tag) {
+			return 0;
+		} else if (!a.tag) {
+			return -1;
+		} else if (!b.tag) {
+			return 1;
+		} else if (
+			props.tagList &&
+			props.tagList.filter((x) => a.tag.includes(x)).length <
+				props.tagList.filter((x) => b.tag.includes(x)).length
+		) {
+			console.log(
+				props.tagList.filter((x) => a.tag.includes(x)).length,
+				props.tagList.filter((x) => b.tag.includes(x)).length
+			);
+			return sortAsc ? -1 : 1;
+		} else {
+			props.tagList &&
+				console.log(
+					props.tagList.filter((x) => a.tag.includes(x)).length,
+					props.tagList.filter((x) => b.tag.includes(x)).length
+				);
+			return sortAsc ? 1 : -1;
 		}
 	};
 
@@ -385,9 +492,9 @@ const MainPageComponent = (props: Props) => {
 	const renderList = () => {
 		return (
 			<React.Fragment>
-				<IconButton onClick={handleOpenDrawer}>
-					<KeyboardArrowRight />
-				</IconButton>
+				<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
+					SORT AND FILTER
+				</Button>
 				<Grid container className={classes.cards} spacing={5} justify="center">
 					{getCards()}
 					<Grid item xs={12}>
@@ -428,35 +535,32 @@ const MainPageComponent = (props: Props) => {
 					renderList()
 				)}
 			</div>
-			<Drawer
-				anchor="left"
-				open={open}
-				onClose={handleCloseDrawer}
-				className={classes.drawer}
-			>
-				<div className={classes.drawerContent}>
-					{filterLimits.minAge !== filterLimits.maxAge && (
-						<CategoryFilterSort label="Age">
+			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
+				<div className={classes.drawer}>
+					<div className={classes.drawerContent}>
+						<SortingGroup
+							sortAsc={sortAsc}
+							sortMethod={sortMethod}
+							setSortAsc={setSortAsc}
+							setSortMethod={setSortMethod}
+						/>
+						{filterLimits.minAge !== filterLimits.maxAge && (
 							<MaterialDoubleSlider
 								min={filterLimits.minAge}
 								max={filterLimits.maxAge}
 								value={[filterValues.minAge, filterValues.maxAge]}
 								handleChange={handleAgeFilter}
 							/>
-						</CategoryFilterSort>
-					)}
-					{filterLimits.minPopularity !== filterLimits.maxPopularity && (
-						<CategoryFilterSort label="Popularity">
+						)}
+						{filterLimits.minPopularity !== filterLimits.maxPopularity && (
 							<MaterialDoubleSlider
 								min={filterLimits.minPopularity}
 								max={filterLimits.maxPopularity}
 								value={[filterValues.minPopularity, filterValues.maxPopularity]}
 								handleChange={handlePopularityFilter}
 							/>
-						</CategoryFilterSort>
-					)}
-					{filterLimits.maxDistance && (
-						<CategoryFilterSort label="Location">
+						)}
+						{filterLimits.maxDistance && (
 							<Slider
 								min={0}
 								max={filterLimits.maxDistance}
@@ -465,14 +569,12 @@ const MainPageComponent = (props: Props) => {
 								valueLabelDisplay="auto"
 								aria-labelledby="range-slider"
 							/>
-						</CategoryFilterSort>
-					)}
-					<CategoryFilterSort label="Tags">
+						)}
 						<TagSearch
 							handleChangeTags={handleChangeTags}
 							tagList={tagList || []}
 						/>
-					</CategoryFilterSort>
+					</div>
 				</div>
 			</Drawer>
 		</React.Fragment>

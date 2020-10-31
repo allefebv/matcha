@@ -6,19 +6,19 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 16:56:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:22:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 
 import { socket } from "../../domain/root/App";
-import { Iaddress, IextendedProfile } from "../../types/types";
+import { Iaddress, Iprofile } from "../../types/types";
 import { CustomAvatar } from "../CustomAvatar";
 
 interface Props {
 	tabMatch: {
-		profile: IextendedProfile;
+		profile: Iprofile;
 		tag: string[] | [];
 		location: Iaddress;
 	}[];

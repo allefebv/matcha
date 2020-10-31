@@ -6,33 +6,32 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:42:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:09:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Grid, TextField, Typography } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-
 import { ProfilePictures } from "./ProfilePictures";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_setTagList } from "../../store/user/action";
-import { getTagAutocompleteAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { TagSearch } from "../../component/TagSearch";
+import { Iprofile } from "../../types/types";
+import { profileHasImages } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
-	profile: state.user.profile,
-	tagList: state.user.tagList,
 	isLoggedIn: state.user.isLoggedIn,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setDisabled: (value: React.SetStateAction<boolean>) => void;
+	setDisabled?: (value: React.SetStateAction<boolean>) => void;
 	imgs: (string | null)[];
 	setImgs: React.Dispatch<React.SetStateAction<(string | null)[]>>;
+	profile: Iprofile;
+	tagList: string[];
+	setTagList: React.Dispatch<React.SetStateAction<string[]>>;
 } & ReduxProps;
 
 function ProfileOptional2Component(props: Props) {
@@ -42,7 +41,7 @@ function ProfileOptional2Component(props: Props) {
 		reason: string
 	) {
 		let tags = typeof value === "string" ? [value] : value;
-		props.dispatch(actionUser_setTagList({ tagList: tags }));
+		props.setTagList(tags);
 	}
 
 	function profileHasTags() {
@@ -50,11 +49,18 @@ function ProfileOptional2Component(props: Props) {
 	}
 
 	useEffect(() => {
-		if (profileHasTags() && props.profile.bio && props.imgs[0]) {
-			props.setDisabled(false);
-		} else {
-			props.setDisabled(true);
+		if (props.setDisabled) {
+			if (
+				profileHasTags() &&
+				props.profile.bio &&
+				profileHasImages(props.profile.username)
+			) {
+				props.setDisabled(false);
+			} else {
+				props.setDisabled(true);
+			}
 		}
+		console.log(props.profile.bio);
 	}, [props.tagList, props.profile.bio, props.imgs]);
 
 	return (

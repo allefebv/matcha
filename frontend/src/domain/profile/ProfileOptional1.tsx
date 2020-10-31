@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/19 12:02:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:02:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,15 @@ import React, { useState, useEffect } from "react";
 import { Grid, Icon, Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-import { connect, ConnectedProps } from "react-redux";
-import { actionUser_setProfile } from "../../store/user/action";
+import { Iprofile } from "../../types/types";
 
-const withReduxProps = connect((state: any) => ({
-	profile: state.user.profile,
-}));
-type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setDisabled: (value: React.SetStateAction<boolean>) => void;
-} & ReduxProps;
+	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
+	setDisabled?: (value: React.SetStateAction<boolean>) => void;
+	profile: Iprofile;
+};
 
-function ProfileOptional1Component(props: Props) {
+export function ProfileOptional1(props: Props) {
 	const [orientationFieldInactive, setOrientationFieldInactive] = useState(
 		true
 	);
@@ -85,11 +81,14 @@ function ProfileOptional1Component(props: Props) {
 		if (props.profile.gender !== null) {
 			setOrientationFieldInactive(false);
 		}
-		if (props.profile.gender && props.profile.sexualOrientation) {
-			props.setDisabled(false);
-		} else {
-			props.setDisabled(true);
+		if (props.setDisabled) {
+			if (props.profile.gender && props.profile.sexualOrientation) {
+				props.setDisabled(false);
+			} else {
+				props.setDisabled(true);
+			}
 		}
+		console.log(props.profile.gender, props.profile.sexualOrientation);
 	}, [props.profile]);
 
 	function handleChangeGender(
@@ -103,7 +102,7 @@ function ProfileOptional1Component(props: Props) {
 				localSexualOrientation,
 				nextView
 			);
-			props.dispatch(actionUser_setProfile({ profile: tmpProfile }));
+			props.setProfile(tmpProfile);
 		}
 	}
 
@@ -114,7 +113,7 @@ function ProfileOptional1Component(props: Props) {
 		if (nextView !== null) {
 			const tmpProfile = { ...props.profile };
 			tmpProfile.sexualOrientation = findOrientation(nextView);
-			props.dispatch(actionUser_setProfile({ profile: tmpProfile }));
+			props.setProfile(tmpProfile);
 			setLocalSexualOrientation(nextView);
 		}
 	}
@@ -167,5 +166,3 @@ function ProfileOptional1Component(props: Props) {
 		</React.Fragment>
 	);
 }
-
-export const ProfileOptional1 = withReduxProps(ProfileOptional1Component);

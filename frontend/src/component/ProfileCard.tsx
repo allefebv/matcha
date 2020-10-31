@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 11:31:59 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/28 13:43:39 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ type Props = {
 
 export function ProfileCard(props: Props) {
 	const { username, age, bio } = props.entry.profile;
+	const { distanceInKm } = props.entry.location;
 	const classes = useStyles();
 	const path = "http://localhost:3001/images/" + username + "img0";
 	const history = useHistory();
@@ -62,7 +63,8 @@ export function ProfileCard(props: Props) {
 			<CardMedia className={classes.media} image={path} />
 			<CardContent>
 				<Typography variant="body1">
-					{username}, {age}
+					{username}, {age},{" "}
+					{distanceInKm ? Math.ceil(distanceInKm) + "km" : "unknown location"}
 				</Typography>
 				<Typography variant="body2" color="textSecondary" component="p">
 					{bio}

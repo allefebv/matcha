@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 09:13:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:47:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ import { actionUser_geolocation } from "../../store/user/action";
 import { useGeolocation } from "../../services/useGeolocation";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { BaseProfileFormContent } from "./BaseProfileFormContent";
-import { IbaseProfile } from "../../types/types";
+import { Iprofile } from "../../types/types";
 import { createProfile } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
@@ -32,13 +32,20 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
+const profileInit = {
+	firstname: "",
+	lastname: "",
+	username: "",
+	dob: null,
+	sexualOrientation: "",
+	gender: "",
+	geoLocationAuthorization: false,
+	bio: "",
+};
+
 function BaseProfileFormComponent(props: Props) {
-	const [profile, setProfile] = useState<IbaseProfile>({
-		firstname: "",
-		lastname: "",
-		username: "",
-		dob: null,
-	});
+	const [profile, setProfile] = useState<Iprofile>(profileInit);
+	const [disabled, setDisabled] = useState(false);
 	const geolocation = useGeolocation();
 	const date = new Date();
 
@@ -66,19 +73,14 @@ function BaseProfileFormComponent(props: Props) {
 		await Promise.all([createProfile(profile, props.loggedIn, props.dispatch)]);
 	};
 
-	const isDisabled = () => {
-		return (
-			profile.firstname === "" ||
-			profile.lastname === "" ||
-			profile.username === "" ||
-			profile.dob === null
-		);
-	};
-
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
-				<BaseProfileFormContent setProfile={setProfile} profile={profile} />
+				<BaseProfileFormContent
+					setProfile={setProfile}
+					profile={profile}
+					setDisabled={setDisabled}
+				/>
 			</Grid>
 			<Grid item xs={12} md={6}>
 				<Button
@@ -86,7 +88,7 @@ function BaseProfileFormComponent(props: Props) {
 					color="primary"
 					onClick={handleSubmit}
 					fullWidth
-					disabled={isDisabled()}
+					disabled={disabled}
 				>
 					Submit
 				</Button>

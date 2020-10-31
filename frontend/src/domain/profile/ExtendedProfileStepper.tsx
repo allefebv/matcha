@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 09:26:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:10:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ import { ProfileOptional1 } from "./ProfileOptional1";
 import { ProfileOptional2 } from "./ProfileOptional2";
 import { ProfileOptional3 } from "./ProfileOptional3";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionUser_geolocation,
-	actionUser_setProfile,
-} from "../../store/user/action";
+import { actionUser_geolocation } from "../../store/user/action";
 import {
 	submitPictures,
 	updateProfile,
@@ -36,6 +33,7 @@ import {
 import { useGeolocation } from "../../services/useGeolocation";
 import { handleGeoLocationAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { Iprofile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -50,6 +48,15 @@ type Props = {} & ReduxProps;
 
 function ExtendedProfileStepperComponent(props: Props) {
 	const [activeStep, setActiveStep] = useState(0);
+	const [usageLocation, setUsageLocation] = useState({
+		...props.usagelocation,
+	});
+	const [profile, setProfile] = useState<Iprofile>({
+		...props.profile,
+	});
+	const [tagList, setTagList] = useState<string[]>({
+		...props.tagList,
+	});
 	const steps = getSteps();
 	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -90,10 +97,10 @@ function ExtendedProfileStepperComponent(props: Props) {
 	const handleSubmit = async () => {
 		setLoading(true);
 		await Promise.all([
-			updateProfile(props.profile, props.loggedIn, props.dispatch),
-			submitTags(props.tagList, props.loggedIn, props.dispatch),
+			updateProfile(profile, props.loggedIn, props.dispatch),
+			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
-			submitUsageLocation(props.usagelocation, props.loggedIn, props.dispatch),
+			submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
 		setLoading(false);
 	};
@@ -110,9 +117,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		props.dispatch(
-			actionUser_setProfile({ profile: { ...props.profile, [name]: value } })
-		);
+		setProfile({ ...profile, [name]: value });
 	};
 
 	function getStepContent() {
@@ -120,8 +125,9 @@ function ExtendedProfileStepperComponent(props: Props) {
 			case 0:
 				return (
 					<ProfileOptional1
-						handleChange={handleChange}
+						setProfile={setProfile}
 						setDisabled={setDisabled}
+						profile={profile}
 					/>
 				);
 			case 1:
@@ -131,6 +137,9 @@ function ExtendedProfileStepperComponent(props: Props) {
 						setDisabled={setDisabled}
 						imgs={imgs}
 						setImgs={setImgs}
+						profile={profile}
+						tagList={tagList}
+						setTagList={setTagList}
 					/>
 				);
 			case 2:
@@ -138,6 +147,10 @@ function ExtendedProfileStepperComponent(props: Props) {
 					<ProfileOptional3
 						handleChange={handleChange}
 						setDisabled={setDisabled}
+						profile={profile}
+						setProfile={setProfile}
+						usageLocation={usageLocation}
+						setUsageLocation={setUsageLocation}
 					/>
 				);
 			default:

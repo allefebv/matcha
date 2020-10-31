@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 10:16:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:46:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,25 @@ import {
 	actionUser_usagelocation,
 } from "../../store/user/action";
 import { autocompleteLocationAPI } from "../../services/apiCalls";
-import { Iaddress } from "../../types/types";
+import { Iaddress, Iprofile } from "../../types/types";
 import { throttle } from "lodash";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const withReduxProps = connect((state: any) => ({
-	profile: state.user.profile,
 	currentGeolocation: state.user.currentGeolocation,
-	usagelocation: state.user.usagelocation,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	setDisabled: (value: React.SetStateAction<boolean>) => void;
+	setDisabled?: (value: React.SetStateAction<boolean>) => void;
+	usageLocation: Iaddress | null;
+	setUsageLocation: React.Dispatch<React.SetStateAction<Iaddress | null>>;
+	profile: Iprofile;
+	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
 } & ReduxProps;
 
 function ProfileOptional3Component(props: Props) {
-	const [value, setValue] = useState<Iaddress | null>(props.usagelocation);
+	const [value, setValue] = useState<Iaddress | null>(props.usageLocation);
 	const [options, setOptions] = useState<Iaddress[]>([]);
 	const [inputValue, setInputValue] = useState("");
 	const [prevent, setPrevent] = useState(false);
@@ -71,7 +73,7 @@ function ProfileOptional3Component(props: Props) {
 		if (props.currentGeolocation) {
 			setOptions([props.currentGeolocation]);
 		}
-		if (value) {
+		if (value && props.setDisabled) {
 			props.setDisabled(false);
 		}
 	}, [props.currentGeolocation]);
@@ -94,15 +96,15 @@ function ProfileOptional3Component(props: Props) {
 		setValue(newValue);
 		setPrevent(true);
 		if (newValue) {
-			const tmpProfile = props.profile;
+			const tmpProfile = { ...props.profile };
 			tmpProfile.geoLocationAuthorization = newValue.isFromGeolocation
 				? true
 				: false;
-			props.dispatch(actionUser_setProfile({ profile: tmpProfile }));
-			props.dispatch(actionUser_usagelocation({ usagelocation: newValue }));
-			props.setDisabled(false);
+			props.setProfile(tmpProfile);
+			props.setUsageLocation(newValue);
+			props.setDisabled && props.setDisabled(false);
 		} else {
-			props.setDisabled(true);
+			props.setDisabled && props.setDisabled(true);
 		}
 	}
 

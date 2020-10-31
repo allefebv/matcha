@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:22:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:10:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,7 @@ import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";
 import { ProfileOptional2 } from "../profile/ProfileOptional2";
 import { ProfileOptional3 } from "../profile/ProfileOptional3";
-import {
-	IbaseProfile,
-	IextendedProfile,
-	IlistProfiles,
-} from "../../types/types";
+import { Iprofile, IlistProfiles, Iaddress } from "../../types/types";
 import {
 	getProfileHydrateRedux,
 	submitPictures,
@@ -44,18 +40,22 @@ import { useGeolocation } from "../../services/useGeolocation";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	profile: state.user.profile,
+	profile: state.user.profile as Iprofile,
 	tagList: state.user.tagList,
-	usagelocation: state.user.usagelocation,
+	usageLocation: state.user.usagelocation,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const UserProfilePageComponent = (props: Props) => {
-	const [profile, setProfile] = useState<any>();
+	const [profile, setProfile] = useState<Iprofile>({ ...props.profile });
+	const [tagList, setTagList] = useState<string[]>([...props.tagList]);
 	const [disabled, setDisabled] = useState(false);
 	const [profileVisits, setProfileVisits] = useState<IlistProfiles[]>();
 	const [profileLikes, setProfileLikes] = useState<IlistProfiles[]>();
+	const [usageLocation, setUsageLocation] = useState<Iaddress | null>({
+		...props.usageLocation,
+	});
 	const [imgs, setImgs] = useState<(string | null)[]>([
 		null,
 		null,
@@ -98,16 +98,13 @@ const UserProfilePageComponent = (props: Props) => {
 		setProfile({ ...profile, [name]: value });
 	};
 
-	const setProfileBase = (profile: IextendedProfile | IbaseProfile) => {
-		props.dispatch(actionUser_setProfile({ profile: profile }));
-	};
-
 	const handleSubmit = async () => {
 		await Promise.all([
-			updateProfile(props.profile, props.loggedIn, props.dispatch),
-			submitTags(props.tagList, props.loggedIn, props.dispatch),
+			updateProfile(profile, props.loggedIn, props.dispatch),
+			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
-			submitUsageLocation(props.usagelocation, props.loggedIn, props.dispatch),
+			usageLocation &&
+				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
 	};
 
@@ -158,27 +155,30 @@ const UserProfilePageComponent = (props: Props) => {
 					<Grid item xs={12} lg={8}>
 						<ProfileOptional2
 							handleChange={handleChangeProfile}
-							setDisabled={setDisabled}
 							imgs={imgs}
 							setImgs={setImgs}
+							profile={profile}
+							tagList={tagList}
+							setTagList={setTagList}
 						/>
 					</Grid>
 					<Grid item xs={12} lg={8}>
 						<BaseProfileFormContent
-							profile={props.profile}
-							setProfile={setProfileBase}
+							profile={profile}
+							setProfile={setProfile}
+							setDisabled={setDisabled}
 						/>
 					</Grid>
 					<Grid item xs={12} lg={8}>
-						<ProfileOptional1
-							handleChange={handleChangeProfile}
-							setDisabled={setDisabled}
-						/>
+						<ProfileOptional1 setProfile={setProfile} profile={profile} />
 					</Grid>
 					<Grid item xs={12} lg={8}>
 						<ProfileOptional3
+							usageLocation={usageLocation}
+							setUsageLocation={setUsageLocation}
 							handleChange={handleChangeProfile}
-							setDisabled={setDisabled}
+							profile={profile}
+							setProfile={setProfile}
 						/>
 					</Grid>
 					<Grid item xs={12} lg={8}>

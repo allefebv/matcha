@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   chatLine.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 11:02:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 10:50:12 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 15:22:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from 'react';
+import React from "react";
 
-import { IextendedProfile } from '../../types/types';
+import { Iprofile } from "../../types/types";
 
 interface Props {
 	lineItem: {
@@ -20,7 +20,7 @@ interface Props {
 		message: string;
 		timestamp: number;
 	};
-	userProfile: IextendedProfile;
+	userProfile: Iprofile;
 }
 
 const ChatLineComponent = (props: Props) => {

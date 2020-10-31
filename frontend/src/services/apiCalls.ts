@@ -6,17 +6,12 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:14:51 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:12:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import * as constants from "../services/constants";
-import {
-	Iaddress,
-	IextendedProfile,
-	IlistProfiles,
-	user,
-} from "../types/types";
+import { Iaddress, Iprofile, IlistProfiles, user } from "../types/types";
 import { fetchApi } from "./fetchApi";
 
 export const signupAPI = (details: Object) => {
@@ -62,7 +57,7 @@ export const deleteAPI = (details: Object, token: string) => {
 
 export const getProfileAPI = (token: string) => {
 	return fetchApi<{
-		profile: IextendedProfile;
+		profile: Iprofile;
 		tag: string[] | [];
 		location: Iaddress | null;
 	}>(constants.URL + constants.URI_GET_PROFILE, {
@@ -177,7 +172,7 @@ export const updateProfileAPI = (details: Object, token: string) => {
 };
 
 export const postTagsAPI = (details: Object, token: string) => {
-	return fetchApi(constants.URL + constants.URI_POST_TAGS, {
+	return fetchApi<string[]>(constants.URL + constants.URI_POST_TAGS, {
 		method: constants.POST_METHOD,
 		headers: {
 			"Content-Type": "application/json",

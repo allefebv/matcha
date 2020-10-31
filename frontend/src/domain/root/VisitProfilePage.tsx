@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 16:34:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:22:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Paper, makeStyles, Typography, Grid, Button } from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
-import { Iaddress, IextendedProfile, IlistProfiles } from "../../types/types";
+import { Iaddress, Iprofile, IlistProfiles } from "../../types/types";
 import {
 	visitProfileAPI,
 	blacklistProfileAPI,
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const VisitProfilePageComponent = (props: Props) => {
 	const historyLocation = useLocation<IlistProfiles>();
 	const classes = useStyles();
-	const [profile, setProfile] = useState<IextendedProfile | null>(null);
+	const [profile, setProfile] = useState<Iprofile | null>(null);
 	const [location, setLocation] = useState<Iaddress | null>(null);
 	const [tags, setTags] = useState<string[] | null>(null);
 	const [likeStatus, setLikeStatus] = useState<{
@@ -208,7 +208,7 @@ const VisitProfilePageComponent = (props: Props) => {
 								<Typography variant="body1">{profile.gender}</Typography>
 								<Typography variant="body1">{profile.bio}</Typography>
 								<Typography variant="body1">
-									{location && location.distance}
+									{location && location.distanceInKm}
 								</Typography>
 							</Paper>
 						</Grid>

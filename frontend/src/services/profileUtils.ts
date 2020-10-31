@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 15:53:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 16:12:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ import {
 	actionUser_setTagList,
 	actionUser_usagelocation,
 } from "../store/user/action";
-import { Iaddress, IbaseProfile, IextendedProfile } from "../types/types";
+import { Iaddress, Iprofile } from "../types/types";
 import {
 	createProfileAPI,
 	getProfileAPI,
@@ -29,7 +29,7 @@ import {
 } from "./apiCalls";
 
 export const getProfileLevel = (
-	profile: IextendedProfile,
+	profile: Iprofile,
 	location: Iaddress | null,
 	tagList: string[]
 ) => {
@@ -56,7 +56,7 @@ export const getProfileLevel = (
 };
 
 export const isProfileEmpty = (
-	profile: IextendedProfile,
+	profile: Iprofile,
 	location: Iaddress,
 	tagList: string[]
 ) => {
@@ -64,7 +64,7 @@ export const isProfileEmpty = (
 };
 
 export const isProfileBase = (
-	profile: IextendedProfile,
+	profile: Iprofile,
 	location: Iaddress,
 	tagList: string[]
 ) => {
@@ -72,7 +72,7 @@ export const isProfileBase = (
 };
 
 export const isProfileComplete = (
-	profile: IextendedProfile,
+	profile: Iprofile,
 	location: Iaddress,
 	tagList: string[]
 ) => {
@@ -122,7 +122,7 @@ export const submitPictures = async (
 };
 
 export const updateProfile = async (
-	profile: IextendedProfile,
+	profile: Iprofile,
 	token: string,
 	dispatch: Dispatch<AnyAction>
 ) => {
@@ -148,11 +148,18 @@ export const updateProfile = async (
 };
 
 export const createProfile = async (
-	profile: IbaseProfile,
+	profile: Iprofile,
 	token: string,
 	dispatch: Dispatch<AnyAction>
 ) => {
-	return createProfileAPI(profile, token)
+	const {
+		geoLocationAuthorization,
+		gender,
+		sexualOrientation,
+		bio,
+		...rest
+	} = profile;
+	return createProfileAPI(rest, token)
 		.then((json: any) => {
 			dispatch(actionUser_setProfile({ profile: json }));
 			dispatch(
@@ -178,15 +185,19 @@ export const submitTags = async (
 	token: string,
 	dispatch: Dispatch<AnyAction>
 ) => {
-	return postTagsAPI({ tagList: [...tags] }, token).catch((error) => {
-		dispatch(
-			actionUi_showSnackbar({
-				message: error.message,
-				type: "error",
-			})
-		);
-		console.log(error.message);
-	});
+	return postTagsAPI({ tagList: [...tags] }, token)
+		.then((tagList) => {
+			dispatch(actionUser_setTagList({ tagList: tagList }));
+		})
+		.catch((error) => {
+			dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 };
 
 export const submitUsageLocation = async (
@@ -235,4 +246,17 @@ export const getProfileHydrateRedux = async (
 			);
 			console.log(error.message);
 		});
+};
+
+export const profileHasImages = (username: string) => {
+	let count = 0;
+	for (let i = 0; i++; i < 5) {
+		try {
+			require("http://localhost:3001/images/" + username + "img" + i);
+		} catch (e) {
+			count++;
+		}
+		console.log(count);
+	}
+	return count < 5;
 };

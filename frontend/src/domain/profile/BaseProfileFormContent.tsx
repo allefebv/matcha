@@ -6,37 +6,64 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/19 18:34:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:42:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { TextField } from "@material-ui/core";
 import { DatePicker } from "@material-ui/pickers";
-import { IbaseProfile, IextendedProfile } from "../../types/types";
+import { Iprofile } from "../../types/types";
 
 type Props = {
-	profile: IextendedProfile | IbaseProfile;
-	setProfile: (profile: IextendedProfile | IbaseProfile) => void;
+	profile: Iprofile;
+	setProfile:
+		| React.Dispatch<React.SetStateAction<Iprofile>>
+		| React.Dispatch<React.SetStateAction<Iprofile>>;
+	setDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function BaseProfileFormContent(props: Props) {
-	const [dob, setDob] = useState<Date | null>(
-		props.profile.dob ? new Date(props.profile.dob) : null
-	);
+	const [dob, setDob] = useState<Date | null>();
+	const [errorUsername, setErrorUsername] = useState(false);
+	const [errorFirstname, setErrorFirstname] = useState(false);
+	const [errorLastname, setErrorLastname] = useState(false);
+	const [errorDob, setErrorDob] = useState(false);
 	const date = new Date();
 
-	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
 		props.setProfile({ ...props.profile, [e.target.name]: e.target.value });
+		setErrorUsername(!e.target.value);
+	};
+
+	const handleChangeLastname = (e: React.ChangeEvent<HTMLInputElement>) => {
+		props.setProfile({ ...props.profile, [e.target.name]: e.target.value });
+		setErrorLastname(!e.target.value);
+	};
+
+	const handleChangeFirstname = (e: React.ChangeEvent<HTMLInputElement>) => {
+		props.setProfile({ ...props.profile, [e.target.name]: e.target.value });
+		setErrorFirstname(!e.target.value);
 	};
 
 	function handleChangeDob(date: Date | null) {
-		if (date) {
-			setDob(date);
-			props.setProfile({ ...props.profile, dob: date.valueOf() });
-		}
+		props.setProfile({ ...props.profile, dob: date ? date.valueOf() : null });
+		setErrorDob(!date);
 	}
+
+	function shouldBeDisabled() {
+		return !(
+			props.profile.username &&
+			props.profile.firstname &&
+			props.profile.lastname &&
+			props.profile.dob
+		);
+	}
+
+	useEffect(() => {
+		props.setDisabled && props.setDisabled(shouldBeDisabled());
+	}, [props.profile]);
 
 	return (
 		<React.Fragment>
@@ -47,8 +74,9 @@ export function BaseProfileFormContent(props: Props) {
 				fullWidth
 				name="firstname"
 				value={props.profile && props.profile.firstname}
-				onChange={handleChangeProfile}
+				onChange={handleChangeFirstname}
 				required
+				error={errorFirstname}
 			/>
 			<TextField
 				label="Last Name"
@@ -57,8 +85,9 @@ export function BaseProfileFormContent(props: Props) {
 				fullWidth
 				name="lastname"
 				value={props.profile && props.profile.lastname}
-				onChange={handleChangeProfile}
+				onChange={handleChangeLastname}
 				required
+				error={errorLastname}
 			/>
 			<TextField
 				label="Username"
@@ -67,20 +96,24 @@ export function BaseProfileFormContent(props: Props) {
 				fullWidth
 				name="username"
 				value={props.profile && props.profile.username}
-				onChange={handleChangeProfile}
+				onChange={handleChangeUsername}
 				required
+				error={errorUsername}
 			/>
 			<DatePicker
 				views={["year", "month", "date"]}
 				margin="normal"
 				label="Date of birth"
-				value={dob}
+				value={props.profile.dob ? new Date(props.profile.dob) : null}
 				onChange={handleChangeDob}
 				fullWidth
 				disableFuture
 				minDate={new Date("1950-01-01")}
 				maxDate={date.setFullYear(date.getFullYear() - 17)}
 				openTo="year"
+				required
+				error={errorDob}
+				clearable
 			/>
 		</React.Fragment>
 	);

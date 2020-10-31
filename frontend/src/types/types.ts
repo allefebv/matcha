@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 10:38:58 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 15:46:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ export interface Iaddress {
 	lat: number | null;
 	lng: number | null;
 	userId?: number;
-	distance?: number;
+	distanceInKm?: number;
 }
 
 export interface Icoordinates {
@@ -42,27 +42,24 @@ export interface user {
 }
 
 export interface IlistProfiles {
-	profile: IextendedProfile;
+	profile: Iprofile;
 	tag: string[];
 	location: Iaddress;
 }
 
-export interface IextendedProfile extends IbaseProfile {
-	userId: number;
-	popularityScore: number;
-	geoLocationAuthorization: number;
+export interface Iprofile {
+	username: string;
+	firstname: string;
+	lastname: string;
+	dob: number | null;
+	geoLocationAuthorization: boolean;
 	gender: string | null;
 	sexualOrientation: string | null;
 	bio: string | null;
 	age?: number | null;
 	tag?: string[];
-}
-
-export interface IbaseProfile {
-	username: string;
-	firstname: string;
-	lastname: string;
-	dob: number | null;
+	popularityScore?: number;
+	userId?: number;
 }
 
 export interface like {
