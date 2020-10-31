@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 09:43:57 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 07:51:10 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,9 @@ export async function getNotificationController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const notificationListId = await getNotification(jwt.decoded.id);
-		const resultList =
-			notificationListId &&
-			notificationListId.length &&
-			notificationListId.map((item) => {
+		let resultList = [];
+		if (notificationListId && notificationListId.length) {
+			resultList = notificationListId.map((item) => {
 				return {
 					notifierProfile: {
 						dob: item.dob,
@@ -78,6 +77,7 @@ export async function getNotificationController(req: Request, res: Response) {
 					},
 				};
 			});
+		}
 		res.status(200).send(resultList);
 	} catch (error) {
 		res.status(error.code).send(error.message);

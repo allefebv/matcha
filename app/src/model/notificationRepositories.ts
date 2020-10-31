@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:32:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 07:48:01 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,13 @@ export function getNotification(id: number): Promise<any[]> {
 		JOIN 
 			profile ON profile.userId = notificationProfile.notifierProfileId
 		WHERE
-			notificationProfile.profileNotifedId = ${escape(id)}
-		`;
+			notificationProfile.profileNotifedId = ${escape(id)}`;
 
 		dataBase.query(sql, (error: string, result: notification[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
+			console.log(result);
 			resolve(result);
 		});
 	});

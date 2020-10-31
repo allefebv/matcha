@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 16:00:13 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 07:17:38 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,8 +246,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			? `${profile.geoLocationAuthorization}`
 			: false;
 		const sql = `
-		INSERT INTO 
-			profile (
+		INSERT INTO profile (
 			userId,
 			dob,
 			username,
@@ -265,7 +264,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			${escape(profile.lastname)},
 			${escape(gender)},
 			${escape(geoLocationAuthorization)},
-			${escape(profile.sexualOrientation || "bisexual")}',
+			${escape(profile.sexualOrientation || "bisexual")},
 			${escape(bio)})`;
 
 		dataBase.query(sql, async (error, result) => {
