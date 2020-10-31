@@ -6,15 +6,16 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 09:44:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 12:46:20 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 08:40:13 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import socketIo from 'socket.io';
 
-import { addMMessage } from './model/messageRepositories';
+import { io } from '../app';
+import { addMMessage } from '../model/messageRepositories';
 
-export function socketRouter(io: socketIo.Server) {
+export function socketRouter() {
 	io.on("connection", (socket) => {
 		socket.on("chatMessage", (msg) => {
 			io.emit("message" + msg.receiver, msg);
@@ -23,10 +24,10 @@ export function socketRouter(io: socketIo.Server) {
 			}
 		});
 		socket.on("connect", (msg) => {
-			console.log(msg.username + "connect on websocket");
+			console.log(msg.username + " connect on websocket");
 		});
 		socket.on("disconnect", (msg) => {
-			console.log(msg.username + "disconnect on websocket");
+			console.log(msg.username + " disconnect on websocket");
 		});
 	});
 }

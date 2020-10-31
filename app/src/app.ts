@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 16:37:50 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 08:04:08 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ import nodemailer from 'nodemailer';
 import socketIo from 'socket.io';
 
 import { router } from './router';
-import { socketRouter } from './socket';
+import { socketRouter } from './services/socket';
 
 export let dataBase = null;
+
 export const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
 	port: 465,
@@ -33,8 +34,6 @@ export const transporter = nodemailer.createTransport({
 		pass: "@Matacha1234",
 	},
 });
-
-let app: express.Application = null;
 
 function initMiddelware() {
 	app.use(
@@ -75,18 +74,14 @@ function initDatabase() {
 	});
 }
 
-async function main() {
-	app = express();
-	const server = http.createServer(app);
-	const io = socketIo(server);
-	initMiddelware();
-	initDatabase();
-	router(app);
-	socketRouter(io);
+const app = express();
+const server = http.createServer(app);
+export const io = socketIo(server);
+initMiddelware();
+initDatabase();
+router(app);
+socketRouter();
 
-	server.listen(3001, () => {
-		console.log(`Server started on port 3001`);
-	});
-}
-
-main();
+server.listen(3001, () => {
+	console.log(`Server started on port 3001`);
+});

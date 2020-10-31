@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 11:25:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 08:25:49 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ export function getUserById(id: number): Promise<user> {
 		dataBase.query(sql, (error: string, result: user[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (!result || result.length !== 1) {
 				reject({ code: 200, message: "Error: user does not exist" });
+				return;
 			}
 			resolve(result[0]);
 		});
@@ -51,9 +53,11 @@ export function getUserByEmail(email: string): Promise<user> {
 		dataBase.query(sql, (error: string, result: user[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (!result || result.length !== 1) {
 				reject({ code: 200, message: "Error: user does not exist" });
+				return;
 			}
 			resolve(result[0]);
 		});
@@ -73,9 +77,11 @@ export function changePassword(id: number, password: string): Promise<string> {
 		dataBase.query(sql, async (error: string, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result.affectedRows) {
 				resolve("Password has beeen change");
+				return;
 			}
 			reject({ code: 400, message: "Error: password not change" });
 		});
@@ -96,11 +102,14 @@ export function changeEmail(id: number, email: string): Promise<string> {
 			if (error) {
 				if (error.errno === 1062) {
 					reject({ code: 200, message: "Email already exsist" });
+					return;
 				}
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result && result.affectedRows) {
 				resolve("Email has been change");
+				return;
 			}
 			reject({ code: 400, message: "Error: an error occured" });
 		});
@@ -135,12 +144,15 @@ export function addUser(email: string, password: string): Promise<user> {
 			if (error) {
 				if (error.errno === 1062) {
 					reject({ code: 200, message: "Email already exsist" });
+					return;
 				}
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result.affectedRows) {
 				const user = await getUserByEmail(email);
 				resolve(user);
+				return;
 			}
 			reject({ code: 400, message: "Error: an error occured" });
 		});
@@ -160,9 +172,11 @@ export async function activateUser(id: number): Promise<string> {
 		dataBase.query(sql, async (error: string, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result.affectedRows) {
 				resolve("User activated");
+				return;
 			}
 			reject({ code: 400, message: "Error: an error occured" });
 		});
@@ -180,9 +194,11 @@ export async function deleteUser(id: number): Promise<string> {
 		dataBase.query(sql, (error: string, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result.affectedRows) {
 				resolve("User delete");
+				return;
 			}
 			reject({ code: 400, message: "Error: an error occured" });
 		});

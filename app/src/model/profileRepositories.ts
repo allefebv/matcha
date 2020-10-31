@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 07:17:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 08:33:43 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ export function getProfileBySexualOriantation(
 	gender: string
 ): Promise<any> {
 	return new Promise((resolve, reject) => {
-		let genderFilter = null;
+		let genderFilter = "";
 		if (sexualOriantation === "heterosexual" && gender === "male") {
 			genderFilter = "AND profile.gender = 'female'";
 		}

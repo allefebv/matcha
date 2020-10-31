@@ -6,16 +6,19 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 07:51:10 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/10/31 08:14:21 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Request, Response } from 'express';
 
+import { io } from '../app';
 import {
 	addNotification, deleteNotification, getNotification
 } from '../model/notificationRepositories';
-import { getCompleteProfileByUsername } from '../model/profileRepositories';
+import {
+	getCompleteProfileByUsername, getProfileByUserId
+} from '../model/profileRepositories';
 import { jwtVerify } from '../services/validation/jwt';
 
 export async function addNotificationController(req: Request, res: Response) {
@@ -24,12 +27,17 @@ export async function addNotificationController(req: Request, res: Response) {
 		const profileNotified = await getCompleteProfileByUsername(
 			req.body.usernameNotified
 		);
+		const notifierProfile = await getProfileByUserId(jwt.decoded.id);
 		await addNotification(
 			profileNotified.userId,
 			jwt.decoded.id,
 			req.body.notification
 		);
-
+		io.emit("notification" + req.body.usernameNotified, {
+			notification: req.body.notification,
+			notifierProfile: notifierProfile.username,
+			date: Date.now(),
+		});
 		res.status(200).send("Notification add");
 	} catch (error) {
 		res.status(error.code).send(error.message);

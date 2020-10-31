@@ -3,26 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   Header.tsx                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/26 18:16:51 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 08:21:06 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
-import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
-import { AccountMenu } from "../user/AccountMenu";
-import { Link } from "react-router-dom";
-import { connect, ConnectedProps } from "react-redux";
-import IconButton from "@material-ui/core/IconButton";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ChatIcon from "@material-ui/icons/Chat";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import PersonIcon from "@material-ui/icons/Person";
-import { SignInDialog } from "../user/SignInDialog";
-import { SignUpDialog } from "../user/SignUpDialog";
-import * as constants from "../../services/constants";
+import React from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { AppBar, Button, makeStyles, Toolbar } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import ChatIcon from '@material-ui/icons/Chat';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PersonIcon from '@material-ui/icons/Person';
+
+import * as constants from '../../services/constants';
+import { AccountMenu } from '../user/AccountMenu';
+import { SignInDialog } from '../user/SignInDialog';
+import { SignUpDialog } from '../user/SignUpDialog';
 
 const useStyles = makeStyles({
 	appBar: {
