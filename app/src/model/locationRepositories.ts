@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:13 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:22:13 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/02 14:00:16 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,10 @@ export function updateLocation(
 	table: string
 ): Promise<boolean> {
 	return new Promise((resolve) => {
+		console.log(location);
 		const sql = `
 		UPDATE
-			${escape(table)}
+			${table}
 		SET
 			city = ${escape(location.city)},
 			postCode = ${escape(location.postCode)},

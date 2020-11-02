@@ -6,11 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2020/10/26 15:43:01 by jfleury          ###   ########.fr       */
-=======
-/*   Updated: 2020/10/27 10:11:36 by jfleury          ###   ########.fr       */
->>>>>>> 2633bf7c7eaef79bca387df005e5c29e4aed1823
+/*   Updated: 2020/11/02 13:57:41 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +76,7 @@ export async function addTableGeoLocation() {
 		const sql = `CREATE TABLE geoLocation (
 			userId							INTEGER NOT NULL,
 			isFromGeolocation				BOOLEAN DEFAULT 0 NOT NULL,
-		    city							TEXT,
+		    city							TEXT NOT NULL,
     		postCode						TEXT,
     		countryCode						TEXT,
     		country							TEXT,
