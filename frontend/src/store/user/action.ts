@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:18 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 15:25:59 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 20:02:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { user } from "../../types/types";
+import { Iaddress, user } from "../../types/types";
 import { createAction } from "typesafe-actions";
 
 export const actionUser_signin = createAction("USER.USERSIGNIN")<{
@@ -34,7 +34,7 @@ export const actionUser_setProfile = createAction("USER.SETPROFILE")<{
 export const actionUser_logout = createAction("USER.USERLOGOUT")();
 
 export const actionUser_geolocation = createAction("USER.USERGEOLOCATION")<{
-	geolocation: any;
+	geolocation: Iaddress;
 }>();
 
 export const actionUser_usagelocation = createAction("USER.USERUSAGELOCATION")<{

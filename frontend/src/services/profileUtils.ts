@@ -6,12 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:12:33 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/02 15:42:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
+import {
+	actionProfilesList_getRecco,
+	actionProfilesList_getSearch,
+} from "../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../store/ui/action";
 import {
 	actionUser_setProfile,
@@ -21,7 +25,9 @@ import {
 import { Iaddress, Iprofile } from "../types/types";
 import {
 	createProfileAPI,
+	getAllProfilesAPI,
 	getProfileAPI,
+	getRecommendationAPI,
 	handleUsageLocationAPI,
 	postPicturesAPI,
 	postTagsAPI,
@@ -208,6 +214,8 @@ export const submitUsageLocation = async (
 	return handleUsageLocationAPI(location, token)
 		.then((response) => {
 			dispatch(actionUser_usagelocation({ usagelocation: response }));
+			getSearchList(token, dispatch);
+			getRecommendationList(token, dispatch);
 		})
 		.catch((error) => {
 			dispatch(
@@ -259,4 +267,57 @@ export const profileHasImages = (username: string) => {
 		console.log(count);
 	}
 	return count < 5;
+};
+
+export const getSearchList = (token: string, dispatch: Dispatch<AnyAction>) => {
+	getAllProfilesAPI(token)
+		.then((json) => {
+			if (json && json.length) {
+				const withAge = json.map((entry) => {
+					entry.profile.age = entry.profile.dob
+						? getAge(entry.profile.dob)
+						: null;
+					return entry;
+				});
+				dispatch(actionProfilesList_getSearch({ profiles: withAge }));
+			}
+		})
+		.catch((error) => {
+			dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
+};
+
+export const getRecommendationList = (
+	token: string,
+	dispatch: Dispatch<AnyAction>
+) => {
+	getRecommendationAPI(token)
+		.then((json) => {
+			if (json && json.length) {
+				const withAge = json.map((entry) => {
+					if (entry.profile.dob) {
+						entry.profile.age = entry.profile.dob
+							? getAge(entry.profile.dob)
+							: null;
+					}
+					return entry;
+				});
+				dispatch(actionProfilesList_getRecco({ profiles: withAge }));
+			}
+		})
+		.catch((error) => {
+			dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 };

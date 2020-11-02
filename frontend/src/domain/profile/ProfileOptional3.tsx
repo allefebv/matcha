@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:46:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/03 11:20:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@ import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionUser_setProfile,
-	actionUser_usagelocation,
-} from "../../store/user/action";
 import { autocompleteLocationAPI } from "../../services/apiCalls";
 import { Iaddress, Iprofile } from "../../types/types";
 import { throttle } from "lodash";
@@ -152,7 +148,7 @@ function ProfileOptional3Component(props: Props) {
 	return (
 		<React.Fragment>
 			<Grid item xs={12}>
-				<Typography color="primary">Where are you ?</Typography>
+				<Typography color="primary">City and PostCode</Typography>
 			</Grid>
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>

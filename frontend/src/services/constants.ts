@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:15:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/02 15:12:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,21 @@ export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
 export const URI_BLACKLIST_PROFILE = "/blacklist/addProfileBlacklist";
 export const URI_GET_BLACKLIST = "/blacklist/getProfileBlacklist";
 
+//Geocoding APIs
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
-export const URI_REVERSE_GEOCODING_API =
-	"https://us1.locationiq.com/v1/reverse.php?key=";
-export const PARAMETERS_REVERSE_GEOCODING_API =
-	"&zoom=12&accept-language=fr&normalizeaddress=1&postaladdress=1&statecode=1&format=json";
+// export const URI_REVERSE_GEOCODING_API =
+// 	"https://us1.locationiq.com/v1/reverse.php?key=";
+// export const PARAMETERS_REVERSE_GEOCODING_API =
+// 	"&zoom=12&accept-language=fr&normalizeaddress=1&postaladdress=1&statecode=1&format=json";
 
-export const URI_AUTOCOMPLETE_API =
-	"https://api.locationiq.com/v1/autocomplete.php?key=";
-export const PARAMETERS_AUTOCOMPLETE_API =
-	"limit=5&tag=" + encodeURIComponent("place:city,place:town");
+export const TOMTOM_API_KEY = "Zc6jNalIhiRkImoNZkfHYmvNo5BgmKTn";
+export const URI_REVERSE_GEOCODING_API =
+	"https://api.tomtom.com/search/2/reverseGeocode/";
+
+// export const URI_AUTOCOMPLETE_API =
+// 	"https://api.locationiq.com/v1/autocomplete.php?key=";
+
+export const URI_AUTOCOMPLETE_API = "https://api.tomtom.com/search/2/search/";
 
 export const POST_METHOD = "POST";
 export const GET_METHOD = "GET";

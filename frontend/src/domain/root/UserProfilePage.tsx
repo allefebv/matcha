@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:10:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/10/31 18:53:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ const UserProfilePageComponent = (props: Props) => {
 
 	useEffect(() => {
 		if (geolocation) {
+			console.log(geolocation);
 			props.dispatch(
 				actionUser_geolocation({
 					geolocation: geolocation,

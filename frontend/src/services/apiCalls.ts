@@ -6,10 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:12:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/03 11:20:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { isEqual, uniqWith } from "lodash";
 import * as constants from "../services/constants";
 import { Iaddress, Iprofile, IlistProfiles, user } from "../types/types";
 import { fetchApi } from "./fetchApi";
@@ -322,21 +323,30 @@ export const getTagAutocompleteAPI = (details: Object, token: string) => {
 	);
 };
 
-const createAddressFromBody = (body: any[]): Iaddress[] | null => {
-	if (body && body.length) {
-		const filtered: any[] = body.filter((entry) => entry && entry.address);
-		return filtered.map((entry: any) => {
-			const { address } = entry;
-			return {
-				city: address.name ? address.name : null,
-				countryCode: address.country_code ? address.country_code : null,
-				postCode: address.postcode ? address.postcode : null,
-				country: address.country ? address.country : null,
-				isFromGeolocation: false,
-				lat: null,
-				lng: null,
-			};
-		});
+const createAddressFromBody = (body: any): Iaddress[] | null => {
+	console.log(body);
+	if (body && body.results.length) {
+		const filtered: any[] = body.results.filter(
+			(entry: any) => entry && entry.address
+		);
+		return uniqWith(
+			filtered
+				.map((entry: any) => {
+					const { address, position } = entry;
+					console.log(address, position);
+					return {
+						city: address.municipality.split(",")[0] || null,
+						countryCode: address.countryCode || null,
+						postCode: address.postalCode || null,
+						country: address.country || null,
+						isFromGeolocation: false,
+						lat: (position && position.lat) || null,
+						lng: (position && position.lon) || null,
+					};
+				})
+				.filter((entry) => entry.postCode),
+			isEqual
+		);
 	}
 	return null;
 };
@@ -344,11 +354,10 @@ const createAddressFromBody = (body: any[]): Iaddress[] | null => {
 export const autocompleteLocationAPI = async (input: string) => {
 	return fetchApi<any[]>(
 		constants.URI_AUTOCOMPLETE_API +
-			constants.LOCATION_IQ_API_KEY +
-			"&q=" +
 			encodeURIComponent(input) +
-			"&" +
-			constants.PARAMETERS_AUTOCOMPLETE_API,
+			".json?key=" +
+			constants.TOMTOM_API_KEY +
+			"&language=fr-FR&typeahead=true&countrySet=FR&idxSet=Geo%2CAddr%2CPAD&limit=5",
 		{
 			method: constants.GET_METHOD,
 		}
