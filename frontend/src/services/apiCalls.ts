@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/03 11:20:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:53:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,7 @@ export const deleteAPI = (details: Object, token: string) => {
 };
 
 export const getProfileAPI = (token: string) => {
-	return fetchApi<{
-		profile: Iprofile;
-		tag: string[] | [];
-		location: Iaddress | null;
-	}>(constants.URL + constants.URI_GET_PROFILE, {
+	return fetchApi<IlistProfiles>(constants.URL + constants.URI_GET_PROFILE, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
@@ -69,6 +65,20 @@ export const getProfileAPI = (token: string) => {
 		},
 		credentials: "include",
 	});
+};
+
+export const getProfileByUsernameAPI = (token: string, username: string) => {
+	return fetchApi<IlistProfiles>(
+		constants.URL + constants.URI_GET_PROFILE_BY_USERNAME + username,
+		{
+			method: constants.GET_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
 };
 
 export const getRecommendationAPI = (token: string) => {
@@ -86,7 +96,7 @@ export const getRecommendationAPI = (token: string) => {
 };
 
 export const getMatchesAPI = (token: string) => {
-	return fetchApi<IlistProfiles[]>(constants.URL + constants.URI_GET_MATCHES, {
+	return fetchApi<Iprofile[]>(constants.URL + constants.URI_GET_MATCHES, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
@@ -108,6 +118,17 @@ export const getAllProfilesAPI = (token: string) => {
 			credentials: "include",
 		}
 	);
+};
+
+export const getNotificationsAPI = (token: string) => {
+	return fetchApi<any[]>(constants.URL + constants.URI_GET_NOTIFICATIONS, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
 };
 
 export const modifyEmailAPI = (details: Object, token: string) => {
@@ -237,7 +258,7 @@ export const getProfileVisitsAPI = (token: string) => {
 	return fetchApi<IlistProfiles[]>(
 		constants.URL + constants.URI_GET_PROFILE_VISITS,
 		{
-			method: constants.POST_METHOD,
+			method: constants.GET_METHOD,
 			headers: {
 				"Content-Type": "application/json",
 				token: token,
@@ -251,7 +272,7 @@ export const getProfileLikesAPI = (token: string) => {
 	return fetchApi<IlistProfiles[]>(
 		constants.URL + constants.URI_GET_PROFILE_LIKES,
 		{
-			method: constants.POST_METHOD,
+			method: constants.GET_METHOD,
 			headers: {
 				"Content-Type": "application/json",
 				token: token,
@@ -324,7 +345,6 @@ export const getTagAutocompleteAPI = (details: Object, token: string) => {
 };
 
 const createAddressFromBody = (body: any): Iaddress[] | null => {
-	console.log(body);
 	if (body && body.results.length) {
 		const filtered: any[] = body.results.filter(
 			(entry: any) => entry && entry.address
@@ -333,7 +353,6 @@ const createAddressFromBody = (body: any): Iaddress[] | null => {
 			filtered
 				.map((entry: any) => {
 					const { address, position } = entry;
-					console.log(address, position);
 					return {
 						city: address.municipality.split(",")[0] || null,
 						countryCode: address.countryCode || null,

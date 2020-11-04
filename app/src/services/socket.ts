@@ -3,24 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   socket.ts                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 09:44:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 08:40:13 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/03 19:39:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import socketIo from 'socket.io';
+import { getProfileByUsername } from "../model/profileRepositories";
+import { msg } from "types/types";
 
-import { io } from '../app';
-import { addMMessage } from '../model/messageRepositories';
+import { io } from "../app";
+import { addMessage } from "../model/messageRepositories";
+import { handleNotifications } from "./handleNotifications";
 
 export function socketRouter() {
 	io.on("connection", (socket) => {
-		socket.on("chatMessage", (msg) => {
-			io.emit("message" + msg.receiver, msg);
+		socket.on("chatMessage", async (msg: msg) => {
 			if (msg && msg.sender && msg.receiver && msg.timestamp && msg.message) {
-				addMMessage(msg.sender, msg.receiver, msg.timestamp, msg.message);
+				io.emit("message" + msg.receiver, msg);
+				addMessage(
+					msg.sender,
+					msg.receiver,
+					msg.timestamp.toString(),
+					msg.message
+				);
+				const notifierProfile = await getProfileByUsername(msg.sender);
+				const notifiedProfile = await getProfileByUsername(msg.receiver);
+				handleNotifications("message", notifierProfile, notifiedProfile);
 			}
 		});
 		socket.on("connect", (msg) => {

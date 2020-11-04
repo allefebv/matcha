@@ -3,20 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   viewController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 09:44:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/03 20:01:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import { getProfileByUsername } from '../model/profileRepositories';
 import {
-	addView, getView, getViewByViewerProfileId, updateView
-} from '../model/viewRepositories';
-import { jwtVerify } from '../services/validation/jwt';
+	getProfileByUserId,
+	getProfileByUsername,
+} from "../model/profileRepositories";
+import {
+	addView,
+	getView,
+	getViewByViewerProfileId,
+	updateView,
+} from "../model/viewRepositories";
+import { jwtVerify } from "../services/validation/jwt";
+import { handleNotifications } from "../services/handleNotifications";
 
 export async function getViewController(req: Request, res: Response) {
 	try {
@@ -29,27 +36,32 @@ export async function getViewController(req: Request, res: Response) {
 }
 
 export async function addViewController(req: Request, res: Response) {
-	const jwt = await jwtVerify(req.headers.token, res);
-	if (jwt && jwt.isLogin) {
-		const profileSeen = await getProfileByUsername(req.body.username);
-		const viewExsist = await getViewByViewerProfileId(
-			profileSeen.userId,
-			jwt.decoded.id
-		);
-		if (viewExsist) {
-			const isUpdate = await updateView(profileSeen.userId, jwt.decoded.id);
-			if (isUpdate) {
-				res.status(200).send("Update view");
-				return;
+	try {
+		const jwt = await jwtVerify(req.headers.token, res);
+		if (jwt && jwt.isLogin) {
+			const profileSeen = await getProfileByUsername(req.body.username);
+			const viewExsist = await getViewByViewerProfileId(
+				profileSeen.userId,
+				jwt.decoded.id
+			);
+			const notifierProfile = await getProfileByUserId(jwt.decoded.id);
+			await handleNotifications("view", notifierProfile, profileSeen);
+			if (viewExsist) {
+				const isUpdate = await updateView(profileSeen.userId, jwt.decoded.id);
+				if (isUpdate) {
+					res.status(200).send("Update view");
+					return;
+				}
+			}
+			if (profileSeen) {
+				const add = await addView(profileSeen.userId, jwt.decoded.id);
+				if (add) {
+					res.status(200).send("Add view");
+					return;
+				}
 			}
 		}
-		if (profileSeen) {
-			const add = await addView(profileSeen.userId, jwt.decoded.id);
-			if (add) {
-				res.status(200).send("Add view");
-				return;
-			}
-		}
+	} catch (e) {
+		res.status(400).send("ERROR_OCCURED");
 	}
-	res.status(400).send("ERROR_OCCURED");
 }

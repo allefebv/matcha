@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/02 15:12:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:52:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 export const URI_CREATE_PROFILE = "/profile/addProfile";
 export const URI_UPDATE_PROFILE = "/profile/updateProfile";
 export const URI_GET_PROFILE = "/profile/getProfile";
+export const URI_GET_PROFILE_BY_USERNAME =
+	"/profile/getProfileByUsername?username=";
 
 //tag
 export const URI_POST_TAGS = "/tag/addTagProfile";
@@ -41,12 +43,13 @@ export const URI_GET_RECOMMENDATIONS = "/recommendation/getRecommendation";
 export const URI_GET_ALL_PROFILES = "/recommendation/getAllProfile";
 
 //notification
+export const URI_GET_NOTIFICATIONS = "/notification/getNotification";
 
 //like
 export const URI_LIKE_PROFILE = "/like/addLikedProfile";
 export const URI_UNLIKE_PROFILE = "/like/deleteLikedProfile";
 export const URI_GET_MATCHES = "/like/getProfileMatch";
-export const URI_GET_PROFILE_LIKES = "/view/getView";
+export const URI_GET_PROFILE_LIKES = "/like/getProfileLike";
 
 //view / visit
 export const URI_VISIT_PROFILE = "/view/addView";

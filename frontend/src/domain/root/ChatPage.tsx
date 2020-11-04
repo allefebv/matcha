@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:22:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:43:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const ChatPageComponent = (props: Props) => {
-	const [tabMatch, setTableMatch] = useState<
-		{ profile: Iprofile; tag: string[] | []; location: Iaddress }[]
-	>([]);
+	const [profiles, setProfiles] = useState<Iprofile[]>([]);
 	const [userSelect, setUserSelect] = useState<string | null>(null);
 	const [message, setMessage] = useState<{
 		sender: string;
@@ -39,10 +37,10 @@ const ChatPageComponent = (props: Props) => {
 
 	useEffect(() => {
 		getMatchesAPI(props.token)
-			.then((item) => {
-				if (item && item.length) {
-					setTableMatch(item);
-					setUserSelect(item[0].profile.username);
+			.then((profiles) => {
+				if (profiles && profiles.length) {
+					setProfiles(profiles);
+					setUserSelect(profiles[0].username);
 				}
 			})
 			.catch((error) => console.log(error));
@@ -81,7 +79,7 @@ const ChatPageComponent = (props: Props) => {
 			}}
 		>
 			<ChatListProfile
-				tabMatch={tabMatch}
+				profiles={profiles}
 				userSelect={userSelect}
 				setUserSelect={setUserSelect}
 			/>

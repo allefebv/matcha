@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:02:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/03 20:11:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ export function ProfileOptional1(props: Props) {
 				props.setDisabled(true);
 			}
 		}
-		console.log(props.profile.gender, props.profile.sexualOrientation);
 	}, [props.profile]);
 
 	function handleChangeGender(

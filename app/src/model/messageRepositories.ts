@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   messageRepositories.ts                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 12:07:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:28:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/03 19:06:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { dataBase } from '../app';
+import { dataBase } from "../app";
 
-export function addMMessage(
+export function addMessage(
 	sender: string,
 	receiver: string,
 	timestamp: string,

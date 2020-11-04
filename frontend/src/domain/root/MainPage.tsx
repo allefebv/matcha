@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/02 15:41:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:44:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,27 +142,27 @@ const MainPageComponent = (props: Props) => {
 	const ITEMS_PER_PAGES = 20;
 
 	const getMatchesList = () => {
-		getMatchesAPI(props.loggedIn)
-			.then((json) => {
-				if (json && json.length) {
-					const withAge = json.map((entry) => {
-						entry.profile.age = entry.profile.dob
-							? getAge(entry.profile.dob)
-							: null;
-						return entry;
-					});
-					props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
-				}
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+		// getMatchesAPI(props.loggedIn)
+		// 	.then((json) => {
+		// 		if (json && json.length) {
+		// 			const withAge = json.map((entry) => {
+		// 				entry.profile.age = entry.profile.dob
+		// 					? getAge(entry.profile.dob)
+		// 					: null;
+		// 				return entry;
+		// 			});
+		// 			props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
+		// 		}
+		// 	})
+		// 	.catch((error) => {
+		// 		props.dispatch(
+		// 			actionUi_showSnackbar({
+		// 				message: error.message,
+		// 				type: "error",
+		// 			})
+		// 		);
+		// 		console.log(error.message);
+		// 	});
 	};
 
 	useEffect(() => {
@@ -241,7 +241,6 @@ const MainPageComponent = (props: Props) => {
 				maxPopularity: limitsArr[3],
 				maxDistance: limitsArr[4],
 			};
-			console.log(newLimits);
 			setFilterLimits(newLimits);
 			setFilterValues(newLimits);
 		}
@@ -249,7 +248,6 @@ const MainPageComponent = (props: Props) => {
 
 	const filterList = () => {
 		if (currentProfilesList && filterValues) {
-			console.log(filterValues);
 			const filtered = currentProfilesList.filter((entry) => {
 				const { age, popularityScore } = entry.profile;
 				const distance = entry.location
@@ -272,7 +270,6 @@ const MainPageComponent = (props: Props) => {
 					tagFilter
 				);
 			});
-			console.log(getSortFunction()?.name, "METHOD: " + sortMethod);
 			const sorted = filtered.sort(getSortFunction());
 			setFilteredProfilesList(sorted);
 		}
@@ -433,7 +430,6 @@ const MainPageComponent = (props: Props) => {
 		reason: string
 	) {
 		let tags = typeof value === "string" ? [value] : value;
-		console.log(tags);
 		setTagList(tags);
 	}
 

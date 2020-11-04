@@ -3,23 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   notificationController.ts                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 11:36:03 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 08:14:21 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/03 20:11:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import { io } from '../app';
+import { io } from "../app";
 import {
-	addNotification, deleteNotification, getNotification
-} from '../model/notificationRepositories';
+	addNotification,
+	deleteNotification,
+	getNotification,
+} from "../model/notificationRepositories";
 import {
-	getCompleteProfileByUsername, getProfileByUserId
-} from '../model/profileRepositories';
-import { jwtVerify } from '../services/validation/jwt';
+	getCompleteProfileByUsername,
+	getProfileByUserId,
+} from "../model/profileRepositories";
+import { jwtVerify } from "../services/validation/jwt";
 
 export async function addNotificationController(req: Request, res: Response) {
 	try {
