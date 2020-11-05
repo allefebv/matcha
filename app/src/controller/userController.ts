@@ -3,31 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   userController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 17:00:15 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 15:54:07 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
-import fs from 'fs';
+import { Request, Response } from "express";
+import fs from "fs";
 
-import { getProfileByUserId } from '../model/profileRepositories';
+import { getProfileByUserId } from "../model/profileRepositories";
 import {
-	activateUser, addUser, changeEmail, changePassword, deleteUser,
-	getUserByEmail, getUserById
-} from '../model/userRepositories';
-import { generatePassword } from '../services/generateString';
+	activateUser,
+	addUser,
+	changeEmail,
+	changePassword,
+	deleteUser,
+	getUserByEmail,
+	getUserById,
+} from "../model/userRepositories";
+import { generatePassword } from "../services/generateString";
 import {
-	activatedUserMailer, newEmailMailer, newPasswordMailer
-} from '../services/mailer';
-import { generateTokenForUser, jwtVerify } from '../services/validation/jwt';
-import { checkPassword, hashPassword } from '../services/validation/password';
+	activatedUserMailer,
+	newEmailMailer,
+	newPasswordMailer,
+} from "../services/mailer";
+import { generateTokenForUser, jwtVerify } from "../services/validation/jwt";
+import { checkPassword, hashPassword } from "../services/validation/password";
 import {
-	addUserValidation, changeEmailValidation, changePasswordValidation,
-	deleteUserValidation, loginUserValidation, resetPasswordValidation
-} from '../services/validation/userValidation';
+	addUserValidation,
+	changeEmailValidation,
+	changePasswordValidation,
+	deleteUserValidation,
+	loginUserValidation,
+	resetPasswordValidation,
+} from "../services/validation/userValidation";
 
 const glob = require("glob");
 
@@ -38,6 +49,7 @@ export async function loginUserController(req: Request, res: Response) {
 		await checkPassword(req.body.password, user.password);
 		res.status(200).json({
 			user: {
+				id: user.id,
 				email: user.email,
 				registrationDate: user.registrationDate,
 				activated: user.activated,

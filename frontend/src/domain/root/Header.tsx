@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 15:26:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 14:54:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ const HeaderComponent = (props: Props) => {
 					console.log(error.message);
 				});
 		socket.on("notification" + props.username, pushNotification);
-		console.log("logged in / mount ?");
 	}, [props.loggedIn]);
 
 	return (

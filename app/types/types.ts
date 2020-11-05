@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/09 12:25:20 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/03 14:23:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 11:52:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ export interface profile {
 	sexualOrientation: string | null;
 	geoLocationAuthorization: boolean;
 	bio: string | null;
+	online?: number;
+	lastConnection?: number;
 }
 
 export interface like {

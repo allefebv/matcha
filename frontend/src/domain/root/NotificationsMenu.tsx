@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:25:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 17:24:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,14 @@ const NotificationsMenuComponent = (props: Props) => {
 			pathname: constants.VISIT_PROFILE,
 			state: profile,
 		});
+		handleClose();
 	};
 
 	const redirectToChat = () => {
 		history.push({
 			pathname: constants.CHAT_ROUTE,
 		});
+		handleClose();
 	};
 
 	const getNotificationCard = () => {

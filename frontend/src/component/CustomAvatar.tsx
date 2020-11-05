@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:38:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 16:38:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 17:37:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 
-import { Avatar, makeStyles } from "@material-ui/core";
+import { Avatar, Badge, makeStyles } from "@material-ui/core";
 
 interface Props {
 	src: string | undefined;

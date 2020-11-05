@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/04 15:49:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 09:45:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ export function getNotification(id: number): Promise<any[]> {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			console.log(result);
 			resolve(result);
 		});
 	});

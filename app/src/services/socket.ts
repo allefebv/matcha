@@ -6,11 +6,15 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 09:44:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/03 19:39:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 17:40:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { getProfileByUsername } from "../model/profileRepositories";
+import {
+	getProfileByUserId,
+	getProfileByUsername,
+	updateProfile,
+} from "../model/profileRepositories";
 import { msg } from "types/types";
 
 import { io } from "../app";
@@ -19,6 +23,19 @@ import { handleNotifications } from "./handleNotifications";
 
 export function socketRouter() {
 	io.on("connection", (socket) => {
+		socket.on("online", async (payload: any) => {
+			if (payload.id) {
+				try {
+					io.emit("online", payload.id);
+					const profile = await getProfileByUserId(payload.id);
+					profile.online = 1;
+					updateProfile(profile, payload.id);
+					socket["userId"] = payload.id;
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		});
 		socket.on("chatMessage", async (msg: msg) => {
 			if (msg && msg.sender && msg.receiver && msg.timestamp && msg.message) {
 				io.emit("message" + msg.receiver, msg);
@@ -33,11 +50,16 @@ export function socketRouter() {
 				handleNotifications("message", notifierProfile, notifiedProfile);
 			}
 		});
-		socket.on("connect", (msg) => {
-			console.log(msg.username + " connect on websocket");
-		});
-		socket.on("disconnect", (msg) => {
-			console.log(msg.username + " disconnect on websocket");
+		socket.on("disconnect", async () => {
+			try {
+				io.emit("offline", socket["userId"]);
+				const profile = await getProfileByUserId(socket["userId"]);
+				profile.online = 0;
+				profile.lastConnection = Date.now();
+				updateProfile(profile, socket["userId"]);
+			} catch (e) {
+				console.log(e);
+			}
 		});
 	});
 }

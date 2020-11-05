@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   locationRepositories.ts                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:13 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/02 14:00:16 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 09:45:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { location } from '../../types/types';
-import { dataBase } from '../app';
+import { location } from "../../types/types";
+import { dataBase } from "../app";
 
 function getLocation(id: number, table: string): Promise<location> {
 	return new Promise((resolve) => {
@@ -75,7 +75,6 @@ export function updateLocation(
 	table: string
 ): Promise<boolean> {
 	return new Promise((resolve) => {
-		console.log(location);
 		const sql = `
 		UPDATE
 			${table}

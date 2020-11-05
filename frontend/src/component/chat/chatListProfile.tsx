@@ -6,10 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:32:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 17:26:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { Badge } from "@material-ui/core";
 import React from "react";
 
 import { socket } from "../../domain/root/App";
@@ -23,7 +24,6 @@ interface Props {
 }
 
 const ChatListProfileComponent = (props: Props) => {
-	console.log(props.profiles);
 	return (
 		<div
 			style={{
