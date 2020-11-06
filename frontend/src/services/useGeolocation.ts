@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:35:59 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/03 11:20:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:52:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as constants from "../services/constants";
 import { Iaddress } from "../types/types";
 import { throttle } from "lodash";
@@ -72,6 +72,7 @@ export const useGeolocation = () => {
 
 	useEffect(() => {
 		getLocation();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return geolocation;

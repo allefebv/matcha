@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 18:11:34 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/28 19:39:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:39:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React from "react";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import { makeStyles } from "@material-ui/core";
 

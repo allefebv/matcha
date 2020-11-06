@@ -6,14 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:16:40 by senz              #+#    #+#             */
-/*   Updated: 2020/10/20 09:13:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 13:05:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
-import { Button, CircularProgress, Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 
 import { BaseProfileForm } from "../profile/BaseProfileForm";
 import { Redirect } from "react-router-dom";
@@ -54,6 +54,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 		) {
 			setNext("extended");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleExtended = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -89,6 +90,7 @@ const ProfileCreationPageComponent = (props: Props) => {
 				);
 			case "skip":
 				setRedirect(constants.SEARCH_ROUTE);
+				break;
 			case "extended":
 				return <ExtendedProfileStepper />;
 		}

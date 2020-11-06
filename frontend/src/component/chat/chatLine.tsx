@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 11:02:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 15:22:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:44:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const ChatLineComponent = (props: Props) => {
-	if (props.lineItem.username == props.userProfile.username) {
+	if (props.lineItem.username === props.userProfile.username) {
 		return (
 			<div
 				style={{

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:43:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:51:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ const TagSearchComponent = (props: Props) => {
 
 	useEffect(() => {
 		TagAutocomplete();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [inputValue]);
 
 	return (

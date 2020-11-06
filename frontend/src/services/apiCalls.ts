@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:53:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 11:40:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ export const visitProfileAPI = (details: Object, token: string) => {
 };
 
 export const getProfileVisitsAPI = (token: string) => {
-	return fetchApi<IlistProfiles[]>(
+	return fetchApi<Iprofile[]>(
 		constants.URL + constants.URI_GET_PROFILE_VISITS,
 		{
 			method: constants.GET_METHOD,
@@ -269,17 +269,14 @@ export const getProfileVisitsAPI = (token: string) => {
 };
 
 export const getProfileLikesAPI = (token: string) => {
-	return fetchApi<IlistProfiles[]>(
-		constants.URL + constants.URI_GET_PROFILE_LIKES,
-		{
-			method: constants.GET_METHOD,
-			headers: {
-				"Content-Type": "application/json",
-				token: token,
-			},
-			credentials: "include",
-		}
-	);
+	return fetchApi<Iprofile[]>(constants.URL + constants.URI_GET_PROFILE_LIKES, {
+		method: constants.GET_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+	});
 };
 
 export const likeProfileAPI = (details: Object, token: string) => {

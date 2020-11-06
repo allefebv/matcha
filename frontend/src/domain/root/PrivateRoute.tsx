@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:03 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 09:13:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:41:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,3 @@ const PrivateRouteComponent = (props: Props) => {
 };
 
 export const PrivateRoute = withReduxProps(PrivateRouteComponent);
-
-// interface Props {
-// 	component: FC | React.ComponentClass;
-// 	isLogged: Boolean;
-// 	path: string;
-// }
-
-// export const PrivateRoute = ({ component, isLogged, ...rest }: Props) => {
-// 	const routeComponent = (props: any) =>
-// 		isLogged ? (
-// 			React.createElement(component, props)
-// 		) : (
-// 			<Redirect to={{ pathname: constants.LANDING_ROUTE }} />
-// 		);
-// 	return <Route {...rest} render={routeComponent} />;
-// };

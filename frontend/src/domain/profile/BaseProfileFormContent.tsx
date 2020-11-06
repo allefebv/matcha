@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:42:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:51:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ type Props = {
 };
 
 export function BaseProfileFormContent(props: Props) {
-	const [dob, setDob] = useState<Date | null>();
 	const [errorUsername, setErrorUsername] = useState(false);
 	const [errorFirstname, setErrorFirstname] = useState(false);
 	const [errorLastname, setErrorLastname] = useState(false);
@@ -63,6 +62,7 @@ export function BaseProfileFormContent(props: Props) {
 
 	useEffect(() => {
 		props.setDisabled && props.setDisabled(shouldBeDisabled());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.profile]);
 
 	return (

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 16:23:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:42:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import {
-	getBlackListAPI,
-	getProfileAPI,
-	signinAPI,
-} from "../../services/apiCalls";
+import { signinAPI } from "../../services/apiCalls";
 import * as constants from "../../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionUser_setBlackList,
-	actionUser_signin,
-} from "../../store/user/action";
+import { actionUser_signin } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { getProfileHydrateRedux } from "../../services/profileUtils";
 

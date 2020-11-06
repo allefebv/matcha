@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:44:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:47:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ import {
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
 import { ToggleGroup } from "../../component/ToggleGroup";
-import { getMatchesAPI } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { actionProfilesList_getMatches } from "../../store/profilesLists/action";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import {
-	getAge,
 	getSearchList,
 	getRecommendationList,
 	isProfileComplete,
@@ -173,6 +169,7 @@ const MainPageComponent = (props: Props) => {
 			getSearchList(props.loggedIn, props.dispatch);
 			getMatchesList();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -181,6 +178,7 @@ const MainPageComponent = (props: Props) => {
 		} else if (!props.isProfileComplete && props.profilesSearch) {
 			setToggleList("Search");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.profilesRecco, props.profilesSearch]);
 
 	useEffect(() => {
@@ -191,6 +189,7 @@ const MainPageComponent = (props: Props) => {
 		} else if (toggleList === "Matches") {
 			setCurrentProfilesList(props.profilesMatches);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [toggleList]);
 
 	useEffect(() => {
@@ -198,6 +197,7 @@ const MainPageComponent = (props: Props) => {
 			computeFilterLimits(currentProfilesList);
 			setFilteredProfilesList(currentProfilesList);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentProfilesList]);
 
 	useEffect(() => {
@@ -205,6 +205,7 @@ const MainPageComponent = (props: Props) => {
 			loading && setLoading(false);
 			setTotalPages(Math.ceil(filteredProfilesList.length / ITEMS_PER_PAGES));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filteredProfilesList]);
 
 	const computeFilterLimits = (profilesArray: IlistProfiles[]) => {

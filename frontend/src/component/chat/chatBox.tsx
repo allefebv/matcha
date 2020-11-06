@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:22:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 13:05:10 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ const ChatBoxComponent = (props: Props) => {
 			});
 			setListMessage(tmpList);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.message]);
 
 	useEffect(() => {
@@ -87,6 +88,7 @@ const ChatBoxComponent = (props: Props) => {
 				);
 				console.log(error.message);
 			});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.userSelect]);
 
 	useEffect(() => {

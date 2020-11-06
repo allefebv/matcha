@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 14:54:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 13:06:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
 
-import {
-	AppBar,
-	Button,
-	makeStyles,
-	MenuItem,
-	Toolbar,
-} from "@material-ui/core";
+import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ChatIcon from "@material-ui/icons/Chat";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -102,6 +96,7 @@ const HeaderComponent = (props: Props) => {
 					console.log(error.message);
 				});
 		socket.on("notification" + props.username, pushNotification);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn]);
 
 	return (

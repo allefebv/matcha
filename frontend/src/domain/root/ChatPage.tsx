@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:43:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:47:40 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ import { ChatBox } from "../../component/chat/chatBox";
 import { ChatListProfile } from "../../component/chat/chatListProfile";
 import { socket } from "../../domain/root/App";
 import { getMatchesAPI } from "../../services/apiCalls";
-import { Iaddress, Iprofile } from "../../types/types";
+import { Iprofile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -44,6 +44,7 @@ const ChatPageComponent = (props: Props) => {
 				}
 			})
 			.catch((error) => console.log(error));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	function callBack(item: {
@@ -60,6 +61,7 @@ const ChatPageComponent = (props: Props) => {
 
 	useEffect(() => {
 		socket.on("message" + props.profile.username, callBack);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/03 11:20:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:52:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { Grid, TextField, Typography } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
@@ -40,6 +40,12 @@ function ProfileOptional3Component(props: Props) {
 	const [options, setOptions] = useState<Iaddress[]>([]);
 	const [inputValue, setInputValue] = useState("");
 	const [prevent, setPrevent] = useState(false);
+	const ref = useRef(options);
+
+	const updateOptions = (options: Iaddress[]) => {
+		ref.current = options;
+		setOptions(options);
+	};
 
 	const autocomplete = async (input: string) => {
 		const address = await autocompleteLocationAPI(input).catch((error) => {
@@ -63,15 +69,27 @@ function ProfileOptional3Component(props: Props) {
 		if (inputValue) {
 			MemoizedThrottledAutocomplete(inputValue);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [inputValue]);
 
 	useEffect(() => {
+		if (props.usageLocation) {
+			const tmp = [...ref.current];
+			tmp.push(props.usageLocation);
+			updateOptions(tmp);
+		}
+	}, [props.usageLocation]);
+
+	useEffect(() => {
 		if (props.currentGeolocation) {
-			setOptions([props.currentGeolocation]);
+			const tmp = [...ref.current];
+			tmp.unshift(props.currentGeolocation);
+			updateOptions(tmp);
 		}
 		if (value && props.setDisabled) {
 			props.setDisabled(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.currentGeolocation]);
 
 	const handleInputChange = (

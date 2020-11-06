@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 18:30:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:40:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@ import React from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { InListProfileCard } from "./InListProfileCard";
-import { IlistProfiles } from "../types/types";
+import { Iprofile } from "../types/types";
 
 const styleList: React.CSSProperties = {
 	width: "100%",
@@ -23,13 +23,13 @@ const styleList: React.CSSProperties = {
 };
 
 type Props = {
-	list: any[] | undefined;
+	list: Iprofile[] | undefined;
 };
 
 export function ProfileCardsScroll(props: Props) {
 	const cards = props.list
 		? props.list.map((entry) => (
-				<ListItem>
+				<ListItem key={entry.username}>
 					<InListProfileCard entry={entry}></InListProfileCard>
 				</ListItem>
 		  ))

@@ -6,14 +6,15 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/04 17:51:21 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:42:10 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
 import {
+	getProfileAPI,
 	getProfileLikesAPI,
 	getProfileVisitsAPI,
 	handleGeoLocationAPI,
@@ -25,9 +26,8 @@ import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";
 import { ProfileOptional2 } from "../profile/ProfileOptional2";
 import { ProfileOptional3 } from "../profile/ProfileOptional3";
-import { Iprofile, IlistProfiles, Iaddress } from "../../types/types";
+import { Iprofile, Iaddress } from "../../types/types";
 import {
-	getProfileHydrateRedux,
 	submitPictures,
 	submitTags,
 	submitUsageLocation,
@@ -47,12 +47,12 @@ type Props = {} & ReduxProps;
 const UserProfilePageComponent = (props: Props) => {
 	const [profile, setProfile] = useState<Iprofile>({ ...props.profile });
 	const [tagList, setTagList] = useState<string[]>([...props.tagList]);
-	const [disabled, setDisabled] = useState(false);
-	const [profileVisits, setProfileVisits] = useState<IlistProfiles[]>();
-	const [profileLikes, setProfileLikes] = useState<IlistProfiles[]>();
 	const [usageLocation, setUsageLocation] = useState<Iaddress | null>({
 		...props.usageLocation,
 	});
+	const [disabled, setDisabled] = useState(false);
+	const [profileVisits, setProfileVisits] = useState<Iprofile[]>();
+	const [profileLikes, setProfileLikes] = useState<Iprofile[]>();
 	const [imgs, setImgs] = useState<(string | null)[]>([
 		null,
 		null,
@@ -84,11 +84,29 @@ const UserProfilePageComponent = (props: Props) => {
 	}, [geolocation]);
 
 	useEffect(() => {
-		getProfileHydrateRedux(props.dispatch, props.loggedIn);
+		getProfile();
 		getProfileVisitsList();
 		getProfileLikesList();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const getProfile = () => {
+		return getProfileAPI(props.loggedIn)
+			.then((response: any) => {
+				if (response) {
+					setProfile({ ...profile, online: profile.online });
+				}
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+	};
 
 	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -201,10 +219,18 @@ const UserProfilePageComponent = (props: Props) => {
 				spacing={3}
 			>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					<ProfileCardsScroll list={profileLikes} />
+					{profileLikes ? (
+						<ProfileCardsScroll list={profileLikes} />
+					) : (
+						<Typography>No one liked your profile yet</Typography>
+					)}
 				</Grid>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					<ProfileCardsScroll list={profileVisits} />
+					{profileVisits ? (
+						<ProfileCardsScroll list={profileVisits} />
+					) : (
+						<Typography>No one visited your profile yet</Typography>
+					)}
 				</Grid>
 			</Grid>
 		</Grid>

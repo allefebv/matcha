@@ -6,25 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 17:24:54 by allefebv         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   AccountMenu.tsx                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 11:17:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:41:39 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import {
 	Badge,
@@ -40,10 +28,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { Iprofile, IlistProfiles } from "../../types/types";
 import { CustomAvatar } from "../../component/CustomAvatar";
 import * as constants from "../../services/constants";
-import {
-	getProfileAPI,
-	getProfileByUsernameAPI,
-} from "../../services/apiCalls";
+import { getProfileByUsernameAPI } from "../../services/apiCalls";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,

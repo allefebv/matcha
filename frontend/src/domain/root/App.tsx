@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 17:14:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:50:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@ import { connect, ConnectedProps } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 
-import { CssBaseline, Grid, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 import { GlobalSnackbar } from "../../component/GlobalSnackbar";
-import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { Router } from "./Router";
 
@@ -59,6 +58,7 @@ const AppComponent = (props: Props) => {
 				});
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn]);
 
 	return (

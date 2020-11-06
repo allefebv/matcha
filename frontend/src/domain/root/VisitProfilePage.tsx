@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 17:18:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 13:08:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ import {
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
-import { updateProfile } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -169,6 +168,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			socket.on("online", updateConnectionStatus);
 			socket.on("offline", updateConnectionStatus);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [historyLocation]);
 
 	const formatTags = (tags: string[]) => {
@@ -195,7 +195,7 @@ const VisitProfilePageComponent = (props: Props) => {
 		<div className={classes.main}>
 			<Paper elevation={5} className={classes.paper}>
 				{profile && (
-					<Grid direction="row">
+					<Grid container direction="row">
 						<Grid item xs={12}>
 							<ProfilePictures
 								imgs={[null, null, null, null, null]}
