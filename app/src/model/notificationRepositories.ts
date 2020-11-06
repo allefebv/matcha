@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   notificationRepositories.ts                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/05 09:45:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 12:37:18 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from "mysql";
+import { escape } from 'mysql';
 
-import { notification } from "../../types/types";
-import { dataBase } from "../app";
+import { notification } from '../../types/types';
+import { dataBase } from '../app';
 
 export function addNotification(
 	profileNotifedId: number,
@@ -42,7 +42,7 @@ export function addNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: "Error: an error occured" });
+			reject({ code: 400, message: 'Error: an error occured' });
 		});
 	});
 }
@@ -67,7 +67,29 @@ export function deleteNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: "Error: an error occured" });
+			reject({ code: 400, message: 'Error: an error occured' });
+		});
+	});
+}
+
+export function readNotification(id: number): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		UPDATE 
+			notificationProfile
+		SET
+			isRead = 1
+		WHERE
+			id = ${escape(id)}`;
+
+		dataBase.query(sql, (error, result) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (result && result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: 'Error: an error occured' });
 		});
 	});
 }
@@ -92,7 +114,7 @@ export function deleteAllNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: "Error: an error occured" });
+			reject({ code: 400, message: 'Error: an error occured' });
 		});
 	});
 }
