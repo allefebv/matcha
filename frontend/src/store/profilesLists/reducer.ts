@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 15:48:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 19:04:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 15:22:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,15 @@ import {
 	actionProfilesList_getMatches,
 } from "./action";
 import { getType } from "typesafe-actions";
+import { IlistProfiles } from "../../types/types";
 
-const initialState = {
+interface state {
+	recommendations: null | IlistProfiles[];
+	search: null | IlistProfiles[];
+	matches: null | IlistProfiles[];
+}
+
+const initialState: state = {
 	recommendations: null,
 	search: null,
 	matches: null,

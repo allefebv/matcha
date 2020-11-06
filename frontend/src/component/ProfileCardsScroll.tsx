@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:30:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 18:30:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ const styleList: React.CSSProperties = {
 };
 
 type Props = {
-	list: IlistProfiles[] | undefined;
+	list: any[] | undefined;
 };
 
 export function ProfileCardsScroll(props: Props) {

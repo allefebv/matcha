@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   likeRepositories.ts                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:09 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:17:09 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/04 18:38:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { like } from '../../types/types';
-import { dataBase } from '../app';
+import { like } from "../../types/types";
+import { dataBase } from "../app";
 
 export function addLikedProfile(
 	profileLikedId: number,
@@ -77,7 +77,7 @@ export function getUserHasBeenLikedById(id: number): Promise<any[] | null> {
 		JOIN 
 			profile ON profile.userId = likeProfile.profileLikesId
 		WHERE
-			likeProfile.profileLikesId = ${escape(id)}
+			likeProfile.profileHasBeenLikedId = ${escape(id)}
 		`;
 
 		dataBase.query(sql, (error: string, result: like[]) => {

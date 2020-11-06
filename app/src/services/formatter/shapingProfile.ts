@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shapingProfile.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/26 12:39:06 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 15:10:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ export function shapingProfileReco(profile, score?) {
 	if (profile) {
 		return {
 			profile: {
+				userId: profile.userId,
 				username: profile.username,
 				firstname: profile.firstname,
 				lastname: profile.lastname,

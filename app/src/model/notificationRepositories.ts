@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   notificationRepositories.ts                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 07:48:01 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 09:45:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { notification } from '../../types/types';
-import { dataBase } from '../app';
+import { notification } from "../../types/types";
+import { dataBase } from "../app";
 
 export function addNotification(
 	profileNotifedId: number,
@@ -36,6 +36,7 @@ export function addNotification(
 
 		dataBase.query(sql, (error, result) => {
 			if (error) {
+				console.log(error);
 				reject({ code: 500, message: error });
 			}
 			if (result && result.affectedRows) {
@@ -107,13 +108,13 @@ export function getNotification(id: number): Promise<any[]> {
 		JOIN 
 			profile ON profile.userId = notificationProfile.notifierProfileId
 		WHERE
-			notificationProfile.profileNotifedId = ${escape(id)}`;
+			notificationProfile.profileNotifedId = ${escape(id)}
+		ORDER BY date DESC`;
 
 		dataBase.query(sql, (error: string, result: notification[]) => {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			console.log(result);
 			resolve(result);
 		});
 	});

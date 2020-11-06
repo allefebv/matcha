@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:10:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:51:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ import {
 	handleGeoLocationAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionUser_geolocation,
-	actionUser_setProfile,
-} from "../../store/user/action";
+import { actionUser_geolocation } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:35:59 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 10:31:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/03 11:20:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ export const useGeolocation = () => {
 						const coordinates = json.loc.split(",");
 						return fetch(
 							constants.URI_REVERSE_GEOCODING_API +
-								constants.LOCATION_IQ_API_KEY +
-								"&lat=" +
 								coordinates[0] +
-								"&lon=" +
+								"," +
 								coordinates[1] +
-								constants.PARAMETERS_REVERSE_GEOCODING_API
+								".JSON?key=" +
+								constants.TOMTOM_API_KEY +
+								"&entityType=Country,Municipality,MunicipalitySubdivision,PostalCodeArea"
 						);
 					} else {
 						throw new Error("Geolocation error");
@@ -48,17 +48,17 @@ export const useGeolocation = () => {
 				})
 				.then(responseError)
 				.then((json) => {
-					if (json.address) {
+					if (json.addresses[0].address) {
+						const { address } = json.addresses[0];
+						const { position }: { position: string } = json.addresses[0];
 						setGeolocation({
-							city: json.address.city_district
-								? json.address.city_district
-								: json.address.city,
-							postCode: json.address.postcode,
-							countryCode: json.address.country_code,
-							country: json.address.country,
+							city: address.municipality.split(",")[0],
+							postCode: address.postalCode,
+							countryCode: address.countryCode,
+							country: address.country,
 							isFromGeolocation: true,
-							lat: parseInt(json.lat),
-							lng: parseInt(json.lon),
+							lat: parseFloat(position),
+							lng: parseFloat(position.split(",")[1]),
 						});
 					}
 				})

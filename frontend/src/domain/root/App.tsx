@@ -3,27 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   App.tsx                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/30 12:30:46 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 17:14:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import socketIOClient from 'socket.io-client';
+import React, { useEffect } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import socketIOClient from "socket.io-client";
 
-import { CssBaseline, Grid, makeStyles } from '@material-ui/core';
+import { CssBaseline, Grid, makeStyles } from "@material-ui/core";
 
-import { GlobalSnackbar } from '../../component/GlobalSnackbar';
-import { Footer } from './Footer';
-import { Header } from './Header';
-import { Router } from './Router';
+import { GlobalSnackbar } from "../../component/GlobalSnackbar";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
+import { Router } from "./Router";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
+	search: state.profilesList.search,
+	profile: state.user.profile,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -41,11 +43,24 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const socket = socketIOClient("http://127.0.0.1:3001");
+export const socket = socketIOClient("http://127.0.0.1:3001", {
+	autoConnect: false,
+});
 
 const AppComponent = (props: Props) => {
 	const classes = useStyles();
-	//TODO: pas fou char A pour afficher div hauteur du header qui est en fixed
+
+	useEffect(() => {
+		if (props.loggedIn) {
+			socket.connect();
+			socket.on("connect", () => {
+				socket.emit("online", {
+					id: props.profile.userId,
+				});
+			});
+		}
+	}, [props.loggedIn]);
+
 	return (
 		<BrowserRouter>
 			{/* <CssBaseline /> */}
@@ -54,16 +69,7 @@ const AppComponent = (props: Props) => {
 				<GlobalSnackbar />
 				<Router />
 			</div>
-			{/* <Grid
-					item
-					container
-					xs={12}
-					style={{ height: "3%" }}
-					justify="center"
-					alignItems="center"
-				>
-					<Footer />
-				</Grid> */}
+			{/* <Footer /> */}
 		</BrowserRouter>
 	);
 };

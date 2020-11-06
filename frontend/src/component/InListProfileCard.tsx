@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:28:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 18:32:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,16 @@ const styleCard: React.CSSProperties = {
 };
 
 type Props = {
-	entry: IlistProfiles;
+	entry: any;
 };
 
 export function InListProfileCard(props: Props) {
-	const { username } = props.entry.profile;
 	return (
 		<Card style={styleCard}>
 			<Avatar
-				src={"http://localhost:3001/images/" + username + "img0"}
+				src={"http://localhost:3001/images/" + props.entry.username + "img0"}
 			></Avatar>
-			<Typography>{username}</Typography>
+			<Typography>{props.entry.username}</Typography>
 		</Card>
 	);
 }

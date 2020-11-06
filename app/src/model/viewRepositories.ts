@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   viewRepositories.ts                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 11:30:23 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/04 18:29:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
-import { view } from 'types/types';
+import { escape } from "mysql";
+import { view } from "types/types";
 
-import { dataBase } from '../app';
+import { dataBase } from "../app";
 
 export async function getView(profileSeenId: number): Promise<view[] | null> {
 	return new Promise((resolve) => {
@@ -22,6 +22,8 @@ export async function getView(profileSeenId: number): Promise<view[] | null> {
 			*
 		FROM
 			viewProfile
+		JOIN
+			profile ON viewProfile.viewerProfileId = profile.userId
 		WHERE
 			profileSeenId = ${escape(profileSeenId)}`;
 

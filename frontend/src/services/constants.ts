@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 18:15:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:52:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ export const URI_ACTIVATE_ACCOUNT = "/user/activateUser";
 export const URI_CREATE_PROFILE = "/profile/addProfile";
 export const URI_UPDATE_PROFILE = "/profile/updateProfile";
 export const URI_GET_PROFILE = "/profile/getProfile";
+export const URI_GET_PROFILE_BY_USERNAME =
+	"/profile/getProfileByUsername?username=";
 
 //tag
 export const URI_POST_TAGS = "/tag/addTagProfile";
@@ -41,12 +43,13 @@ export const URI_GET_RECOMMENDATIONS = "/recommendation/getRecommendation";
 export const URI_GET_ALL_PROFILES = "/recommendation/getAllProfile";
 
 //notification
+export const URI_GET_NOTIFICATIONS = "/notification/getNotification";
 
 //like
 export const URI_LIKE_PROFILE = "/like/addLikedProfile";
 export const URI_UNLIKE_PROFILE = "/like/deleteLikedProfile";
 export const URI_GET_MATCHES = "/like/getProfileMatch";
-export const URI_GET_PROFILE_LIKES = "/view/getView";
+export const URI_GET_PROFILE_LIKES = "/like/getProfileLike";
 
 //view / visit
 export const URI_VISIT_PROFILE = "/view/addView";
@@ -59,16 +62,21 @@ export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
 export const URI_BLACKLIST_PROFILE = "/blacklist/addProfileBlacklist";
 export const URI_GET_BLACKLIST = "/blacklist/getProfileBlacklist";
 
+//Geocoding APIs
 export const LOCATION_IQ_API_KEY = "pk.043501281a35e7090602a19c4f522019";
-export const URI_REVERSE_GEOCODING_API =
-	"https://us1.locationiq.com/v1/reverse.php?key=";
-export const PARAMETERS_REVERSE_GEOCODING_API =
-	"&zoom=12&accept-language=fr&normalizeaddress=1&postaladdress=1&statecode=1&format=json";
+// export const URI_REVERSE_GEOCODING_API =
+// 	"https://us1.locationiq.com/v1/reverse.php?key=";
+// export const PARAMETERS_REVERSE_GEOCODING_API =
+// 	"&zoom=12&accept-language=fr&normalizeaddress=1&postaladdress=1&statecode=1&format=json";
 
-export const URI_AUTOCOMPLETE_API =
-	"https://api.locationiq.com/v1/autocomplete.php?key=";
-export const PARAMETERS_AUTOCOMPLETE_API =
-	"limit=5&tag=" + encodeURIComponent("place:city,place:town");
+export const TOMTOM_API_KEY = "Zc6jNalIhiRkImoNZkfHYmvNo5BgmKTn";
+export const URI_REVERSE_GEOCODING_API =
+	"https://api.tomtom.com/search/2/reverseGeocode/";
+
+// export const URI_AUTOCOMPLETE_API =
+// 	"https://api.locationiq.com/v1/autocomplete.php?key=";
+
+export const URI_AUTOCOMPLETE_API = "https://api.tomtom.com/search/2/search/";
 
 export const POST_METHOD = "POST";
 export const GET_METHOD = "GET";

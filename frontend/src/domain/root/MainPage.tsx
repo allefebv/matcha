@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:48:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/04 17:44:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,16 @@ import {
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
 import { ToggleGroup } from "../../component/ToggleGroup";
-import {
-	getAllProfilesAPI,
-	getRecommendationAPI,
-	getMatchesAPI,
-} from "../../services/apiCalls";
+import { getMatchesAPI } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import {
-	actionProfilesList_getMatches,
-	actionProfilesList_getRecco,
-	actionProfilesList_getSearch,
-} from "../../store/profilesLists/action";
+import { actionProfilesList_getMatches } from "../../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
-import { getAge, isProfileComplete } from "../../services/profileUtils";
+import {
+	getAge,
+	getSearchList,
+	getRecommendationList,
+	isProfileComplete,
+} from "../../services/profileUtils";
 import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
 import { IlistProfiles } from "../../types/types";
 import { TagSearch } from "../../component/TagSearch";
@@ -144,85 +141,36 @@ const MainPageComponent = (props: Props) => {
 	const [sortAsc, setSortAsc] = useState(true);
 	const ITEMS_PER_PAGES = 20;
 
-	const getRecommendationList = () => {
-		getRecommendationAPI(props.loggedIn)
-			.then((json) => {
-				if (json && json.length) {
-					const withAge = json.map((entry) => {
-						if (entry.profile.dob) {
-							entry.profile.age = entry.profile.dob
-								? getAge(entry.profile.dob)
-								: null;
-						}
-						return entry;
-					});
-					props.dispatch(actionProfilesList_getRecco({ profiles: withAge }));
-				}
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
-	};
-
-	const getSearchList = () => {
-		getAllProfilesAPI(props.loggedIn)
-			.then((json) => {
-				if (json && json.length) {
-					const withAge = json.map((entry) => {
-						entry.profile.age = entry.profile.dob
-							? getAge(entry.profile.dob)
-							: null;
-						return entry;
-					});
-					props.dispatch(actionProfilesList_getSearch({ profiles: withAge }));
-				}
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
-	};
-
 	const getMatchesList = () => {
-		getMatchesAPI(props.loggedIn)
-			.then((json) => {
-				if (json && json.length) {
-					const withAge = json.map((entry) => {
-						entry.profile.age = entry.profile.dob
-							? getAge(entry.profile.dob)
-							: null;
-						return entry;
-					});
-					props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
-				}
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+		// getMatchesAPI(props.loggedIn)
+		// 	.then((json) => {
+		// 		if (json && json.length) {
+		// 			const withAge = json.map((entry) => {
+		// 				entry.profile.age = entry.profile.dob
+		// 					? getAge(entry.profile.dob)
+		// 					: null;
+		// 				return entry;
+		// 			});
+		// 			props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
+		// 		}
+		// 	})
+		// 	.catch((error) => {
+		// 		props.dispatch(
+		// 			actionUi_showSnackbar({
+		// 				message: error.message,
+		// 				type: "error",
+		// 			})
+		// 		);
+		// 		console.log(error.message);
+		// 	});
 	};
 
 	useEffect(() => {
 		if (!props.profilesRecco) {
 			setLoading(true);
-			props.isProfileComplete && getRecommendationList();
-			getSearchList();
+			props.isProfileComplete &&
+				getRecommendationList(props.loggedIn, props.dispatch);
+			getSearchList(props.loggedIn, props.dispatch);
 			getMatchesList();
 		}
 	}, []);
@@ -293,7 +241,6 @@ const MainPageComponent = (props: Props) => {
 				maxPopularity: limitsArr[3],
 				maxDistance: limitsArr[4],
 			};
-			console.log(newLimits);
 			setFilterLimits(newLimits);
 			setFilterValues(newLimits);
 		}
@@ -301,7 +248,6 @@ const MainPageComponent = (props: Props) => {
 
 	const filterList = () => {
 		if (currentProfilesList && filterValues) {
-			console.log(filterValues);
 			const filtered = currentProfilesList.filter((entry) => {
 				const { age, popularityScore } = entry.profile;
 				const distance = entry.location
@@ -324,7 +270,6 @@ const MainPageComponent = (props: Props) => {
 					tagFilter
 				);
 			});
-			console.log(getSortFunction()?.name, "METHOD: " + sortMethod);
 			const sorted = filtered.sort(getSortFunction());
 			setFilteredProfilesList(sorted);
 		}
@@ -485,7 +430,6 @@ const MainPageComponent = (props: Props) => {
 		reason: string
 	) {
 		let tags = typeof value === "string" ? [value] : value;
-		console.log(tags);
 		setTagList(tags);
 	}
 

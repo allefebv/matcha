@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 15:22:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/05 17:18:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Paper, makeStyles, Typography, Grid, Button } from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
@@ -23,6 +23,8 @@ import {
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { socket } from "./App";
+import { updateProfile } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -59,13 +61,19 @@ const useStyles = makeStyles((theme) => ({
 const VisitProfilePageComponent = (props: Props) => {
 	const historyLocation = useLocation<IlistProfiles>();
 	const classes = useStyles();
-	const [profile, setProfile] = useState<Iprofile | null>(null);
+	const [profile, setProfile] = useState<Iprofile>();
 	const [location, setLocation] = useState<Iaddress | null>(null);
 	const [tags, setTags] = useState<string[] | null>(null);
 	const [likeStatus, setLikeStatus] = useState<{
 		iLike: boolean;
 		heLikes: boolean;
 	}>();
+	const ref = useRef(profile);
+
+	const updateProfile = (profile: Iprofile) => {
+		ref.current = profile;
+		setProfile(profile);
+	};
 
 	const visitProfile = () => {
 		visitProfileAPI(
@@ -136,15 +144,30 @@ const VisitProfilePageComponent = (props: Props) => {
 		}
 	};
 
+	const updateConnectionStatus = (userId: number) => {
+		if (ref.current !== undefined) {
+			const newStatus = ref.current.online === 1 ? 0 : 1;
+			userId &&
+				ref.current &&
+				ref.current.userId &&
+				ref.current.userId === userId &&
+				updateProfile({ ...ref.current, online: newStatus });
+		}
+	};
+
 	useEffect(() => {
 		if (historyLocation && historyLocation.state) {
 			props.blackList.filter(
 				(username) => historyLocation.state.profile.username
 			).length === 0 && visitProfile();
 			getLikeStatus();
-			setProfile(historyLocation.state.profile);
+			//TODO: Remove when connection status is ok in backend
+			const tmp = { ...historyLocation.state.profile };
+			updateProfile(tmp);
 			setLocation(historyLocation.state.location);
 			setTags(historyLocation.state.tag);
+			socket.on("online", updateConnectionStatus);
+			socket.on("offline", updateConnectionStatus);
 		}
 	}, [historyLocation]);
 
@@ -187,6 +210,7 @@ const VisitProfilePageComponent = (props: Props) => {
 								</Typography>
 								<Typography>Firstname {profile.firstname}</Typography>
 								<Typography>Lastname {profile.lastname}</Typography>
+								<Typography>{profile.online ? "Online" : "Offline"}</Typography>
 							</Paper>
 						</Grid>
 						<Grid item xs={12}>

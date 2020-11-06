@@ -3,27 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   likeController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 16:34:46 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/04 18:47:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import { handleNotifications } from "../services/handleNotifications";
 
 import {
-	addLikedProfile, deleteLikedProfile, getProfileMatch, getStatueOfLike,
-	getUserHasBeenLikedById
-} from '../model/likeRepositories';
-import { getProfileByUsername } from '../model/profileRepositories';
-import { jwtVerify } from '../services/validation/jwt';
+	addLikedProfile,
+	deleteLikedProfile,
+	getProfileMatch,
+	getStatueOfLike,
+	getUserHasBeenLikedById,
+} from "../model/likeRepositories";
+import {
+	getProfileByUserId,
+	getProfileByUsername,
+} from "../model/profileRepositories";
+import { jwtVerify } from "../services/validation/jwt";
+import { matchStatus } from "../services/likeStatus";
 
 export async function addlikedProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
 		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
 		await addLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
+		const notifierProfile = await getProfileByUserId(jwt.decoded.id);
+		await handleNotifications("like", notifierProfile, profileHasBeenLiked);
 		res.status(200).json("Liked successful");
 	} catch (error) {
 		res.status(error.code).send(error.message);
@@ -36,11 +46,17 @@ export async function deletelikedProfileController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
-		const deleteLike = await deleteLikedProfile(
-			jwt.decoded.id,
-			profileHasBeenLiked.userId
-		);
+		const profileHasBeenUnliked = await getProfileByUsername(req.body.username);
+		const notifierProfile = await getProfileByUserId(jwt.decoded.id);
+		const isMatch = await matchStatus(notifierProfile, profileHasBeenUnliked);
+		if (isMatch) {
+			await handleNotifications(
+				"unlike",
+				notifierProfile,
+				profileHasBeenUnliked
+			);
+		}
+		await deleteLikedProfile(jwt.decoded.id, profileHasBeenUnliked.userId);
 		res.status(200).json("Delete like successful");
 	} catch (error) {
 		res.status(error.code).send(error.message);

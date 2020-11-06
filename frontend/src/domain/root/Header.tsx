@@ -3,28 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   Header.tsx                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 08:21:06 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/05 14:54:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { Link } from "react-router-dom";
 
-import { AppBar, Button, makeStyles, Toolbar } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import ChatIcon from '@material-ui/icons/Chat';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import PersonIcon from '@material-ui/icons/Person';
+import {
+	AppBar,
+	Button,
+	makeStyles,
+	MenuItem,
+	Toolbar,
+} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import ChatIcon from "@material-ui/icons/Chat";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import PersonIcon from "@material-ui/icons/Person";
 
-import * as constants from '../../services/constants';
-import { AccountMenu } from '../user/AccountMenu';
-import { SignInDialog } from '../user/SignInDialog';
-import { SignUpDialog } from '../user/SignUpDialog';
+import * as constants from "../../services/constants";
+import { AccountMenu } from "../user/AccountMenu";
+import { SignInDialog } from "../user/SignInDialog";
+import { SignUpDialog } from "../user/SignUpDialog";
+import { NotificationsMenu } from "./NotificationsMenu";
+import { socket } from "./App";
+import { getNotificationsAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
 
 const useStyles = makeStyles({
 	appBar: {
@@ -49,12 +58,51 @@ const useStyles = makeStyles({
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
+	username: state.user.profile.username,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const HeaderComponent = (props: Props) => {
 	const classes = useStyles();
+	const [notifications, setNotifications] = useState<any[]>([]);
+	const ref = useRef(notifications);
+
+	function updateNotifications(notifications: any[]) {
+		ref.current = notifications;
+		setNotifications(notifications);
+	}
+
+	function pushNotification(notification: {
+		notifierProfile: Object;
+		notification: {
+			notification: string;
+			isRead: number;
+			date: number;
+		};
+	}) {
+		const tmp = [...ref.current];
+		tmp.unshift(notification);
+		updateNotifications(tmp);
+	}
+
+	useEffect(() => {
+		props.loggedIn &&
+			getNotificationsAPI(props.loggedIn)
+				.then((json) => {
+					json && json.length && updateNotifications(json);
+				})
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
+		socket.on("notification" + props.username, pushNotification);
+	}, [props.loggedIn]);
 
 	return (
 		<React.Fragment>
@@ -100,9 +148,7 @@ const HeaderComponent = (props: Props) => {
 					)}
 					{props.loggedIn && (
 						<div className={classes.accountMenu}>
-							<IconButton>
-								<NotificationsIcon />
-							</IconButton>
+							<NotificationsMenu notifications={ref.current} />
 							<Link
 								to={"/my-profile"}
 								style={{ color: "inherit", textDecoration: "inherit" }}
@@ -111,7 +157,7 @@ const HeaderComponent = (props: Props) => {
 									<PersonIcon />
 								</IconButton>
 							</Link>
-							<AccountMenu></AccountMenu>
+							<AccountMenu />
 						</div>
 					)}
 				</Toolbar>
