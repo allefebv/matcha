@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   likeRepositories.ts                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:09 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 11:40:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/06 18:28:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { like } from '../../types/types';
-import { dataBase } from '../app';
+import { like } from "../../types/types";
+import { dataBase } from "../app";
 
 export function addLikedProfile(
 	profileLikedId: number,
@@ -32,11 +32,13 @@ export function addLikedProfile(
 		dataBase.query(sql, (error, result) => {
 			if (error) {
 				reject({ code: 500, message: error });
+				return;
 			}
 			if (result.affectedRows) {
 				resolve(true);
+				return;
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -61,7 +63,7 @@ export function deleteLikedProfile(
 			if (result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 16:39:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 19:08:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,6 @@ const NotificationsMenuComponent = (props: Props) => {
 		notification: Inotification,
 		index: number
 	) => {
-		console.log(notification);
 		await readNotificationAPI(
 			{ id: notification.notification.id },
 			props.loggedIn
@@ -147,7 +146,6 @@ const NotificationsMenuComponent = (props: Props) => {
 				const tmp = [...props.notifications];
 				tmp[index] = notification;
 				tmp[index].notification.isRead = true;
-				console.log("tmp", tmp, tmp[index]);
 				props.setNotifications(tmp);
 			})
 			.catch((error) => {

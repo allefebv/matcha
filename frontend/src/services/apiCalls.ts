@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 16:02:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 19:04:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,21 @@ export const getProfileLikesAPI = (token: string) => {
 		},
 		credentials: "include",
 	});
+};
+
+export const getLikeStatusAPI = (details: Object, token: string) => {
+	return fetchApi<{ iLike: boolean; heLikes: boolean }>(
+		constants.URL + constants.URI_GET_LIKE_STATUS,
+		{
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			body: details,
+			credentials: "include",
+		}
+	);
 };
 
 export const likeProfileAPI = (details: Object, token: string) => {

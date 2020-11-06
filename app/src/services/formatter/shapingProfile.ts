@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/05 15:10:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 18:44:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ export function shapingProfile(profile) {
 					? true
 					: false,
 				bio: profile.bio,
+				online: profile.online,
+				lastConnection: profile.lastConnection,
 			},
 			location: {
 				isFromGeolocation: profile.isFromGeolocation ? true : false,
@@ -54,6 +56,8 @@ export function shapingProfileReco(profile, score?) {
 				sexualOrientation: profile.sexualOrientation,
 				popularityScore: profile.popularityScore,
 				bio: profile.bio,
+				online: profile.online,
+				lastConnection: profile.lastConnection,
 			},
 			location: {
 				country: profile.country,

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 13:08:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 19:07:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import {
 	blacklistProfileAPI,
 	likeProfileAPI,
 	unlikeProfileAPI,
+	getLikeStatusAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
@@ -90,12 +91,22 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const getLikeStatus = () => {
-		// getLikeStatusAPI(
-		// 	{ username: historyLocation.state.profile.username },
-		// 	props.loggedIn
-		// ).then((json: boolean[]) => {
-		// 	setLikeStatus(json);
-		// });
+		getLikeStatusAPI(
+			{ username: historyLocation.state.profile.username },
+			props.loggedIn
+		)
+			.then((json) => {
+				setLikeStatus(json);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	};
 
 	const blacklistProfile = () => {
@@ -114,32 +125,40 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const toggleLikeProfile = () => {
-		if (likeStatus !== undefined && likeStatus.iLike === true) {
+		if (likeStatus !== undefined && likeStatus.iLike === false) {
 			likeProfileAPI(
 				{ username: historyLocation.state.profile.username },
 				props.loggedIn
-			).catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
-		} else if (likeStatus !== undefined && likeStatus.iLike === false) {
+			)
+				.then(() => {
+					setLikeStatus({ ...likeStatus, iLike: true });
+				})
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
+		} else if (likeStatus !== undefined && likeStatus.iLike === true) {
 			unlikeProfileAPI(
 				{ username: historyLocation.state.profile.username },
 				props.loggedIn
-			).catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			)
+				.then(() => {
+					setLikeStatus({ ...likeStatus, iLike: false });
+				})
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
 		}
 	};
 
@@ -160,7 +179,6 @@ const VisitProfilePageComponent = (props: Props) => {
 				(username) => historyLocation.state.profile.username
 			).length === 0 && visitProfile();
 			getLikeStatus();
-			//TODO: Remove when connection status is ok in backend
 			const tmp = { ...historyLocation.state.profile };
 			updateProfile(tmp);
 			setLocation(historyLocation.state.location);

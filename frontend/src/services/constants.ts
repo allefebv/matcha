@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 16:01:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 17:55:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ export const URI_LIKE_PROFILE = "/like/addLikedProfile";
 export const URI_UNLIKE_PROFILE = "/like/deleteLikedProfile";
 export const URI_GET_MATCHES = "/like/getProfileMatch";
 export const URI_GET_PROFILE_LIKES = "/like/getProfileLike";
+export const URI_GET_LIKE_STATUS = "/like/getStatueOfLike";
 
 //view / visit
 export const URI_VISIT_PROFILE = "/view/addView";
