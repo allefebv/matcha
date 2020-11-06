@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   notificationRepositories.ts                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 12:37:18 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/06 17:05:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { notification } from '../../types/types';
-import { dataBase } from '../app';
+import { notification } from "../../types/types";
+import { dataBase } from "../app";
 
 export function addNotification(
 	profileNotifedId: number,
@@ -42,7 +42,7 @@ export function addNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -67,7 +67,7 @@ export function deleteNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -89,7 +89,7 @@ export function readNotification(id: number): Promise<boolean> {
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -114,7 +114,7 @@ export function deleteAllNotification(
 			if (result && result.affectedRows) {
 				resolve(true);
 			}
-			reject({ code: 400, message: 'Error: an error occured' });
+			reject({ code: 400, message: "Error: an error occured" });
 		});
 	});
 }
@@ -138,6 +138,24 @@ export function getNotification(id: number): Promise<any[]> {
 				reject({ code: 500, message: error });
 			}
 			resolve(result);
+		});
+	});
+}
+
+export function getLastNotification(id: number): Promise<notification> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		SELECT id
+		FROM  notificationProfile
+		WHERE notificationProfile.profileNotifedId = ${escape(id)}
+		ORDER BY date DESC
+		LIMIT 1`;
+
+		dataBase.query(sql, (error: string, result: notification) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			resolve(result[0].id);
 		});
 	});
 }

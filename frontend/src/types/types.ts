@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/05 15:39:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 16:33:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,14 @@ export interface like {
 	profileHasBeenLikedId: number;
 }
 
-export interface notification {
-	profileNotifedId: number;
-	notifierProfileId: number;
-	date: number;
-	notification: string;
+export interface Inotification {
+	notifierProfile: Iprofile;
+	notification: {
+		id: number;
+		notification: string;
+		date: number;
+		isRead: boolean;
+	};
 }
 
 export interface tag {

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:41:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 16:39:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,17 @@ import {
 	Typography,
 } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import { Iprofile, IlistProfiles } from "../../types/types";
+import { IlistProfiles, Inotification } from "../../types/types";
 import { CustomAvatar } from "../../component/CustomAvatar";
 import * as constants from "../../services/constants";
-import { getProfileByUsernameAPI } from "../../services/apiCalls";
+import {
+	getProfileByUsernameAPI,
+	readNotificationAPI,
+	deleteNotificationAPI,
+} from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import CloseIcon from "@material-ui/icons/Close";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -36,17 +43,21 @@ const withReduxProps = connect((state: any) => ({
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	notifications: {
-		notifierProfile: Iprofile;
-		notification: { notification: string; date: number; isRead: number };
-	}[];
+	notifications: Inotification[];
+	setNotifications: (notifications: Inotification[]) => void;
 } & ReduxProps;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	item: {
 		whiteSpace: "normal",
 	},
-});
+	textGray: {
+		color: "grey",
+	},
+	textPop: {
+		color: theme.palette.primary.main,
+	},
+}));
 
 const NotificationsMenuComponent = (props: Props) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -117,21 +128,78 @@ const NotificationsMenuComponent = (props: Props) => {
 		handleClose();
 	};
 
+	const handleClickNotification = (notification: Inotification) => {
+		notification.notification.notification.split(",")[0] === "message"
+			? redirectToChat()
+			: redirectToProfile(notification.notifierProfile.username);
+	};
+
+	const handleReadNotification = async (
+		notification: Inotification,
+		index: number
+	) => {
+		console.log(notification);
+		await readNotificationAPI(
+			{ id: notification.notification.id },
+			props.loggedIn
+		)
+			.then(() => {
+				const tmp = [...props.notifications];
+				tmp[index] = notification;
+				tmp[index].notification.isRead = true;
+				console.log("tmp", tmp, tmp[index]);
+				props.setNotifications(tmp);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+	};
+
+	const handleDeleteNotification = async (notification: Inotification) => {
+		await deleteNotificationAPI(
+			{ id: notification.notification.id },
+			props.loggedIn
+		)
+			.then(() => {
+				props.setNotifications(
+					props.notifications.filter(
+						(entry) => entry.notification.id !== notification.notification.id
+					)
+				);
+				console.log(props.notifications);
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+	};
+
 	const getNotificationCard = () => {
 		return props.notifications.map((notification, index) => {
 			const type = notification.notification.notification.split(",")[0];
+			const isRead = notification.notification.isRead;
 			return (
 				<MenuItem
 					key={index}
 					className={classes.item}
 					onClick={() => {
-						type === "message"
-							? redirectToChat()
-							: redirectToProfile(notification.notifierProfile.username);
+						handleReadNotification(notification, index);
+						handleClickNotification(notification);
 					}}
 				>
-					<Grid container>
-						<Grid item xs={3}>
+					<Grid container alignItems="center" justify="center">
+						<Grid item xs={2}>
 							<CustomAvatar
 								id={0}
 								src={
@@ -142,10 +210,42 @@ const NotificationsMenuComponent = (props: Props) => {
 								modifiable={false}
 							/>
 						</Grid>
-						<Grid item xs={9}>
-							{notification.notifierProfile.username}
-							{getNotificationText(type)}
-							{" " + getNotificationTime(notification.notification.date)}
+						<Grid item xs={isRead ? 9 : 8}>
+							<Typography className={isRead ? classes.textGray : undefined}>
+								{notification.notifierProfile.username}
+								{getNotificationText(type)}
+							</Typography>
+							<Typography
+								className={isRead ? classes.textGray : classes.textPop}
+							>
+								{" " + getNotificationTime(notification.notification.date)}
+							</Typography>
+						</Grid>
+						{!isRead && (
+							<Grid item xs={1}>
+								<IconButton
+									onClick={(
+										event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+									) => {
+										handleReadNotification(notification, index);
+										event.stopPropagation();
+									}}
+								>
+									<FiberManualRecordIcon />
+								</IconButton>
+							</Grid>
+						)}
+						<Grid item xs={1}>
+							<IconButton
+								onClick={(
+									event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+								) => {
+									handleDeleteNotification(notification);
+									event.stopPropagation();
+								}}
+							>
+								<CloseIcon />
+							</IconButton>
 						</Grid>
 					</Grid>
 				</MenuItem>
@@ -156,7 +256,11 @@ const NotificationsMenuComponent = (props: Props) => {
 	return (
 		<div>
 			<Badge
-				badgeContent={props.notifications.length}
+				badgeContent={
+					props.notifications.filter(
+						(notification) => !notification.notification.isRead
+					).length
+				}
 				color="error"
 				max={50}
 				overlap="circle"

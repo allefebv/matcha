@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 13:06:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 16:16:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ import { NotificationsMenu } from "./NotificationsMenu";
 import { socket } from "./App";
 import { getNotificationsAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { Inotification } from "../../types/types";
 
 const useStyles = makeStyles({
 	appBar: {
@@ -59,22 +60,15 @@ type Props = {} & ReduxProps;
 
 const HeaderComponent = (props: Props) => {
 	const classes = useStyles();
-	const [notifications, setNotifications] = useState<any[]>([]);
+	const [notifications, setNotifications] = useState<Inotification[]>([]);
 	const ref = useRef(notifications);
 
-	function updateNotifications(notifications: any[]) {
+	function updateNotifications(notifications: Inotification[]) {
 		ref.current = notifications;
 		setNotifications(notifications);
 	}
 
-	function pushNotification(notification: {
-		notifierProfile: Object;
-		notification: {
-			notification: string;
-			isRead: number;
-			date: number;
-		};
-	}) {
+	function pushNotification(notification: Inotification) {
 		const tmp = [...ref.current];
 		tmp.unshift(notification);
 		updateNotifications(tmp);
@@ -143,7 +137,10 @@ const HeaderComponent = (props: Props) => {
 					)}
 					{props.loggedIn && (
 						<div className={classes.accountMenu}>
-							<NotificationsMenu notifications={ref.current} />
+							<NotificationsMenu
+								notifications={ref.current}
+								setNotifications={updateNotifications}
+							/>
 							<Link
 								to={"/my-profile"}
 								style={{ color: "inherit", textDecoration: "inherit" }}

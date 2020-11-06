@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 11:40:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/06 16:02:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,36 @@ export const getNotificationsAPI = (token: string) => {
 		},
 		credentials: "include",
 	});
+};
+
+export const readNotificationAPI = (details: Object, token: string) => {
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_READ_NOTIFICATION,
+		{
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			body: details,
+			credentials: "include",
+		}
+	);
+};
+
+export const deleteNotificationAPI = (details: Object, token: string) => {
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_DELETE_NOTIFICATION,
+		{
+			method: constants.POST_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			body: details,
+			credentials: "include",
+		}
+	);
 };
 
 export const modifyEmailAPI = (details: Object, token: string) => {
