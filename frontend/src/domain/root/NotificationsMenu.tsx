@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 19:08:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 17:38:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ import {
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import CloseIcon from "@material-ui/icons/Close";
+import { getTimeElapsed } from "../../services/timeUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -82,28 +83,6 @@ const NotificationsMenuComponent = (props: Props) => {
 				return " stopped to like your profile";
 			case "message":
 				return " sent you a message";
-		}
-	};
-
-	const getNotificationTime = (date: number) => {
-		const diff = Date.now() - date;
-		const ms_Min = 60 * 1000;
-		const ms_Hour = ms_Min * 60;
-		const ms_Day = ms_Hour * 24;
-		const ms_Mon = ms_Day * 30;
-		const ms_Yr = ms_Day * 365;
-		if (diff < ms_Min) {
-			return "less than a minute ago";
-		} else if (diff < ms_Hour) {
-			return Math.round(diff / ms_Min) + " minutes ago";
-		} else if (diff < ms_Day) {
-			return Math.round(diff / ms_Hour) + " hours ago";
-		} else if (diff < ms_Mon) {
-			return Math.round(diff / ms_Day) + " days ago";
-		} else if (diff < ms_Yr) {
-			return Math.round(diff / ms_Mon) + " months ago";
-		} else {
-			return Math.round(diff / ms_Yr) + " years ago";
 		}
 	};
 
@@ -216,7 +195,7 @@ const NotificationsMenuComponent = (props: Props) => {
 							<Typography
 								className={isRead ? classes.textGray : classes.textPop}
 							>
-								{" " + getNotificationTime(notification.notification.date)}
+								{" " + getTimeElapsed(notification.notification.date)}
 							</Typography>
 						</Grid>
 						{!isRead && (

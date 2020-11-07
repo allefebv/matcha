@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 19:07:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 17:38:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ import {
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
+import { getTimeElapsed } from "../../services/timeUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -209,6 +210,21 @@ const VisitProfilePageComponent = (props: Props) => {
 		}
 	};
 
+	const getConnectionStatusText = () => {
+		if (profile) {
+			if (profile.online) {
+				return "Online";
+			} else if (profile.lastConnection) {
+				return (
+					"Offline - last connection " +
+					getTimeElapsed(parseInt(profile.lastConnection))
+				);
+			} else {
+				return "Offline";
+			}
+		}
+	};
+
 	return (
 		<div className={classes.main}>
 			<Paper elevation={5} className={classes.paper}>
@@ -228,7 +244,7 @@ const VisitProfilePageComponent = (props: Props) => {
 								</Typography>
 								<Typography>Firstname {profile.firstname}</Typography>
 								<Typography>Lastname {profile.lastname}</Typography>
-								<Typography>{profile.online ? "Online" : "Offline"}</Typography>
+								<Typography>{getConnectionStatusText()}</Typography>
 							</Paper>
 						</Grid>
 						<Grid item xs={12}>
