@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/03 20:12:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 19:25:12 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ import {
 } from "../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../store/ui/action";
 import {
+	actionUser_setImages,
 	actionUser_setProfile,
 	actionUser_setTagList,
 	actionUser_usagelocation,
 } from "../store/user/action";
-import { Iaddress, Iprofile } from "../types/types";
+import { Iaddress, Iimgs, Iprofile } from "../types/types";
 import {
 	createProfileAPI,
 	getAllProfilesAPI,
@@ -238,6 +239,8 @@ export const getProfileHydrateRedux = async (
 				dispatch(actionUser_setProfile({ profile: response.profile }));
 				response.tag &&
 					dispatch(actionUser_setTagList({ tagList: response.tag }));
+				response.imgs &&
+					dispatch(actionUser_setImages({ images: response.imgs }));
 				dispatch(
 					actionUser_usagelocation({
 						usagelocation: response.location,
@@ -256,16 +259,8 @@ export const getProfileHydrateRedux = async (
 		});
 };
 
-export const profileHasImages = (username: string) => {
-	let count = 0;
-	for (let i = 0; i++; i < 5) {
-		try {
-			require("http://localhost:3001/images/" + username + "img" + i);
-		} catch (e) {
-			count++;
-		}
-	}
-	return count < 5;
+export const profileHasImages = (imgs: (null | string)[]) => {
+	return imgs.some((x) => x !== null);
 };
 
 export const getSearchList = (token: string, dispatch: Dispatch<AnyAction>) => {

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/07 16:43:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 18:34:07 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,15 @@ export interface Iprofile {
 	userId?: number;
 	online?: number;
 	lastConnection?: string;
+	imgs?: (null | string)[];
+}
+
+export interface Iimgs {
+	img0: string | null;
+	img1: string | null;
+	img2: string | null;
+	img3: string | null;
+	img4: string | null;
 }
 
 export interface like {

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 17:38:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 19:25:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ const NotificationsMenuComponent = (props: Props) => {
 						(entry) => entry.notification.id !== notification.notification.id
 					)
 				);
-				console.log(props.notifications);
 			})
 			.catch((error) => {
 				props.dispatch(

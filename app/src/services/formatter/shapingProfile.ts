@@ -6,9 +6,36 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 18:44:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 19:24:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import fs from "fs";
+import path from "path";
+
+type Imgs = {
+	img0: string;
+	img1: string;
+	img2: string;
+	img3: string;
+	img4: string;
+};
+
+function getProfileImagesPath(username: string) {
+	let array = [];
+	for (let i = 0; i < 5; i++) {
+		try {
+			fs.accessSync(
+				"./public/images/" + username + "img" + i + ".jpg",
+				fs.constants.R_OK | fs.constants.W_OK
+			);
+			array.push("http://localhost:3001/images" + username + "img" + i);
+		} catch (e) {
+			array.push(null);
+		}
+	}
+	return array;
+}
 
 export function shapingProfile(profile) {
 	if (profile) {
@@ -39,6 +66,7 @@ export function shapingProfile(profile) {
 				lng: profile.lng,
 			},
 			tag: profile.tag ? profile.tag.split(",") : null,
+			imgs: getProfileImagesPath(profile.username),
 		};
 	}
 }

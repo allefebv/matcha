@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 17:38:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 19:13:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
 import { getTimeElapsed } from "../../services/timeUtils";
+import { profileHasImages } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	blackList: state.user.blackList as string[],
+	hasImages: profileHasImages(state.user.imgs),
 }));
 
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
@@ -276,7 +278,7 @@ const VisitProfilePageComponent = (props: Props) => {
 						<Grid item xs={4}>
 							<Button>REPORT</Button>
 						</Grid>
-						{likeStatus !== undefined && (
+						{likeStatus !== undefined && props.hasImages && (
 							<Grid item xs={4}>
 								<Button
 									className={classes.likeButton}

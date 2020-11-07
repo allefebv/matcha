@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:50:59 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 18:37:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ function ProfileOptional2Component(props: Props) {
 			if (
 				profileHasTags() &&
 				props.profile.bio &&
-				profileHasImages(props.profile.username)
+				props.profile.imgs &&
+				profileHasImages(props.profile.imgs)
 			) {
 				props.setDisabled(false);
 			} else {

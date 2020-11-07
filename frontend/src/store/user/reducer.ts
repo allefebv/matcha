@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 20:10:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/07 19:09:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import {
 	actionUser_activate,
 	actionUser_setTagList,
 	actionUser_setBlackList,
+	actionUser_setImages,
 } from "./action";
 import { getType } from "typesafe-actions";
 
@@ -33,6 +34,7 @@ const initialState = {
 	usagelocation: null,
 	tagList: [],
 	blackList: [],
+	images: [],
 };
 
 export function userReducer(state = initialState, action: AnyAction) {
@@ -80,6 +82,11 @@ export function userReducer(state = initialState, action: AnyAction) {
 			return {
 				...state,
 				blackList: action.payload.blackList,
+			};
+		case getType(actionUser_setImages):
+			return {
+				...state,
+				imgs: action.payload.images,
 			};
 		default:
 			return state;
