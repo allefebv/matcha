@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 16:16:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:04:59 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ type Props = {} & ReduxProps;
 const HeaderComponent = (props: Props) => {
 	const classes = useStyles();
 	const [notifications, setNotifications] = useState<Inotification[]>([]);
+	const [username, setUsername] = useState("");
 	const ref = useRef(notifications);
 
 	function updateNotifications(notifications: Inotification[]) {
@@ -75,7 +76,7 @@ const HeaderComponent = (props: Props) => {
 	}
 
 	useEffect(() => {
-		props.loggedIn &&
+		if (props.loggedIn) {
 			getNotificationsAPI(props.loggedIn)
 				.then((json) => {
 					json && json.length && updateNotifications(json);
@@ -89,7 +90,11 @@ const HeaderComponent = (props: Props) => {
 					);
 					console.log(error.message);
 				});
-		socket.on("notification" + props.username, pushNotification);
+			socket.on("notification" + props.username, pushNotification);
+			setUsername(props.username);
+		} else {
+			socket.off("notification" + username);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn]);
 

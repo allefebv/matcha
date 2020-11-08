@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 19:04:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 18:08:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ export const getRecommendationAPI = (token: string) => {
 };
 
 export const getMatchesAPI = (token: string) => {
-	return fetchApi<Iprofile[]>(constants.URL + constants.URI_GET_MATCHES, {
+	return fetchApi<IlistProfiles[]>(constants.URL + constants.URI_GET_MATCHES, {
 		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
@@ -360,9 +360,21 @@ export const blacklistProfileAPI = (details: Object, token: string) => {
 	});
 };
 
+export const deleteBlacklistProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_DELETE_BLACKLIST_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
 export const getBlackListAPI = (token: string) => {
 	return fetchApi<string[]>(constants.URL + constants.URI_GET_BLACKLIST, {
-		method: constants.POST_METHOD,
+		method: constants.GET_METHOD,
 		headers: {
 			"Content-Type": "application/json",
 			token: token,

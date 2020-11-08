@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/07 19:09:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:05:57 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ export function userReducer(state = initialState, action: AnyAction) {
 				imgs: action.payload.images,
 			};
 		default:
+			console.log(action.type);
 			return state;
 	}
 }

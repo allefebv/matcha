@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:42:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:06:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { signinAPI } from "../../services/apiCalls";
+import { getBlackListAPI, signinAPI } from "../../services/apiCalls";
 import * as constants from "../../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
-import { actionUser_signin } from "../../store/user/action";
+import {
+	actionUser_setBlackList,
+	actionUser_signin,
+} from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { getProfileHydrateRedux } from "../../services/profileUtils";
 
@@ -82,9 +85,20 @@ function SignInDialogComponent(props: Props) {
 		signinAPI(details)
 			.then(async ({ user, token }) => {
 				if (user.activated) {
-					// getBlackListAPI(token).then((json) => {
-					// 	actionUser_setBlackList({ blackList: json });
-					// });
+					getBlackListAPI(token)
+						.then((json) => {
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
+						})
+						.catch((error) => {
+							console.log(error);
+							props.dispatch(
+								actionUi_showSnackbar({
+									message: error.message,
+									type: "error",
+								})
+							);
+							console.log(error.message);
+						});
 					await getProfileHydrateRedux(props.dispatch, token);
 					props.dispatch(actionUser_signin({ user, token }));
 				} else {

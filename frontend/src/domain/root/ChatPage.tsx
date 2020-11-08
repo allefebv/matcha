@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:47:40 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 17:21:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ import { ChatBox } from "../../component/chat/chatBox";
 import { ChatListProfile } from "../../component/chat/chatListProfile";
 import { socket } from "../../domain/root/App";
 import { getMatchesAPI } from "../../services/apiCalls";
-import { Iprofile } from "../../types/types";
+import { IlistProfiles, Iprofile } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -27,7 +27,7 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
 const ChatPageComponent = (props: Props) => {
-	const [profiles, setProfiles] = useState<Iprofile[]>([]);
+	const [profiles, setProfiles] = useState<IlistProfiles[]>([]);
 	const [userSelect, setUserSelect] = useState<string | null>(null);
 	const [message, setMessage] = useState<{
 		sender: string;
@@ -40,7 +40,7 @@ const ChatPageComponent = (props: Props) => {
 			.then((profiles) => {
 				if (profiles && profiles.length) {
 					setProfiles(profiles);
-					setUserSelect(profiles[0].username);
+					setUserSelect(profiles[0].profile.username);
 				}
 			})
 			.catch((error) => console.log(error));

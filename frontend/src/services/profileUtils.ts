@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 19:25:12 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:06:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,4 +314,13 @@ export const getRecommendationList = (
 			);
 			console.log(error.message);
 		});
+};
+
+export const isProfileBlacklisted = (
+	blacklistUsernames: string[],
+	username: string
+) => {
+	return blacklistUsernames.some(
+		(blacklistUsername) => blacklistUsername === username
+	);
 };

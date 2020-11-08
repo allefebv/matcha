@@ -6,17 +6,17 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:38:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 17:22:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
 
-import { Iprofile } from "../../types/types";
+import { IlistProfiles } from "../../types/types";
 import { CustomAvatar } from "../CustomAvatar";
 
 interface Props {
-	profiles: Iprofile[];
+	profiles: IlistProfiles[];
 	userSelect: string | null;
 	setUserSelect: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -43,19 +43,19 @@ const ChatListProfileComponent = (props: Props) => {
 				{props.profiles.map((profile) => {
 					return (
 						<div
-							key={profile.userId + profile.username}
+							key={profile.profile.userId + profile.profile.username}
 							style={{
 								display: "flex",
 								alignItems: "center",
 								height: 50,
 								width: "100%",
 								backgroundColor:
-									profile.username === props.userSelect
+									profile.profile.username === props.userSelect
 										? "#3e50b5"
 										: "lightGrey",
 							}}
 							onClick={() => {
-								props.setUserSelect(profile.username);
+								props.setUserSelect(profile.profile.username);
 							}}
 						>
 							<div style={{ marginLeft: 10 }}>
@@ -69,7 +69,7 @@ const ChatListProfileComponent = (props: Props) => {
 									textAlign: "center",
 								}}
 							>
-								{profile.username}
+								{profile.profile.username}
 							</div>
 						</div>
 					);

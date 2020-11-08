@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 17:55:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 18:09:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ export const URI_GET_CHAT_MESSAGE = "/message/getMessage";
 
 //blacklist
 export const URI_BLACKLIST_PROFILE = "/blacklist/addProfileBlacklist";
+export const URI_DELETE_BLACKLIST_PROFILE = "/blacklist/deleteProfileBlacklist";
 export const URI_GET_BLACKLIST = "/blacklist/getProfileBlacklist";
 
 //Geocoding APIs

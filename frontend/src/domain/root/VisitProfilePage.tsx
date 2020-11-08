@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 19:13:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 18:11:09 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,18 @@ import {
 	likeProfileAPI,
 	unlikeProfileAPI,
 	getLikeStatusAPI,
+	getBlackListAPI,
+	deleteBlacklistProfileAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
 import { getTimeElapsed } from "../../services/timeUtils";
-import { profileHasImages } from "../../services/profileUtils";
+import {
+	isProfileBlacklisted,
+	profileHasImages,
+} from "../../services/profileUtils";
+import { actionUser_setBlackList } from "../../store/user/action";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -52,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down("sm")]: {
 			width: "100%",
 		},
+		backgroundColor: (isBlackListed) => (isBlackListed ? "grey" : "blue"),
 	},
 	element: {
 		display: "flex",
@@ -63,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
 
 const VisitProfilePageComponent = (props: Props) => {
 	const historyLocation = useLocation<IlistProfiles>();
-	const classes = useStyles();
 	const [profile, setProfile] = useState<Iprofile>();
 	const [location, setLocation] = useState<Iaddress | null>(null);
 	const [tags, setTags] = useState<string[] | null>(null);
@@ -77,6 +83,44 @@ const VisitProfilePageComponent = (props: Props) => {
 		ref.current = profile;
 		setProfile(profile);
 	};
+	const [isBlackListed, setIsBlackListed] = useState(true);
+	const classes = useStyles(isBlackListed);
+
+	useEffect(() => {
+		if (historyLocation && historyLocation.state) {
+			setIsBlackListed(
+				isProfileBlacklisted(
+					props.blackList,
+					historyLocation.state.profile.username
+				)
+			);
+			getLikeStatus();
+			const tmp = { ...historyLocation.state.profile };
+			updateProfile(tmp);
+			setLocation(historyLocation.state.location);
+			setTags(historyLocation.state.tag);
+			socket.on("online", updateConnectionStatus);
+			socket.on("offline", updateConnectionStatus);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [historyLocation]);
+
+	useEffect(() => {
+		if (!isBlackListed) {
+			visitProfile();
+		}
+	}, [isBlackListed]);
+
+	useEffect(() => {
+		if (historyLocation.state.profile) {
+			setIsBlackListed(
+				isProfileBlacklisted(
+					props.blackList,
+					historyLocation.state.profile.username
+				)
+			);
+		}
+	}, [props.blackList]);
 
 	const visitProfile = () => {
 		visitProfileAPI(
@@ -112,19 +156,68 @@ const VisitProfilePageComponent = (props: Props) => {
 			});
 	};
 
-	const blacklistProfile = () => {
-		blacklistProfileAPI(
-			{ username: historyLocation.state.profile.username },
-			props.loggedIn
-		).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
+	const toggleBlackListProfile = () => {
+		if (!isBlackListed) {
+			blacklistProfileAPI(
+				{ username: historyLocation.state.profile.username },
+				props.loggedIn
+			)
+				.then(() => {
+					getBlackListAPI(props.loggedIn)
+						.then((json) => {
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
+						})
+						.catch((error) => {
+							console.log(error);
+							props.dispatch(
+								actionUi_showSnackbar({
+									message: error.message,
+									type: "error",
+								})
+							);
+							console.log(error.message);
+						});
 				})
-			);
-			console.log(error.message);
-		});
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
+		} else {
+			deleteBlacklistProfileAPI(
+				{ username: historyLocation.state.profile.username },
+				props.loggedIn
+			)
+				.then(() => {
+					getBlackListAPI(props.loggedIn)
+						.then((json) => {
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
+						})
+						.catch((error) => {
+							console.log(error);
+							props.dispatch(
+								actionUi_showSnackbar({
+									message: error.message,
+									type: "error",
+								})
+							);
+							console.log(error.message);
+						});
+				})
+				.catch((error) => {
+					props.dispatch(
+						actionUi_showSnackbar({
+							message: error.message,
+							type: "error",
+						})
+					);
+					console.log(error.message);
+				});
+		}
 	};
 
 	const toggleLikeProfile = () => {
@@ -175,22 +268,6 @@ const VisitProfilePageComponent = (props: Props) => {
 				updateProfile({ ...ref.current, online: newStatus });
 		}
 	};
-
-	useEffect(() => {
-		if (historyLocation && historyLocation.state) {
-			props.blackList.filter(
-				(username) => historyLocation.state.profile.username
-			).length === 0 && visitProfile();
-			getLikeStatus();
-			const tmp = { ...historyLocation.state.profile };
-			updateProfile(tmp);
-			setLocation(historyLocation.state.location);
-			setTags(historyLocation.state.tag);
-			socket.on("online", updateConnectionStatus);
-			socket.on("offline", updateConnectionStatus);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [historyLocation]);
 
 	const formatTags = (tags: string[]) => {
 		return tags.map((tag) => (
@@ -273,7 +350,9 @@ const VisitProfilePageComponent = (props: Props) => {
 							</Paper>
 						</Grid>
 						<Grid item xs={4}>
-							<Button onClick={blacklistProfile}>BLOCK</Button>
+							<Button onClick={toggleBlackListProfile}>
+								{isBlackListed ? "UNBLOCK" : "BLOCK"}
+							</Button>
 						</Grid>
 						<Grid item xs={4}>
 							<Button>REPORT</Button>

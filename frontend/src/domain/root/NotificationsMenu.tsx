@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 19:25:04 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:05:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ const NotificationsMenuComponent = (props: Props) => {
 				return " has seen your profile";
 			case "like":
 				return " has liked your profile";
+			case "likeBack":
+				return " just matched with you";
 			case "unlike":
 				return " stopped to like your profile";
 			case "message":
