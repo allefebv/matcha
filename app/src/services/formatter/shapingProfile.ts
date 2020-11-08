@@ -6,20 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/07 19:24:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:23:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import fs from "fs";
-import path from "path";
-
-type Imgs = {
-	img0: string;
-	img1: string;
-	img2: string;
-	img3: string;
-	img4: string;
-};
 
 function getProfileImagesPath(username: string) {
 	let array = [];

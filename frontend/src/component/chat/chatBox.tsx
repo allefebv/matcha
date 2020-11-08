@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 13:05:10 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:22:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ const ChatBoxComponent = (props: Props) => {
 	>([]);
 
 	useEffect(() => {
-		console.log(props.message);
 		if (
 			props.userSelect &&
 			props.message &&

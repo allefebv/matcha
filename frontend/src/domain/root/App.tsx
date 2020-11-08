@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:50:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:57:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ import { Router } from "./Router";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	search: state.profilesList.search,
 	profile: state.user.profile,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;

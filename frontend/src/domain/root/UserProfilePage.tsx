@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:42:10 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 20:08:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ import { ProfileOptional2 } from "../profile/ProfileOptional2";
 import { ProfileOptional3 } from "../profile/ProfileOptional3";
 import { Iprofile, Iaddress } from "../../types/types";
 import {
+	isProfileComplete,
 	submitPictures,
 	submitTags,
 	submitUsageLocation,
@@ -40,6 +41,11 @@ const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile as Iprofile,
 	tagList: state.user.tagList,
 	usageLocation: state.user.usagelocation,
+	isProfileComplete: isProfileComplete(
+		state.user.profile,
+		state.user.usagelocation,
+		state.user.tagList
+	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -115,7 +121,12 @@ const UserProfilePageComponent = (props: Props) => {
 
 	const handleSubmit = async () => {
 		await Promise.all([
-			updateProfile(profile, props.loggedIn, props.dispatch),
+			updateProfile(
+				profile,
+				props.loggedIn,
+				props.dispatch,
+				props.isProfileComplete
+			),
 			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			usageLocation &&
@@ -222,14 +233,14 @@ const UserProfilePageComponent = (props: Props) => {
 					{profileLikes ? (
 						<ProfileCardsScroll list={profileLikes} />
 					) : (
-						<Typography>No one liked your profile yet</Typography>
+						<Typography>No one has liked your profile yet</Typography>
 					)}
 				</Grid>
 				<Grid item xs={12} style={{ height: "50%" }}>
 					{profileVisits ? (
 						<ProfileCardsScroll list={profileVisits} />
 					) : (
-						<Typography>No one visited your profile yet</Typography>
+						<Typography>No one has visited your profile yet</Typography>
 					)}
 				</Grid>
 			</Grid>

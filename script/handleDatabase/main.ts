@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 11:11:35 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 18:21:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:32:55 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ export async function addTableProfile() {
 			sexualOrientation				TEXT NOT NULL,
 			bio								TEXT,
 			online							BOOLEAN DEFAULT 0 NOT NULL,
-			lastConnection					INTEGER NOT NULL,
+			lastConnection					BIGINT NOT NULL,
 			FOREIGN KEY (userId) 			REFERENCES user(id) ON DELETE CASCADE
 		)`;
 		dataBase.query(sql, (error: string) => {

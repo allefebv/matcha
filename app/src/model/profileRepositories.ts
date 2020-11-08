@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   profileRepositories.ts                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 08:33:43 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/08 19:37:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { profile } from '../../types/types';
-import { dataBase } from '../app';
+import { profile } from "../../types/types";
+import { dataBase } from "../app";
 
 export function getCompleteProfileByUserId(id: number): Promise<any> {
 	return new Promise((resolve, reject) => {
@@ -255,7 +255,8 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			gender,
 			geoLocationAuthorization,
 			sexualOrientation,
-			bio
+			bio,
+			lastConnection
 		) VALUES ( 
 			${escape(userId)},
 			${escape(profile.dob)},
@@ -265,7 +266,8 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			${escape(gender)},
 			${escape(geoLocationAuthorization)},
 			${escape(profile.sexualOrientation || "bisexual")},
-			${escape(bio)})`;
+			${escape(bio)},
+			${Date.now()})`;
 
 		dataBase.query(sql, async (error, result) => {
 			if (error) {

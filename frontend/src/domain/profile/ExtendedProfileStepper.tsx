@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/31 16:10:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 20:06:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ import {
 	updateProfile,
 	submitTags,
 	submitUsageLocation,
+	isProfileComplete,
 } from "../../services/profileUtils";
 import { useGeolocation } from "../../services/useGeolocation";
 import { handleGeoLocationAPI } from "../../services/apiCalls";
@@ -42,6 +43,11 @@ const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
 	tagList: state.user.tagList,
 	usagelocation: state.user.usagelocation,
+	isProfileComplete: isProfileComplete(
+		state.user.profile,
+		state.user.usagelocation,
+		state.user.tagList
+	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -97,7 +103,12 @@ function ExtendedProfileStepperComponent(props: Props) {
 	const handleSubmit = async () => {
 		setLoading(true);
 		await Promise.all([
-			updateProfile(profile, props.loggedIn, props.dispatch),
+			updateProfile(
+				profile,
+				props.loggedIn,
+				props.dispatch,
+				props.isProfileComplete
+			),
 			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
