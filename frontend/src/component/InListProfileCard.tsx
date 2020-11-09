@@ -6,13 +6,19 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:40:10 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/09 19:33:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { Avatar, Card, Typography } from "@material-ui/core";
+import { Avatar, Button, Card, Grid, Typography } from "@material-ui/core";
+import { IlistProfiles, Iprofile } from "../types/types";
+import { useHistory } from "react-router-dom";
+import * as constants from "../services/constants";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { getProfileByUsernameAPI } from "../services/apiCalls";
+import { connect, ConnectedProps } from "react-redux";
 
 const styleCard: React.CSSProperties = {
 	display: "flex",
@@ -20,17 +26,60 @@ const styleCard: React.CSSProperties = {
 	width: "100%",
 };
 
+const withReduxProps = connect((state: any) => ({
+	loggedIn: state.user.isLoggedIn,
+	username: state.user.profile.username,
+}));
+type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
-	entry: any;
-};
+	profile: Iprofile;
+} & ReduxProps;
 
-export function InListProfileCard(props: Props) {
+function InListProfileCardComponent(props: Props) {
+	const history = useHistory();
+	const [profile, setProfile] = useState<IlistProfiles>();
+
+	useEffect(() => {
+		(async () => {
+			let profile = await getProfileByUsernameAPI(
+				props.loggedIn,
+				props.profile.username
+			);
+			setProfile(profile);
+		})();
+	}, []);
+
+	const redirectToProfile = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
+		history.push({
+			pathname: constants.VISIT_PROFILE,
+			state: profile,
+		});
+	};
+
 	return (
 		<Card style={styleCard}>
-			<Avatar
-				src={"http://localhost:3001/images/" + props.entry.username + "img0"}
-			></Avatar>
-			<Typography>{props.entry.username}</Typography>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-around",
+					alignItems: "center",
+					flexGrow: 1,
+				}}
+			>
+				<Avatar
+					src={
+						"http://localhost:3001/images/" + props.profile.username + "img0"
+					}
+				></Avatar>
+				<Typography variant="body1">{props.profile.username}</Typography>
+				<Button startIcon={<AccountCircleIcon />} onClick={redirectToProfile}>
+					<Typography variant="button">View Profile</Typography>
+				</Button>
+			</div>
 		</Card>
 	);
 }
+
+export const InListProfileCard = withReduxProps(InListProfileCardComponent);

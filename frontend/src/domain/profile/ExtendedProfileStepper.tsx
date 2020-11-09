@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 20:06:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/08 20:18:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 	const [profile, setProfile] = useState<Iprofile>({
 		...props.profile,
 	});
-	const [tagList, setTagList] = useState<string[]>({
-		...props.tagList,
-	});
+	const [tagList, setTagList] = useState<string[]>([...props.tagList]);
 	const steps = getSteps();
 	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:40:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/09 21:22:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ type Props = {
 
 export function ProfileCardsScroll(props: Props) {
 	const cards = props.list
-		? props.list.map((entry) => (
-				<ListItem key={entry.username}>
-					<InListProfileCard entry={entry}></InListProfileCard>
+		? props.list.map((profile) => (
+				<ListItem key={profile.username}>
+					<InListProfileCard profile={profile}></InListProfileCard>
 				</ListItem>
 		  ))
 		: null;

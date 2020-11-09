@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/05 15:20:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/09 19:19:39 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ export function ProfileCard(props: Props) {
 				{props.entry.tag && formatTags(props.entry.tag)}
 			</CardContent>
 			<CardActions disableSpacing>
-				<IconButton aria-label="add to favorites">
+				<IconButton>
 					<FavoriteIcon />
 				</IconButton>
 				<Button

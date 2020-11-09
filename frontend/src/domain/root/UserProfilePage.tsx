@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 20:08:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/09 21:22:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,14 +230,16 @@ const UserProfilePageComponent = (props: Props) => {
 				spacing={3}
 			>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					{profileLikes ? (
+					<Typography variant="h6">Likes you have received</Typography>
+					{profileLikes?.length ?? 0 > 0 ? (
 						<ProfileCardsScroll list={profileLikes} />
 					) : (
 						<Typography>No one has liked your profile yet</Typography>
 					)}
 				</Grid>
 				<Grid item xs={12} style={{ height: "50%" }}>
-					{profileVisits ? (
+					<Typography variant="h6">Visits you have received</Typography>
+					{profileVisits?.length ?? 0 > 0 ? (
 						<ProfileCardsScroll list={profileVisits} />
 					) : (
 						<Typography>No one has visited your profile yet</Typography>

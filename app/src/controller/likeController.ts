@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/08 18:51:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/09 21:22:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ export async function getProfileLikeController(req: Request, res: Response) {
 					bio: item.bio,
 				};
 			});
-		res.status(200).json(resultList);
+		res.status(200).json(resultList || []);
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
