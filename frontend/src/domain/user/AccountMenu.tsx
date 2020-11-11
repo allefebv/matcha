@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 11:17:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:29:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import { actionUser_logout } from "../../store/user/action";
@@ -28,9 +28,16 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
+const useStyles = makeStyles((theme) => ({
+	button: {
+		color: theme.palette.primary.contrastText,
+	},
+}));
+
 const AccountMenuComponent = (props: Props) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 	const history = useHistory();
+	const classes = useStyles();
 
 	function handleClick(event: React.MouseEvent) {
 		setAnchorEl(event.currentTarget);
@@ -48,7 +55,12 @@ const AccountMenuComponent = (props: Props) => {
 
 	return (
 		<div>
-			<IconButton onClick={handleClick}>
+			<IconButton
+				classes={{
+					root: classes.button,
+				}}
+				onClick={handleClick}
+			>
 				<KeyboardArrowDownIcon
 					aria-controls="simple-menu"
 					aria-haspopup="true"

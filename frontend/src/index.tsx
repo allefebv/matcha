@@ -6,11 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/23 16:44:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 19:07:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { unstable_createMuiStrictModeTheme as createMuiTheme } from "@material-ui/core";
+import {
+	CssBaseline,
+	unstable_createMuiStrictModeTheme as createMuiTheme,
+} from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -26,7 +29,14 @@ import DateFnsUtils from "@date-io/date-fns";
 
 const theme = createMuiTheme({
 	palette: {
-		type: "light",
+		primary: {
+			main: "#9c27b0",
+			contrastText: "#ffffff",
+		},
+		secondary: {
+			main: "#ffc400",
+			contrastText: "#000000",
+		},
 	},
 	overrides: {
 		MuiCssBaseline: {
@@ -38,10 +48,14 @@ const theme = createMuiTheme({
 					"-webkit-box-shadow": "inset 0 0 5px rgb(10,10,0)",
 				},
 				"*::-webkit-scrollbar-thumb": {
-					backgroundColor: "rgba(0,0,0,.1)",
-					outline: "1px solid slategrey",
+					backgroundColor: "rgba(0,0,0,.2)",
 				},
 			},
+		},
+	},
+	typography: {
+		button: {
+			fontStyle: "italic",
 		},
 	},
 });
@@ -49,6 +63,7 @@ const theme = createMuiTheme({
 ReactDOM.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
+			<CssBaseline />
 			<MuiPickersUtilsProvider utils={DateFnsUtils}>
 				<Provider store={store}>
 					<PersistGate loading={null} persistor={persistor}>

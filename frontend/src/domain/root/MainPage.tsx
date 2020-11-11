@@ -6,20 +6,19 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 20:10:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 19:37:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 import { Pagination } from "@material-ui/lab";
 import {
-	Drawer,
 	makeStyles,
 	Grid,
 	Slider,
-	CircularProgress,
 	Typography,
 	Button,
+	SwipeableDrawer,
 } from "@material-ui/core";
 import { ProfileCard } from "../../component/ProfileCard";
 import { KeyboardArrowRight } from "@material-ui/icons";
@@ -38,34 +37,40 @@ import { SortingGroup } from "../../component/SortingGroup";
 import { getMatchesAPI } from "../../services/apiCalls";
 import { actionProfilesList_getMatches } from "../../store/profilesLists/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { CustomLoader } from "../../component/CustomLoader";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
 		display: "flex",
-		justifyContent: "center",
+		flexDirection: "column",
+		justifyContent: "space-around",
 		alignItems: "center",
-		width: "30vw",
 		height: "100vh",
 		overflow: "hidden",
-		backgroundColor: "orange",
+		backgroundColor: theme.palette.primary.main,
 	},
 	drawerContent: {
 		display: "flex",
 		flexDirection: "column",
 		width: "60%",
+		alignItems: "space-between",
+	},
+	logo: {
+		display: "flex",
+		justifySelf: "flex-start",
 	},
 	main: {
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
+		alignSelf: "start",
 	},
 	toggleGroup: {
 		backgroundColor: "blue",
 	},
 	cards: {
 		display: "flex",
-		backgroundColor: "pink",
-		height: "85vh",
+		height: "84vh",
 		overflow: "scroll",
 		overflowX: "hidden",
 		width: "100%",
@@ -74,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
 		},
 		justifyContent: "center",
 		alignItems: "center",
+		borderColor: theme.palette.secondary.main,
+		border: "solid",
+		borderBottom: "none",
+		margin: "auto",
 	},
 	loading: {
 		alignSelf: "center",
@@ -82,6 +91,15 @@ const useStyles = makeStyles((theme) => ({
 	paginator: {
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	alert: {
+		color: theme.palette.primary.dark,
+	},
+	slider: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		flexGrow: 1,
 	},
 }));
 
@@ -177,9 +195,13 @@ const MainPageComponent = (props: Props) => {
 	}, []);
 
 	useEffect(() => {
-		if (props.isProfileComplete && props.profilesRecco) {
+		if (
+			props.isProfileComplete &&
+			props.profilesRecco &&
+			props.profilesRecco.length > 0
+		) {
 			setToggleList("Preselection");
-		} else if (!props.isProfileComplete && props.profilesSearch) {
+		} else {
 			setToggleList("Search");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -441,28 +463,66 @@ const MainPageComponent = (props: Props) => {
 	const renderList = () => {
 		return (
 			<React.Fragment>
-				<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
-					SORT AND FILTER
-				</Button>
-				<Grid container className={classes.cards} spacing={5} justify="center">
-					{getCards()}
-					<Grid item xs={12}>
-						<Pagination
-							count={totalPages}
-							showFirstButton
-							showLastButton
-							className={classes.paginator}
-							onChange={changePage}
-						/>
-					</Grid>
-				</Grid>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						flexGrow: 1,
+					}}
+				>
+					<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
+						SORT AND FILTER
+					</Button>
+					{filteredProfilesList?.length ?? 0 > 0 ? (
+						<Grid
+							container
+							className={classes.cards}
+							spacing={5}
+							justify="center"
+						>
+							{getCards()}
+							<Grid item xs={12}>
+								<Pagination
+									style={{ display: "flex", alignSelf: "center" }}
+									color="primary"
+									variant="outlined"
+									count={totalPages}
+									showFirstButton
+									showLastButton
+									className={classes.paginator}
+									onChange={changePage}
+								/>
+							</Grid>
+						</Grid>
+					) : (
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+								flexDirection: "column",
+							}}
+						>
+							<Typography variant="button" color="primary">
+								Your filters don't match any profiles.
+							</Typography>
+							<Typography variant="button" color="primary">
+								Try again with more open filtering options
+							</Typography>
+						</div>
+					)}
+				</div>
 			</React.Fragment>
 		);
 	};
 
 	const renderNoMatches = () => {
 		return (
-			<Typography>Oh snap, you don't have any matches at the moment</Typography>
+			<React.Fragment>
+				<Typography variant="button" className={classes.alert}>
+					Oh snap, you don't have any matches at the moment
+				</Typography>
+			</React.Fragment>
 		);
 	};
 
@@ -473,19 +533,28 @@ const MainPageComponent = (props: Props) => {
 					<ToggleGroup value={toggleList} setValue={setToggleList} />
 				</div>
 				{loading ? (
-					<CircularProgress
-						size={80}
-						color="primary"
-						className={classes.loading}
-					/>
+					<CustomLoader />
 				) : toggleList === "Matches" && !currentProfilesList ? (
 					renderNoMatches()
 				) : (
 					renderList()
 				)}
 			</div>
-			<Drawer anchor="left" open={open} onClose={handleCloseDrawer}>
+			<SwipeableDrawer
+				onOpen={handleOpenDrawer}
+				anchor="left"
+				open={open}
+				onClose={handleCloseDrawer}
+				swipeAreaWidth={80}
+			>
 				<div className={classes.drawer}>
+					<div className={classes.logo}>
+						<img
+							src={require("../../images/logo_white.png")}
+							style={{ maxWidth: 100 }}
+							alt="logo"
+						/>
+					</div>
 					<div className={classes.drawerContent}>
 						<SortingGroup
 							sortAsc={sortAsc}
@@ -494,38 +563,76 @@ const MainPageComponent = (props: Props) => {
 							setSortMethod={setSortMethod}
 						/>
 						{filterLimits.minAge !== filterLimits.maxAge && (
-							<MaterialDoubleSlider
-								min={filterLimits.minAge}
-								max={filterLimits.maxAge}
-								value={[filterValues.minAge, filterValues.maxAge]}
-								handleChange={handleAgeFilter}
-							/>
+							<div className={classes.slider}>
+								<Typography variant="button" color="secondary">
+									AGE
+								</Typography>
+								<MaterialDoubleSlider
+									min={filterLimits.minAge}
+									max={filterLimits.maxAge}
+									value={[filterValues.minAge, filterValues.maxAge]}
+									handleChange={handleAgeFilter}
+								/>
+							</div>
 						)}
 						{filterLimits.minPopularity !== filterLimits.maxPopularity && (
-							<MaterialDoubleSlider
-								min={filterLimits.minPopularity}
-								max={filterLimits.maxPopularity}
-								value={[filterValues.minPopularity, filterValues.maxPopularity]}
-								handleChange={handlePopularityFilter}
-							/>
+							<div className={classes.slider}>
+								<Typography variant="button" color="secondary">
+									POPULARITY
+								</Typography>
+								<MaterialDoubleSlider
+									min={filterLimits.minPopularity}
+									max={filterLimits.maxPopularity}
+									value={[
+										filterValues.minPopularity,
+										filterValues.maxPopularity,
+									]}
+									handleChange={handlePopularityFilter}
+								/>
+							</div>
 						)}
 						{filterLimits.maxDistance && (
-							<Slider
-								min={0}
-								max={filterLimits.maxDistance}
-								value={filterValues.maxDistance}
-								onChange={handleDistanceFilter}
-								valueLabelDisplay="auto"
-								aria-labelledby="range-slider"
-							/>
+							<div className={classes.slider}>
+								<Typography variant="button" color="secondary">
+									DISTANCE IN KMs
+								</Typography>
+								<Slider
+									min={0}
+									max={filterLimits.maxDistance}
+									value={filterValues.maxDistance}
+									onChange={handleDistanceFilter}
+									valueLabelDisplay="auto"
+									aria-labelledby="range-slider"
+									color="secondary"
+								/>
+							</div>
 						)}
-						<TagSearch
-							handleChangeTags={handleChangeTags}
-							tagList={tagList || []}
-						/>
+						<div
+							style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+						>
+							<Typography
+								variant="button"
+								color="secondary"
+								style={{ alignSelf: "center" }}
+							>
+								COMMON TAGS
+							</Typography>
+							<TagSearch
+								handleChangeTags={handleChangeTags}
+								tagList={tagList || []}
+							/>
+						</div>
 					</div>
+					<Button
+						variant="contained"
+						color="secondary"
+						onClick={handleCloseDrawer}
+						style={{ justifySelf: "flex-end" }}
+					>
+						APPLY
+					</Button>
 				</div>
-			</Drawer>
+			</SwipeableDrawer>
 		</React.Fragment>
 	);
 };

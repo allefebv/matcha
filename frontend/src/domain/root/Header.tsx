@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 19:04:59 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:27:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ import { getNotificationsAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Inotification } from "../../types/types";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	appBar: {
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -49,7 +49,10 @@ const useStyles = makeStyles({
 		display: "flex",
 		justifySelf: "end",
 	},
-});
+	button: {
+		color: theme.palette.primary.contrastText,
+	},
+}));
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -124,13 +127,27 @@ const HeaderComponent = (props: Props) => {
 								to={"/chat"}
 								style={{ color: "inherit", textDecoration: "inherit" }}
 							>
-								<Button startIcon={<ChatIcon />}>CHAT</Button>
+								<Button
+									classes={{
+										root: classes.button,
+									}}
+									startIcon={<ChatIcon />}
+								>
+									CHAT
+								</Button>
 							</Link>
 							<Link
 								to={"/search"}
 								style={{ color: "inherit", textDecoration: "inherit" }}
 							>
-								<Button startIcon={<FavoriteIcon />}>EXPLORE</Button>
+								<Button
+									classes={{
+										root: classes.button,
+									}}
+									startIcon={<FavoriteIcon />}
+								>
+									EXPLORE
+								</Button>
 							</Link>
 						</div>
 					)}
@@ -150,7 +167,11 @@ const HeaderComponent = (props: Props) => {
 								to={"/my-profile"}
 								style={{ color: "inherit", textDecoration: "inherit" }}
 							>
-								<IconButton>
+								<IconButton
+									classes={{
+										root: classes.button,
+									}}
+								>
 									<PersonIcon />
 								</IconButton>
 							</Link>

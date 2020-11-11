@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 19:05:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:28:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	textPop: {
 		color: theme.palette.primary.main,
+	},
+	button: {
+		color: theme.palette.primary.contrastText,
 	},
 }));
 
@@ -243,7 +246,12 @@ const NotificationsMenuComponent = (props: Props) => {
 				max={50}
 				overlap="circle"
 			>
-				<IconButton onClick={handleClick}>
+				<IconButton
+					classes={{
+						root: classes.button,
+					}}
+					onClick={handleClick}
+				>
 					<NotificationsIcon aria-controls="simple-menu" aria-haspopup="true" />
 				</IconButton>
 			</Badge>

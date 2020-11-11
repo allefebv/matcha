@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 18:11:34 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:39:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:57:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,18 @@ type Props = {
 	setSortAsc: React.Dispatch<React.SetStateAction<boolean>>;
 	setSortMethod: React.Dispatch<React.SetStateAction<string>>;
 };
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	group: {
 		display: "flex",
 		justifyContent: "center",
 	},
-});
+	root: {
+		color: theme.palette.secondary.main,
+	},
+	selected: {
+		color: theme.palette.primary.contrastText,
+	},
+}));
 
 export function SortingGroup(props: Props) {
 	const classes = useStyles();
@@ -45,6 +51,10 @@ export function SortingGroup(props: Props) {
 				selected={props.sortMethod === "Age"}
 				value="Age"
 				onClick={handleClick}
+				classes={{
+					root: classes.root,
+					selected: classes.selected,
+				}}
 			>
 				Age
 			</ToggleButton>
@@ -52,6 +62,10 @@ export function SortingGroup(props: Props) {
 				value="Distance"
 				onClick={handleClick}
 				selected={props.sortMethod === "Distance"}
+				classes={{
+					root: classes.root,
+					selected: classes.selected,
+				}}
 			>
 				Distance
 			</ToggleButton>
@@ -59,6 +73,10 @@ export function SortingGroup(props: Props) {
 				value="Popularity"
 				onClick={handleClick}
 				selected={props.sortMethod === "Popularity"}
+				classes={{
+					root: classes.root,
+					selected: classes.selected,
+				}}
 			>
 				Popularity
 			</ToggleButton>
@@ -66,6 +84,10 @@ export function SortingGroup(props: Props) {
 				value="Shared Interests"
 				onClick={handleClick}
 				selected={props.sortMethod === "Shared Interests"}
+				classes={{
+					root: classes.root,
+					selected: classes.selected,
+				}}
 			>
 				Shared Interests
 			</ToggleButton>

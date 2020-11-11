@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 18:11:34 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/28 14:21:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 14:37:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,22 @@ type Props = {
 	setValue: React.Dispatch<React.SetStateAction<string | null>>;
 } & ReduxProps;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	button: (isProfileComplete) => {
 		return {
-			color: isProfileComplete ? "default" : "red",
+			color: isProfileComplete ? "default" : theme.palette.error.main,
 		};
+	},
+	color: {
+		color: theme.palette.secondary.contrastText,
+		backgroundColor: theme.palette.secondary.main,
 	},
 	toggleGroup: {
 		display: "flex",
 		justifySelf: "center",
+		backgroundColor: theme.palette.primary.main,
 	},
-});
+}));
 
 function ToggleGroupComponent(props: Props) {
 	const classes = useStyles(props.isProfileComplete);
@@ -70,11 +75,30 @@ function ToggleGroupComponent(props: Props) {
 				exclusive
 				className={classes.toggleGroup}
 			>
-				<ToggleButton value="Matches">Matches</ToggleButton>
-				<ToggleButton value="Preselection" className={classes.button}>
+				<ToggleButton
+					className={classes.color}
+					color="secondary"
+					value="Matches"
+				>
+					Matches
+				</ToggleButton>
+				<ToggleButton
+					classes={{
+						root: classes.color,
+					}}
+					value="Preselection"
+					className={classes.button}
+				>
 					Preselection
 				</ToggleButton>
-				<ToggleButton value="Search">Search</ToggleButton>
+				<ToggleButton
+					classes={{
+						root: classes.color,
+					}}
+					value="Search"
+				>
+					Search
+				</ToggleButton>
 			</ToggleButtonGroup>
 		</React.Fragment>
 	);

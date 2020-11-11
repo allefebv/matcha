@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 21:19:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:39:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:33:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ export const MaterialDoubleSlider = (props: Props) => {
 			onChange={props.handleChange}
 			valueLabelDisplay="auto"
 			aria-labelledby="range-slider"
+			color="secondary"
 		/>
 	);
 };

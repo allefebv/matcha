@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 20:18:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 16:20:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ import { useGeolocation } from "../../services/useGeolocation";
 import { handleGeoLocationAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Iprofile } from "../../types/types";
+import { CustomLoader } from "../../component/CustomLoader";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -170,7 +171,7 @@ function ExtendedProfileStepperComponent(props: Props) {
 	return (
 		<React.Fragment>
 			{loading ? (
-				<CircularProgress size={80} color="primary" />
+				<CustomLoader />
 			) : (
 				<React.Fragment>
 					<Grid item xs={12}>

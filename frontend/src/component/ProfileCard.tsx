@@ -6,18 +6,16 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:59:49 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/09 19:19:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 15:22:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Button, CardMedia } from "@material-ui/core";
 import * as constants from "../services/constants";
@@ -71,10 +69,10 @@ export function ProfileCard(props: Props) {
 				</Typography>
 				{props.entry.tag && formatTags(props.entry.tag)}
 			</CardContent>
-			<CardActions disableSpacing>
-				<IconButton>
-					<FavoriteIcon />
-				</IconButton>
+			<CardActions
+				disableSpacing
+				style={{ display: "flex", justifyContent: "center" }}
+			>
 				<Button
 					startIcon={<AccountCircleIcon />}
 					onClick={handleRedirectProfile}

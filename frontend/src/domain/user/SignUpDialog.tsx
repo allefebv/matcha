@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 11:23:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 18:26:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,20 @@ import * as constants from "../../services/constants";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_signup } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { makeStyles } from "@material-ui/core";
 
 const withReduxProps = connect((state: any) => ({}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
+const useStyles = makeStyles((theme) => ({
+	button: {
+		color: theme.palette.primary.contrastText,
+	},
+}));
+
 function SignUpDialogComponent(props: Props) {
+	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	let [email, setEmail] = useState<string | null>("");
 	let [emailError, setEmailError] = useState(false);
@@ -125,7 +133,13 @@ function SignUpDialogComponent(props: Props) {
 
 	return (
 		<div>
-			<Button variant="outlined" onClick={handleClickOpen}>
+			<Button
+				classes={{
+					root: classes.button,
+				}}
+				variant="outlined"
+				onClick={handleClickOpen}
+			>
 				Sign up
 			</Button>
 			<Dialog

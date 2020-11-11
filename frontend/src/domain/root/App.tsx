@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 19:57:06 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 14:23:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 		height: "92vh",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "cyan",
 	},
 }));
 

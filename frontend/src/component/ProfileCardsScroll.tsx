@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/09 21:22:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/11 15:34:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ import { Iprofile } from "../types/types";
 const styleList: React.CSSProperties = {
 	width: "100%",
 	overflow: "scroll",
+	overflowX: "hidden",
 	maxHeight: "100%",
 };
 
