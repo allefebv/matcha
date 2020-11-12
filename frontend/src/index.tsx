@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/07 16:18:20 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 19:07:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 12:57:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ const theme = createMuiTheme({
 		},
 		secondary: {
 			main: "#ffc400",
+			light: "#fff64f",
 			contrastText: "#000000",
 		},
 	},
@@ -56,6 +57,11 @@ const theme = createMuiTheme({
 	typography: {
 		button: {
 			fontStyle: "italic",
+		},
+		h6: {
+			fontStyle: "italic",
+			textTransform: "uppercase",
+			color: "#9c27b0",
 		},
 	},
 });

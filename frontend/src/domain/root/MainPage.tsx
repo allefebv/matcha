@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 19:37:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 13:06:25 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -503,10 +503,10 @@ const MainPageComponent = (props: Props) => {
 								flexDirection: "column",
 							}}
 						>
-							<Typography variant="button" color="primary">
+							<Typography align="center" variant="h6">
 								Your filters don't match any profiles.
 							</Typography>
-							<Typography variant="button" color="primary">
+							<Typography align="center" variant="h6">
 								Try again with more open filtering options
 							</Typography>
 						</div>
@@ -519,7 +519,7 @@ const MainPageComponent = (props: Props) => {
 	const renderNoMatches = () => {
 		return (
 			<React.Fragment>
-				<Typography variant="button" className={classes.alert}>
+				<Typography variant="h6" className={classes.alert}>
 					Oh snap, you don't have any matches at the moment
 				</Typography>
 			</React.Fragment>

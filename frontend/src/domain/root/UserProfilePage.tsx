@@ -6,12 +6,12 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/09 21:22:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 13:38:16 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
 import {
 	getProfileAPI,
@@ -50,7 +50,25 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
+const useStyles = makeStyles((theme) => ({
+	paperScroll: {
+		height: "100%",
+		overflow: "hidden",
+		paddingTop: "16px",
+		paddingBottom: "16px",
+		backgroundColor: theme.palette.secondary.main,
+	},
+	paperProfile: {
+		padding: "16px",
+	},
+	main: {
+		height: "95%",
+		justifyContent: "center",
+	},
+}));
+
 const UserProfilePageComponent = (props: Props) => {
+	const classes = useStyles();
 	const [profile, setProfile] = useState<Iprofile>({ ...props.profile });
 	const [tagList, setTagList] = useState<string[]>([...props.tagList]);
 	const [usageLocation, setUsageLocation] = useState<Iaddress | null>({
@@ -167,83 +185,102 @@ const UserProfilePageComponent = (props: Props) => {
 	};
 
 	return (
-		<Grid item container direction="row" style={{ height: "100%" }}>
+		<Grid item container direction="row" className={classes.main}>
 			<Grid
 				container
 				item
 				xs={12}
-				sm={9}
-				style={{ height: "100%" }}
-				alignContent="flex-start"
+				sm={8}
+				md={6}
+				style={{ margin: "10px" }}
+				alignContent="center"
 				justify="center"
 			>
-				<Grid item container justify="center" xs={6}>
-					<Grid item xs={12} lg={8}>
-						<ProfileOptional2
-							handleChange={handleChangeProfile}
-							imgs={imgs}
-							setImgs={setImgs}
-							profile={profile}
-							tagList={tagList}
-							setTagList={setTagList}
-						/>
+				<Paper className={classes.paperProfile}>
+					<Grid container justify="center">
+						<Grid item xs={12} md={10} lg={8}>
+							<ProfileOptional2
+								handleChange={handleChangeProfile}
+								imgs={imgs}
+								setImgs={setImgs}
+								profile={profile}
+								tagList={tagList}
+								setTagList={setTagList}
+							/>
+						</Grid>
+						<Grid item xs={12} md={10} lg={8}>
+							<BaseProfileFormContent
+								profile={profile}
+								setProfile={setProfile}
+								setDisabled={setDisabled}
+							/>
+						</Grid>
+						<Grid item xs={12} md={10} lg={8}>
+							<ProfileOptional1 setProfile={setProfile} profile={profile} />
+						</Grid>
+						<Grid item xs={12} md={10} lg={8}>
+							<ProfileOptional3
+								usageLocation={usageLocation}
+								setUsageLocation={setUsageLocation}
+								handleChange={handleChangeProfile}
+								profile={profile}
+								setProfile={setProfile}
+							/>
+						</Grid>
+						<Grid item xs={12} lg={8}>
+							<Button
+								variant="contained"
+								color="primary"
+								onClick={handleSubmit}
+								fullWidth
+								disabled={disabled}
+							>
+								Update Profile
+							</Button>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} lg={8}>
-						<BaseProfileFormContent
-							profile={profile}
-							setProfile={setProfile}
-							setDisabled={setDisabled}
-						/>
-					</Grid>
-					<Grid item xs={12} lg={8}>
-						<ProfileOptional1 setProfile={setProfile} profile={profile} />
-					</Grid>
-					<Grid item xs={12} lg={8}>
-						<ProfileOptional3
-							usageLocation={usageLocation}
-							setUsageLocation={setUsageLocation}
-							handleChange={handleChangeProfile}
-							profile={profile}
-							setProfile={setProfile}
-						/>
-					</Grid>
-					<Grid item xs={12} lg={8}>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={handleSubmit}
-							fullWidth
-							disabled={disabled}
-						>
-							Update Profile
-						</Button>
-					</Grid>
-				</Grid>
+				</Paper>
 			</Grid>
-
 			<Grid
 				container
 				item
 				xs={12}
-				sm={3}
-				style={{ height: "100%" }}
+				sm={8}
+				md={5}
+				style={{
+					height: "100%",
+					justifyContent: "center",
+					margin: "10px",
+				}}
 				spacing={3}
 			>
-				<Grid item xs={12} style={{ height: "50%" }}>
-					<Typography variant="h6">Likes you have received</Typography>
-					{profileLikes?.length ?? 0 > 0 ? (
-						<ProfileCardsScroll list={profileLikes} />
-					) : (
-						<Typography>No one has liked your profile yet</Typography>
-					)}
+				<Grid item xs={12} lg={8} style={{ height: "50%" }}>
+					<Paper className={classes.paperScroll}>
+						<Typography align="center" variant="h6">
+							Likes you have received
+						</Typography>
+						{profileLikes?.length ?? 0 > 0 ? (
+							<ProfileCardsScroll list={profileLikes} />
+						) : (
+							<Typography align="center">
+								No one has liked your profile yet
+							</Typography>
+						)}
+					</Paper>
 				</Grid>
-				<Grid item xs={12} style={{ height: "50%" }}>
-					<Typography variant="h6">Visits you have received</Typography>
-					{profileVisits?.length ?? 0 > 0 ? (
-						<ProfileCardsScroll list={profileVisits} />
-					) : (
-						<Typography>No one has visited your profile yet</Typography>
-					)}
+				<Grid item xs={12} lg={8} style={{ height: "50%" }}>
+					<Paper className={classes.paperScroll}>
+						<Typography align="center" variant="h6">
+							Visits you have received
+						</Typography>
+						{profileVisits?.length ?? 0 > 0 ? (
+							<ProfileCardsScroll list={profileVisits} />
+						) : (
+							<Typography align="center">
+								No one has visited your profile yet
+							</Typography>
+						)}
+					</Paper>
 				</Grid>
 			</Grid>
 		</Grid>

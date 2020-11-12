@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 18:11:09 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 11:49:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ const VisitProfilePageComponent = (props: Props) => {
 	const [tags, setTags] = useState<string[] | null>(null);
 	const [likeStatus, setLikeStatus] = useState<{
 		iLike: boolean;
-		heLikes: boolean;
+		heLike: boolean;
 	}>();
 	const ref = useRef(profile);
 
@@ -279,9 +279,10 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const getLikeButtonText = () => {
 		if (likeStatus) {
+			console.log(likeStatus);
 			if (likeStatus.iLike === true) {
 				return "UNLIKE";
-			} else if (likeStatus.heLikes === true) {
+			} else if (likeStatus.heLike === true) {
 				return "LIKE BACK";
 			} else {
 				return "LIKE";
