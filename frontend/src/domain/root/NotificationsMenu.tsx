@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 18:28:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 15:56:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,6 @@ const NotificationsMenuComponent = (props: Props) => {
 				</IconButton>
 			</Badge>
 			<Menu
-				id="simple-menu"
 				anchorEl={anchorEl}
 				keepMounted
 				open={Boolean(anchorEl)}

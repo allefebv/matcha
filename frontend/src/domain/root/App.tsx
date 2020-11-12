@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 14:23:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 16:31:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: 64,
 		display: "flex",
 		flexGrow: 1,
-		height: "92vh",
+		height: "90vh",
 		alignItems: "center",
 		justifyContent: "center",
 	},

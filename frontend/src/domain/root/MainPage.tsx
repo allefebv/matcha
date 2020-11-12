@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 13:06:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 16:33:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 	cards: {
 		display: "flex",
-		height: "84vh",
 		overflow: "scroll",
 		overflowX: "hidden",
 		width: "100%",
+		height: "84vh",
+		[theme.breakpoints.down("xs")]: {
+			height: "76vh",
+		},
 		[theme.breakpoints.up("md")]: {
 			width: "80%",
 		},
@@ -545,7 +548,7 @@ const MainPageComponent = (props: Props) => {
 				anchor="left"
 				open={open}
 				onClose={handleCloseDrawer}
-				swipeAreaWidth={80}
+				swipeAreaWidth={30}
 			>
 				<div className={classes.drawer}>
 					<div className={classes.logo}>

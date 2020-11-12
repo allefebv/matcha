@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 18:27:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 16:04:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
+import {
+	AppBar,
+	Button,
+	makeStyles,
+	Toolbar,
+	useMediaQuery,
+	useTheme,
+} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ChatIcon from "@material-ui/icons/Chat";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -66,17 +73,8 @@ const HeaderComponent = (props: Props) => {
 	const [notifications, setNotifications] = useState<Inotification[]>([]);
 	const [username, setUsername] = useState("");
 	const ref = useRef(notifications);
-
-	function updateNotifications(notifications: Inotification[]) {
-		ref.current = notifications;
-		setNotifications(notifications);
-	}
-
-	function pushNotification(notification: Inotification) {
-		const tmp = [...ref.current];
-		tmp.unshift(notification);
-		updateNotifications(tmp);
-	}
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
 	useEffect(() => {
 		if (props.loggedIn) {
@@ -101,81 +99,95 @@ const HeaderComponent = (props: Props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn]);
 
+	function updateNotifications(notifications: Inotification[]) {
+		ref.current = notifications;
+		setNotifications(notifications);
+	}
+
+	function pushNotification(notification: Inotification) {
+		const tmp = [...ref.current];
+		tmp.unshift(notification);
+		updateNotifications(tmp);
+	}
+
+	function handleOpenBurger() {}
+
 	return (
 		<React.Fragment>
 			<AppBar className={classes.appBar}>
 				<Toolbar className={classes.appBar}>
-					<div className={classes.logo}>
-						<Link
-							to={
-								props.loggedIn
-									? constants.SEARCH_ROUTE
-									: constants.LANDING_ROUTE
-							}
-						>
-							<img
-								src={require("../../images/logo_white.png")}
-								style={{ maxWidth: 100 }}
-								alt="logo"
-							/>
-						</Link>
-					</div>
-
-					{props.loggedIn && (
-						<div className={classes.menuOptions}>
+					{!isMobile && (
+						<div className={classes.logo}>
 							<Link
-								to={"/chat"}
-								style={{ color: "inherit", textDecoration: "inherit" }}
+								to={
+									props.loggedIn
+										? constants.SEARCH_ROUTE
+										: constants.LANDING_ROUTE
+								}
 							>
-								<Button
-									classes={{
-										root: classes.button,
-									}}
-									startIcon={<ChatIcon />}
-								>
-									CHAT
-								</Button>
-							</Link>
-							<Link
-								to={"/search"}
-								style={{ color: "inherit", textDecoration: "inherit" }}
-							>
-								<Button
-									classes={{
-										root: classes.button,
-									}}
-									startIcon={<FavoriteIcon />}
-								>
-									EXPLORE
-								</Button>
+								<img
+									src={require("../../images/logo_white.png")}
+									style={{ maxWidth: 100 }}
+									alt="logo"
+								/>
 							</Link>
 						</div>
 					)}
-					{!props.loggedIn && (
+					{props.loggedIn && (
+						<React.Fragment>
+							<div className={classes.menuOptions}>
+								<Link
+									to={"/chat"}
+									style={{ color: "inherit", textDecoration: "inherit" }}
+								>
+									<Button
+										classes={{
+											root: classes.button,
+										}}
+										startIcon={<ChatIcon />}
+									>
+										CHAT
+									</Button>
+								</Link>
+								<Link
+									to={"/search"}
+									style={{ color: "inherit", textDecoration: "inherit" }}
+								>
+									<Button
+										classes={{
+											root: classes.button,
+										}}
+										startIcon={<FavoriteIcon />}
+									>
+										EXPLORE
+									</Button>
+								</Link>
+							</div>
+							<div className={classes.accountMenu}>
+								<NotificationsMenu
+									notifications={ref.current}
+									setNotifications={updateNotifications}
+								/>
+								<Link
+									to={"/my-profile"}
+									style={{ color: "inherit", textDecoration: "inherit" }}
+								>
+									<IconButton
+										classes={{
+											root: classes.button,
+										}}
+									>
+										<PersonIcon />
+									</IconButton>
+								</Link>
+								<AccountMenu />
+							</div>
+						</React.Fragment>
+					)}
+					{!isMobile && !props.loggedIn && (
 						<div className={classes.accountMenu}>
 							<SignInDialog />
 							<SignUpDialog />
-						</div>
-					)}
-					{props.loggedIn && (
-						<div className={classes.accountMenu}>
-							<NotificationsMenu
-								notifications={ref.current}
-								setNotifications={updateNotifications}
-							/>
-							<Link
-								to={"/my-profile"}
-								style={{ color: "inherit", textDecoration: "inherit" }}
-							>
-								<IconButton
-									classes={{
-										root: classes.button,
-									}}
-								>
-									<PersonIcon />
-								</IconButton>
-							</Link>
-							<AccountMenu />
 						</div>
 					)}
 				</Toolbar>
