@@ -6,13 +6,22 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 11:49:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/12 18:49:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Paper, makeStyles, Typography, Grid, Button } from "@material-ui/core";
+import {
+	Paper,
+	makeStyles,
+	Typography,
+	Grid,
+	Button,
+	Icon,
+	useTheme,
+	useMediaQuery,
+} from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
 import { Iaddress, Iprofile, IlistProfiles } from "../../types/types";
 import {
@@ -29,6 +38,7 @@ import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
 import { getTimeElapsed } from "../../services/timeUtils";
 import {
+	getAge,
 	isProfileBlacklisted,
 	profileHasImages,
 } from "../../services/profileUtils";
@@ -45,27 +55,49 @@ type Props = {} & ReduxProps;
 
 const useStyles = makeStyles((theme) => ({
 	main: {
+		padding: "16px",
+		height: "90vh",
+		display: "flex",
+		justifyContent: "center",
+	},
+	container: {
 		display: "flex",
 		flexDirection: "column",
-		justifyContent: "center",
 		alignItems: "center",
-		height: "90vh",
-		backgroundColor: "cyan",
+		padding: "32px",
+		[theme.breakpoints.down("xs")]: {
+			padding: "16px",
+		},
 	},
 	paper: {
 		display: "flex",
 		width: "80%",
-		[theme.breakpoints.down("sm")]: {
+		height: "80%",
+		[theme.breakpoints.down("xs")]: {
 			width: "100%",
+			height: "100%",
 		},
-		backgroundColor: (isBlackListed) => (isBlackListed ? "grey" : "blue"),
+		backgroundColor: (isBlackListed) =>
+			isBlackListed ? "grey" : theme.palette.secondary.main,
 	},
 	element: {
 		display: "flex",
 		backgroundColor: "pink",
 		flexDirection: "column",
 	},
-	likeButton: {},
+	buttons: {
+		display: "flex",
+		justifyContent: "flex-end",
+		marginTop: "auto",
+		width: "100%",
+	},
+	bio: {
+		width: "60%",
+		[theme.breakpoints.down("xs")]: {
+			width: "100%",
+		},
+		alignSelf: "center",
+	},
 }));
 
 const VisitProfilePageComponent = (props: Props) => {
@@ -78,6 +110,8 @@ const VisitProfilePageComponent = (props: Props) => {
 		heLike: boolean;
 	}>();
 	const ref = useRef(profile);
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
 	const updateProfile = (profile: Iprofile) => {
 		ref.current = profile;
@@ -271,7 +305,7 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const formatTags = (tags: string[]) => {
 		return tags.map((tag) => (
-			<Typography display="inline" key={tag}>
+			<Typography variant="button" color="primary" display="inline" key={tag}>
 				#{tag}{" "}
 			</Typography>
 		));
@@ -305,70 +339,130 @@ const VisitProfilePageComponent = (props: Props) => {
 		}
 	};
 
+	const getOrientationIcon = () => {
+		console.log(profile?.sexualOrientation);
+		switch (profile?.sexualOrientation) {
+			case "lesbian":
+				return "fa fa-venus";
+			case "gay":
+				return "fa fa-mars";
+			case "bisexual":
+				return "fa fa-venus-mars";
+		}
+		if (profile?.gender === "male") {
+			return "fa fa-venus";
+		}
+		return "fa fa-mars";
+	};
+
 	return (
 		<div className={classes.main}>
 			<Paper elevation={5} className={classes.paper}>
 				{profile && (
-					<Grid container direction="row">
-						<Grid item xs={12}>
+					<div className={classes.container}>
+						<div>
 							<ProfilePictures
 								imgs={[null, null, null, null, null]}
 								modifiable={false}
 								username={profile.username}
 							/>
-						</Grid>
-						<Grid item xs={12}>
-							<Paper variant="outlined" className={classes.element}>
-								<Typography display="block">
-									Username {profile.username}
+						</div>
+						<div>
+							{!isMobile ? (
+								<Typography variant="h5" align="center">
+									{profile.username +
+										" - " +
+										profile.firstname +
+										" " +
+										profile.lastname +
+										(location &&
+											", " + location.distanceInKm?.toFixed(1) + " km")}
 								</Typography>
-								<Typography>Firstname {profile.firstname}</Typography>
-								<Typography>Lastname {profile.lastname}</Typography>
-								<Typography>{getConnectionStatusText()}</Typography>
-							</Paper>
-						</Grid>
-						<Grid item xs={12}>
-							<Paper>{tags && formatTags(tags)}</Paper>
-						</Grid>
-						<Grid item xs={12}>
-							<Paper>
-								<Typography variant="body1">{profile.age}</Typography>
-							</Paper>
-						</Grid>
-						<Grid item xs={12}>
-							<Paper variant="outlined" className={classes.element}>
-								<Typography variant="body1">
-									{profile.popularityScore}
+							) : (
+								<React.Fragment>
+									<Typography variant="h5" align="center">
+										{profile.username +
+											(location &&
+												", " + location.distanceInKm?.toFixed(1) + " km")}
+									</Typography>
+									<Typography variant="h5" align="center">
+										-
+									</Typography>
+									<Typography variant="h5" align="center">
+										{profile.firstname + " " + profile.lastname}
+									</Typography>
+								</React.Fragment>
+							)}
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<Typography
+									style={{
+										display: "flex",
+										alignItems: "center",
+									}}
+									variant="button"
+									color="primary"
+									display="inline"
+								>
+									{profile.dob && getAge(profile.dob) + " y/o"}
+									<Icon
+										className={
+											profile.gender === "female" ? "fa fa-venus" : "fa fa-mars"
+										}
+									></Icon>
+									{"looking for  "}
+									<Icon className={getOrientationIcon()}></Icon>
 								</Typography>
-								<Typography variant="body1">
-									{profile.sexualOrientation}
-								</Typography>
-								<Typography variant="body1">{profile.gender}</Typography>
-								<Typography variant="body1">{profile.bio}</Typography>
-								<Typography variant="body1">
-									{location && location.distanceInKm}
-								</Typography>
-							</Paper>
-						</Grid>
-						<Grid item xs={4}>
-							<Button onClick={toggleBlackListProfile}>
-								{isBlackListed ? "UNBLOCK" : "BLOCK"}
-							</Button>
-						</Grid>
-						<Grid item xs={4}>
-							<Button>REPORT</Button>
-						</Grid>
-						{likeStatus !== undefined && props.hasImages && (
-							<Grid item xs={4}>
+							</div>
+							<Typography align="center">
+								{getConnectionStatusText()}
+							</Typography>
+						</div>
+						<div style={{ marginTop: "40px" }}>{tags && formatTags(tags)}</div>
+						<div className={classes.bio}>
+							<Typography align="center">{profile.bio}</Typography>
+						</div>
+						<div>
+							{likeStatus !== undefined && props.hasImages && (
 								<Button
-									className={classes.likeButton}
+									color="primary"
+									variant="contained"
 									onClick={toggleLikeProfile}
+									style={{ justifySelf: "center", marginTop: "30px" }}
+									disabled={isBlackListed}
 								>
 									{getLikeButtonText()}
 								</Button>
-							</Grid>
-						)}
-					</Grid>
+							)}
+						</div>
+						<div className={classes.buttons}>
+							<Typography
+								variant="button"
+								color="primary"
+								style={{
+									display: "flex",
+									alignItems: "center",
+									marginRight: "auto",
+								}}
+							>
+								Pop. score {" " + profile.popularityScore}
+							</Typography>
+							<Button
+								style={{ display: "flex", justifySelf: "flex-end" }}
+								variant="outlined"
+								onClick={toggleBlackListProfile}
+							>
+								{isBlackListed ? "UNBLOCK" : "BLOCK"}
+							</Button>
+							<Button variant="outlined">REPORT</Button>
+						</div>
+					</div>
 				)}
 			</Paper>
 		</div>
