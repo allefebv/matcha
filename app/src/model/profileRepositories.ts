@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   profileRepositories.ts                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/08 19:37:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/14 14:52:40 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from "mysql";
+import { escape } from 'mysql';
 
-import { profile } from "../../types/types";
-import { dataBase } from "../app";
+import { profile } from '../../types/types';
+import { dataBase } from '../app';
 
 export function getCompleteProfileByUserId(id: number): Promise<any> {
 	return new Promise((resolve, reject) => {
@@ -54,7 +54,7 @@ export function getCompleteProfileByUserId(id: number): Promise<any> {
 				return;
 			}
 			if (!result || result.length !== 1) {
-				reject({ code: 200, message: "Profile does not exist" });
+				reject({ code: 200, message: 'Profile does not exist' });
 				return;
 			}
 			resolve(result[0]);
@@ -98,7 +98,7 @@ export function getCompleteProfileByUsername(username: string): Promise<any> {
 				return;
 			}
 			if (!result || result.length !== 1) {
-				reject({ code: 200, message: "Profile does not exist" });
+				reject({ code: 200, message: 'Profile does not exist' });
 				return;
 			}
 			resolve(result[0]);
@@ -122,7 +122,7 @@ export function getProfileByUserId(id: number): Promise<profile | null> {
 				return;
 			}
 			if (!result || result.length !== 1) {
-				reject({ code: 200, message: "Profile does not exist" });
+				reject({ code: 200, message: 'Profile does not exist' });
 				return;
 			}
 			resolve(result[0]);
@@ -148,7 +148,7 @@ export function getProfileByUsername(
 				return;
 			}
 			if (!result || result.length !== 1) {
-				reject({ code: 200, message: "Profile does not exist" });
+				reject({ code: 200, message: 'Profile does not exist' });
 				return;
 			}
 			resolve(result[0]);
@@ -172,7 +172,7 @@ export function getAllProfile(id: number): Promise<profile[] | null> {
 				return;
 			}
 			if (!result || result.length === 0) {
-				reject({ code: 200, message: "Profile list is empty" });
+				reject({ code: 200, message: 'Profile list is empty' });
 				return;
 			}
 			resolve(result);
@@ -186,11 +186,11 @@ export function getProfileBySexualOriantation(
 	gender: string
 ): Promise<any> {
 	return new Promise((resolve, reject) => {
-		let genderFilter = "";
-		if (sexualOriantation === "heterosexual" && gender === "male") {
+		let genderFilter = '';
+		if (sexualOriantation === 'heterosexual' && gender === 'male') {
 			genderFilter = "AND profile.gender = 'female'";
 		}
-		if (sexualOriantation === "heterosexual" && gender === "female") {
+		if (sexualOriantation === 'heterosexual' && gender === 'female') {
 			genderFilter = "AND profile.gender = 'male'";
 		}
 		const sql = `
@@ -230,7 +230,7 @@ export function getProfileBySexualOriantation(
 				return;
 			}
 			if (!result || result.length === 0) {
-				reject({ code: 200, message: "Profile list is empty" });
+				reject({ code: 200, message: 'Profile list is empty' });
 				return;
 			}
 			resolve(result);
@@ -265,7 +265,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 			${escape(profile.lastname)},
 			${escape(gender)},
 			${escape(geoLocationAuthorization)},
-			${escape(profile.sexualOrientation || "bisexual")},
+			${escape(profile.sexualOrientation || 'bisexual')},
 			${escape(bio)},
 			${Date.now()})`;
 
@@ -274,7 +274,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 				if (error.errno === 1062) {
 					reject({
 						code: 400,
-						message: "Error: username or profile already exsist",
+						message: 'Error: username or profile already exsist',
 					});
 					return;
 				}
@@ -285,7 +285,7 @@ export function addProfile(profile: profile, userId: number): Promise<profile> {
 				const profileResult = await getProfileByUsername(profile.username);
 				resolve(profileResult);
 			}
-			reject({ code: 400, message: "Error: an error occured" });
+			reject({ code: 400, message: 'Error: an error occured' });
 		});
 	});
 }
@@ -315,7 +315,7 @@ export function updateProfile(
 				if (error.errno === 1062) {
 					reject({
 						code: 400,
-						message: "Error: username or profile already exsist",
+						message: 'Error: username or profile already exsist',
 					});
 					return;
 				}
@@ -326,7 +326,7 @@ export function updateProfile(
 				const profileResult = await getProfileByUsername(profile.username);
 				resolve(profileResult);
 			}
-			reject({ code: 400, message: "Error: an error occured" });
+			reject({ code: 400, message: 'Error: an error occured' });
 		});
 	});
 }

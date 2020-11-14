@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 15:58:36 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/14 14:54:43 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@ import { userProfile } from 'types/types';
 
 import { getProfileBlackList } from '../model/blackListRepositories';
 import {
-	getCompleteProfileByUserId, getProfileBySexualOriantation
+	getCompleteProfileByUserId,
+	getProfileBySexualOriantation,
 } from '../model/profileRepositories';
-import {
-	recommendationAlgorithm
-} from '../services/algorithm/ recommendationAlgorithm';
+import { recommendationAlgorithm } from '../services/algorithm/ recommendationAlgorithm';
 import { locationAlgorithm } from '../services/algorithm/locationAlgorithm';
 import {
-	shapingProfile, shapingProfileReco
+	shapingProfile,
+	shapingProfileReco,
 } from '../services/formatter/shapingProfile';
 import { jwtVerify } from '../services/validation/jwt';
 
@@ -71,15 +71,26 @@ export async function allProfileController(req: Request, res: Response) {
 		const listRecoBlacklist = profileRecoList.filter((profile) => {
 			return !blackList.includes(profile.username);
 		});
-		const profileListLocation = await locationAlgorithm(
-			userProfile.location,
-			listRecoBlacklist,
-			200
-		);
-		const allProfile = profileListLocation.map((profileLocation) =>
-			shapingProfileReco(profileLocation)
-		);
-		res.status(200).json(allProfile);
+		if (
+			userProfile.location &&
+			userProfile.location.lat &&
+			userProfile.location.lng
+		) {
+			const profileListLocation = await locationAlgorithm(
+				userProfile.location,
+				listRecoBlacklist,
+				200
+			);
+			const allProfile = profileListLocation.map((profileLocation) =>
+				shapingProfileReco(profileLocation)
+			);
+			res.status(200).json(allProfile);
+		} else {
+			const allProfile = listRecoBlacklist.map((profileLocation) =>
+				shapingProfileReco(profileLocation)
+			);
+			res.status(200).json(allProfile);
+		}
 	} catch (error) {
 		res.status(400).json(error);
 	}
