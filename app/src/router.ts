@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:33 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 12:15:08 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/25 14:05:46 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ import {
 	addProfileInBlackListController,
 	deleteProfileInBlackListController,
 	getProfileBlackListController,
+	reportController,
 } from './controller/blackListController';
 import { handleImageController } from './controller/imageController';
 import {
@@ -212,6 +213,9 @@ function blackListRouter(app: Application) {
 	);
 	app.post('/blacklist/deleteProfileBlacklist', (req: Request, res: Response) =>
 		deleteProfileInBlackListController(req, res)
+	);
+	app.post('/blacklist/profileReport', (req: Request, res: Response) =>
+		reportController(req, res)
 	);
 }
 
