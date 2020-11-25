@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:38:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:39:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 17:33:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ interface Props {
 const useStyles = makeStyles({
 	avatar: (props: Props) => {
 		return {
-			width: props.id === 0 ? "min(15vh, 6vw)" : "min(12vh, 5vw)",
-			height: props.id === 0 ? "min(15vh, 6vw)" : "min(12vh, 5vw)",
+			width: 65,
+			height: 65,
 			"&:hover": {
 				opacity: props.modifiable ? 0.6 : 1,
 			},

@@ -6,76 +6,120 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 17:22:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:08:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React from "react";
+import {
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+	makeStyles,
+	SwipeableDrawer,
+	Toolbar,
+	Typography,
+	useMediaQuery,
+	useTheme,
+} from "@material-ui/core";
+import React, { useState } from "react";
 
 import { IlistProfiles } from "../../types/types";
 import { CustomAvatar } from "../CustomAvatar";
 
 interface Props {
 	profiles: IlistProfiles[];
-	userSelect: string | null;
-	setUserSelect: React.Dispatch<React.SetStateAction<string | null>>;
+	userSelect: IlistProfiles | null;
+	setUserSelect: React.Dispatch<React.SetStateAction<IlistProfiles | null>>;
 }
 
+const drawerWidthMobile = "100%";
+const drawerWidthDesktop = 200;
+
+const useStyles = makeStyles((theme) => ({
+	drawer: {
+		zIndex: 0,
+		width: drawerWidthDesktop,
+		[theme.breakpoints.down("xs")]: {
+			width: drawerWidthMobile,
+		},
+	},
+	drawerPaper: {
+		width: drawerWidthDesktop,
+		[theme.breakpoints.down("xs")]: {
+			width: drawerWidthMobile,
+		},
+	},
+}));
+
 const ChatListProfileComponent = (props: Props) => {
+	const classes = useStyles();
+	const [open, setOpen] = useState(false);
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+
+	const handleOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+
 	return (
-		<div
-			style={{
-				display: "flex",
-				maxWidth: "500px",
-				minWidth: "200px",
-				boxShadow: "1px 1px 1px 1px lightGrey",
-				zIndex: 1,
-				marginTop: 64,
-			}}
-		>
-			<div
-				style={{
-					display: "flex",
-					width: "100%",
-					flexDirection: "column",
+		<React.Fragment>
+			<SwipeableDrawer
+				open={open}
+				onOpen={handleOpen}
+				onClose={handleClose}
+				variant={isMobile ? "temporary" : "permanent"}
+				className={classes.drawer}
+				classes={{
+					paper: classes.drawerPaper,
 				}}
 			>
-				{props.profiles.map((profile) => {
-					return (
-						<div
-							key={profile.profile.userId + profile.profile.username}
-							style={{
-								display: "flex",
-								alignItems: "center",
-								height: 50,
-								width: "100%",
-								backgroundColor:
-									profile.profile.username === props.userSelect
-										? "#3e50b5"
-										: "lightGrey",
-							}}
-							onClick={() => {
-								props.setUserSelect(profile.profile.username);
-							}}
-						>
-							<div style={{ marginLeft: 10 }}>
-								<CustomAvatar modifiable={false} src={"undefined"} id={0} />
-							</div>
-							<div
+				{!isMobile ? (
+					<Toolbar />
+				) : (
+					<Typography variant="button" color="primary" align="center">
+						MATCHES
+					</Typography>
+				)}
+				<List>
+					{props.profiles.map((profile) => {
+						return (
+							<ListItem
+								key={profile.profile.userId}
+								onClick={() => {
+									props.setUserSelect(profile);
+									setOpen(false);
+								}}
 								style={{
-									marginLeft: 10,
-									fontFamily: "Roboto",
-									fontSize: 18,
-									textAlign: "center",
+									backgroundColor:
+										profile.profile.username ===
+										props.userSelect?.profile.username
+											? "lightGrey"
+											: "white",
 								}}
 							>
-								{profile.profile.username}
-							</div>
-						</div>
-					);
-				})}
-			</div>
-		</div>
+								<ListItemIcon>
+									<CustomAvatar
+										modifiable={false}
+										src={
+											"http://localhost:3001/images/" +
+											profile.profile.username +
+											"img0"
+										}
+										id={0}
+									/>
+								</ListItemIcon>
+								<ListItemText primary={profile.profile.firstname} />
+							</ListItem>
+						);
+					})}
+				</List>
+			</SwipeableDrawer>
+		</React.Fragment>
 	);
 };
 

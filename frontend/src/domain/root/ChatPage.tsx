@@ -6,10 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 17:21:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:02:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
@@ -26,9 +27,23 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
 
+const useStyles = makeStyles({
+	main: {
+		display: "flex",
+		flexDirection: "row",
+		position: "absolute",
+		top: 0,
+		left: 0,
+		width: "100vw",
+		height: "100vh",
+		overflow: "hidden",
+	},
+});
+
 const ChatPageComponent = (props: Props) => {
+	const classes = useStyles();
 	const [profiles, setProfiles] = useState<IlistProfiles[]>([]);
-	const [userSelect, setUserSelect] = useState<string | null>(null);
+	const [userSelect, setUserSelect] = useState<IlistProfiles | null>(null);
 	const [message, setMessage] = useState<{
 		sender: string;
 		message: string;
@@ -40,7 +55,7 @@ const ChatPageComponent = (props: Props) => {
 			.then((profiles) => {
 				if (profiles && profiles.length) {
 					setProfiles(profiles);
-					setUserSelect(profiles[0].profile.username);
+					setUserSelect(profiles[0]);
 				}
 			})
 			.catch((error) => console.log(error));
@@ -69,17 +84,7 @@ const ChatPageComponent = (props: Props) => {
 	}, [userSelect]);
 
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "row",
-				position: "absolute",
-				top: 0,
-				left: 0,
-				width: "100vw",
-				height: "100vh",
-			}}
-		>
+		<div className={classes.main}>
 			<ChatListProfile
 				profiles={profiles}
 				userSelect={userSelect}

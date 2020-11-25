@@ -6,17 +6,26 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 19:22:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:09:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import {
+	Avatar,
+	makeStyles,
+	Paper,
+	Typography,
+	useMediaQuery,
+	useTheme,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import { socket } from "../../domain/root/App";
 import { getMessageAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
-import { Iprofile } from "../../types/types";
+import { IlistProfiles, Iprofile } from "../../types/types";
+import { InListProfileCard } from "../InListProfileCard";
 import { ChatLine } from "./chatLine";
 
 const withReduxProps = connect((state: any) => ({
@@ -26,13 +35,28 @@ const withReduxProps = connect((state: any) => ({
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	userProfile: Iprofile;
-	userSelect: string | null;
+	userSelect: IlistProfiles | null;
 	message: {
 		sender: string;
 		message: string;
 		timestamp: number;
 	} | null;
 } & ReduxProps;
+
+const useStyles = makeStyles((theme) => ({
+	main: {
+		display: "flex",
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "flex-end",
+		backgroundColor: "white",
+		marginTop: 64,
+	},
+	paper: {
+		marginBottom: "auto",
+		backgroundColor: theme.palette.secondary.main,
+	},
+}));
 
 const ChatBoxComponent = (props: Props) => {
 	const [input, setInput] = useState("");
@@ -43,16 +67,19 @@ const ChatBoxComponent = (props: Props) => {
 			timestamp: number;
 		}[]
 	>([]);
+	const classes = useStyles();
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
 	useEffect(() => {
 		if (
 			props.userSelect &&
 			props.message &&
-			props.userSelect === props.message.sender
+			props.userSelect.profile.username === props.message.sender
 		) {
 			const tmpList = [...listMessage];
 			tmpList.push({
-				username: props.userSelect,
+				username: props.userSelect.profile.username,
 				message: props.message.message,
 				timestamp: props.message.timestamp,
 			});
@@ -65,7 +92,7 @@ const ChatBoxComponent = (props: Props) => {
 		setListMessage([]);
 		const details = {
 			username1: props.profile.username,
-			username2: props.userSelect,
+			username2: props.userSelect?.profile.username,
 		};
 		getMessageAPI(details, props.token)
 			.then((result) => {
@@ -117,16 +144,30 @@ const ChatBoxComponent = (props: Props) => {
 	}
 
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "flex-end",
-				width: "100%",
-				backgroundColor: "white",
-				marginTop: 64,
-			}}
-		>
+		<div className={classes.main} style={{}}>
+			{isMobile && props.userSelect && (
+				<Paper className={classes.paper}>
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							flexGrow: 1,
+						}}
+					>
+						<Avatar
+							src={
+								"http://localhost:3001/images/" +
+								props.userSelect.profile.username +
+								"img0"
+							}
+						></Avatar>
+						<Typography variant="body1">
+							{props.userSelect.profile.firstname}
+						</Typography>
+					</div>
+				</Paper>
+			)}
 			<div
 				style={{
 					overflowY: "scroll",
