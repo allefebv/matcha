@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 15:56:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:47:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ const NotificationsMenuComponent = (props: Props) => {
 					}}
 				>
 					<Grid container alignItems="center" justify="center">
-						<Grid item xs={2}>
+						<Grid item xs={3} md={2}>
 							<CustomAvatar
 								id={0}
 								src={
@@ -191,7 +191,7 @@ const NotificationsMenuComponent = (props: Props) => {
 								modifiable={false}
 							/>
 						</Grid>
-						<Grid item xs={isRead ? 9 : 8}>
+						<Grid item xs={isRead ? 8 : 7}>
 							<Typography className={isRead ? classes.textGray : undefined}>
 								{notification.notifierProfile.username}
 								{getNotificationText(type)}
