@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/09 19:33:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 12:56:16 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 
-import { Avatar, Button, Card, Grid, Typography } from "@material-ui/core";
+import { Avatar, Button, Card, Typography } from "@material-ui/core";
 import { IlistProfiles, Iprofile } from "../types/types";
 import { useHistory } from "react-router-dom";
 import * as constants from "../services/constants";
@@ -40,13 +40,18 @@ function InListProfileCardComponent(props: Props) {
 	const [profile, setProfile] = useState<IlistProfiles>();
 
 	useEffect(() => {
+		let isMounted = true;
 		(async () => {
 			let profile = await getProfileByUsernameAPI(
 				props.loggedIn,
 				props.profile.username
 			);
-			setProfile(profile);
+			isMounted && setProfile(profile);
 		})();
+		return () => {
+			isMounted = false;
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const redirectToProfile = (

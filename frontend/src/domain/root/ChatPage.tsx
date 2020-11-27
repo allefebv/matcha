@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 18:02:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 11:37:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ import { ChatBox } from "../../component/chat/chatBox";
 import { ChatListProfile } from "../../component/chat/chatListProfile";
 import { socket } from "../../domain/root/App";
 import { getMatchesAPI } from "../../services/apiCalls";
-import { IlistProfiles, Iprofile } from "../../types/types";
+import { IlistProfiles } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,

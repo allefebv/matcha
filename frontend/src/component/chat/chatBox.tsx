@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 18:09:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 18:22:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ import { socket } from "../../domain/root/App";
 import { getMessageAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { IlistProfiles, Iprofile } from "../../types/types";
-import { InListProfileCard } from "../InListProfileCard";
 import { ChatLine } from "./chatLine";
 
 const withReduxProps = connect((state: any) => ({
@@ -135,7 +134,7 @@ const ChatBoxComponent = (props: Props) => {
 			});
 			setInput("");
 			socket.emit("chatMessage", {
-				receiver: props.userSelect,
+				receiver: props.userSelect?.profile.username,
 				sender: props.userProfile.username,
 				timestamp: Date.now(),
 				message: input,

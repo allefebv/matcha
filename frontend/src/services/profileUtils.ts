@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/08 20:04:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 18:09:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ import {
 	actionUser_setTagList,
 	actionUser_usagelocation,
 } from "../store/user/action";
-import { Iaddress, Iimgs, Iprofile } from "../types/types";
+import { Iaddress, Iprofile } from "../types/types";
 import {
 	createProfileAPI,
 	getAllProfilesAPI,
@@ -100,7 +100,7 @@ export const submitPictures = async (
 	const data = new FormData();
 	await Promise.all(
 		imgs.map(async (img, index) => {
-			if (img !== null) {
+			if (img !== null && img.search("3001") === -1) {
 				await fetch(img)
 					.then((response) => response.blob())
 					.then((blob) => {
@@ -116,15 +116,19 @@ export const submitPictures = async (
 	);
 
 	if (imgs.some((img) => img !== null)) {
-		return postPicturesAPI(data, token).catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		return postPicturesAPI(data, token)
+			.then(() => {
+				dispatch(actionUser_setImages({ images: imgs }));
+			})
+			.catch((error) => {
+				dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
 	}
 };
 

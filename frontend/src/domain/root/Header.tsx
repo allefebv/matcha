@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 16:04:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 11:35:12 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ const HeaderComponent = (props: Props) => {
 		tmp.unshift(notification);
 		updateNotifications(tmp);
 	}
-
-	function handleOpenBurger() {}
 
 	return (
 		<React.Fragment>

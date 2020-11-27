@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 16:20:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 16:18:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 
-import { Grid, CircularProgress } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -36,12 +36,15 @@ import { handleGeoLocationAPI } from "../../services/apiCalls";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Iprofile } from "../../types/types";
 import { CustomLoader } from "../../component/CustomLoader";
+import { useHistory } from "react-router-dom";
+import * as constants from "../../services/constants";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
 	user: state.user.user,
 	currentGeolocation: state.user.currentGeolocation,
 	profile: state.user.profile,
+	imgs: state.user.imgs,
 	tagList: state.user.tagList,
 	usagelocation: state.user.usagelocation,
 	isProfileComplete: isProfileComplete(
@@ -65,13 +68,8 @@ function ExtendedProfileStepperComponent(props: Props) {
 	const steps = getSteps();
 	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);
-	const [imgs, setImgs] = useState<(string | null)[]>([
-		null,
-		null,
-		null,
-		null,
-		null,
-	]);
+	const [imgs, setImgs] = useState<(string | null)[]>([...props.imgs]);
+	const history = useHistory();
 
 	const geolocation = useGeolocation();
 
@@ -112,7 +110,10 @@ function ExtendedProfileStepperComponent(props: Props) {
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
-		setLoading(false);
+		history.push({
+			pathname: constants.LANDING_ROUTE,
+			state: profile,
+		});
 	};
 
 	const handleNext = () => {

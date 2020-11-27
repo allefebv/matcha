@@ -6,11 +6,10 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 11:49:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:53:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { isEqual, uniqWith } from "lodash";
 import * as constants from "../services/constants";
 import { Iaddress, Iprofile, IlistProfiles, user } from "../types/types";
 import { fetchApi } from "./fetchApi";
@@ -400,26 +399,24 @@ export const getTagAutocompleteAPI = (details: Object, token: string) => {
 
 const createAddressFromBody = (body: any): Iaddress[] | null => {
 	if (body && body.results.length) {
-		const filtered: any[] = body.results.filter(
+		let filtered: any[] = body.results.filter(
 			(entry: any) => entry && entry.address
 		);
-		return uniqWith(
-			filtered
-				.map((entry: any) => {
-					const { address, position } = entry;
-					return {
-						city: address.municipality.split(",")[0] || null,
-						countryCode: address.countryCode || null,
-						postCode: address.postalCode || null,
-						country: address.country || null,
-						isFromGeolocation: false,
-						lat: (position && position.lat) || null,
-						lng: (position && position.lon) || null,
-					};
-				})
-				.filter((entry) => entry.postCode),
-			isEqual
-		);
+		filtered = filtered
+			.filter((entry) => entry.entityType === "PostalCodeArea")
+			.map((entry: any) => {
+				const { address, position } = entry;
+				return {
+					city: address.municipality.split(",")[0] || null,
+					countryCode: address.countryCode || null,
+					postCode: address.postalCode || null,
+					country: address.country || null,
+					isFromGeolocation: false,
+					lat: (position && position.lat) || null,
+					lng: (position && position.lon) || null,
+				};
+			});
+		return filtered;
 	}
 	return null;
 };

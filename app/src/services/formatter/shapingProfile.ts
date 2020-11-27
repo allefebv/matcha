@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/08 19:23:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/25 19:27:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ function getProfileImagesPath(username: string) {
 				"./public/images/" + username + "img" + i + ".jpg",
 				fs.constants.R_OK | fs.constants.W_OK
 			);
-			array.push("http://localhost:3001/images" + username + "img" + i);
+			array.push("http://localhost:3001/images/" + username + "img" + i);
 		} catch (e) {
 			array.push(null);
 		}

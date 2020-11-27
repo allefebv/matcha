@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:35:59 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 16:51:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 14:53:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ function responseError(response: Response) {
 
 export const useGeolocation = () => {
 	const [geolocation, setGeolocation] = useState<Iaddress | null>(null);
+
+	useEffect(() => {
+		let timeout = setTimeout(() => {
+			getLocation();
+		}, 1000);
+		return () => {
+			clearTimeout(timeout);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const getLocation = useCallback(
 		throttle(() => {
@@ -69,11 +79,6 @@ export const useGeolocation = () => {
 		}, 5000),
 		[]
 	);
-
-	useEffect(() => {
-		getLocation();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	return geolocation;
 };

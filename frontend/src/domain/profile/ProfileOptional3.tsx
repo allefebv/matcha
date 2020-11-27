@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/09 21:21:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:53:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,69 +38,95 @@ type Props = {
 function ProfileOptional3Component(props: Props) {
 	const [value, setValue] = useState<Iaddress | null>(props.usageLocation);
 	const [options, setOptions] = useState<Iaddress[]>([]);
-	const [inputValue, setInputValue] = useState("");
-	const [prevent, setPrevent] = useState(false);
+	const [input, setInput] = useState("");
 	const ref = useRef(options);
+	const [wait, setWait] = useState(true);
 
 	const updateOptions = (options: Iaddress[]) => {
 		ref.current = options;
 		setOptions(options);
 	};
 
-	const autocomplete = async (input: string) => {
-		const address = await autocompleteLocationAPI(input).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
+	useEffect(() => {
+		let isMounted = true;
+		if (isMounted && props.usageLocation) {
+			let tmp = [...ref.current];
+			tmp = tmp.filter(
+				(address) => address.postCode !== props.usageLocation?.postCode
 			);
-			console.log(error.message);
-		});
-		if (address) {
-			address.unshift(props.currentGeolocation);
-			setOptions(address);
-		}
-	};
-	const throttledAutocomplete = throttle(autocomplete, 1100);
-	const MemoizedThrottledAutocomplete = useCallback(throttledAutocomplete, []);
-
-	useEffect(() => {
-		if (inputValue) {
-			MemoizedThrottledAutocomplete(inputValue);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [inputValue]);
-
-	useEffect(() => {
-		if (props.usageLocation) {
-			const tmp = [...ref.current];
 			tmp.push(props.usageLocation);
 			updateOptions(tmp);
 		}
-	}, []);
+		let timeout = setTimeout(() => {
+			setWait(false);
+		}, 1000);
+		setValue(props.usageLocation);
+		return () => {
+			isMounted = false;
+			clearTimeout(timeout);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.usageLocation]);
+
+	useEffect(() => {}, [props.usageLocation]);
 
 	useEffect(() => {
-		if (props.currentGeolocation) {
-			const tmp = [...ref.current];
+		let isMounted = true;
+		if (
+			props.currentGeolocation &&
+			isMounted &&
+			props.currentGeolocation.postCode !== props.usageLocation?.postCode
+		) {
+			let tmp = [...ref.current];
+			tmp = tmp.filter((address) => address.isFromGeolocation === false);
 			tmp.unshift(props.currentGeolocation);
 			updateOptions(tmp);
 		}
-		if (value && props.setDisabled) {
+		if (value && props.setDisabled && isMounted) {
 			props.setDisabled(false);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.currentGeolocation]);
+
+	useEffect(() => {
+		if (input !== "" && !wait) {
+			MemoizedThrottledAutocomplete(input);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [input]);
+
+	const autocomplete = async (input: string) => {
+		autocompleteLocationAPI(input)
+			.then((address) => {
+				if (address) {
+					address = address.filter(
+						(memberAddress) => memberAddress.isFromGeolocation === false
+					);
+					address.unshift(props.currentGeolocation);
+					updateOptions(address);
+				}
+			})
+			.catch((error) => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: error.message,
+						type: "error",
+					})
+				);
+				console.log(error.message);
+			});
+	};
+	const throttledAutocomplete = throttle(autocomplete, 1100);
+	const MemoizedThrottledAutocomplete = useCallback(throttledAutocomplete, []);
 
 	const handleInputChange = (
 		event: React.ChangeEvent<{}>,
 		newInputValue: string
 	) => {
-		if (prevent === true) {
-			setPrevent(false);
-			return;
-		}
-		setInputValue(newInputValue);
+		setInput(newInputValue);
 	};
 
 	function handleValueChange(
@@ -108,7 +134,6 @@ function ProfileOptional3Component(props: Props) {
 		newValue: Iaddress | null
 	) {
 		setValue(newValue);
-		setPrevent(true);
 		if (newValue) {
 			const tmpProfile = { ...props.profile };
 			tmpProfile.geoLocationAuthorization = newValue.isFromGeolocation

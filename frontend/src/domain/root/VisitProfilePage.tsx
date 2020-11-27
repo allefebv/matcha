@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 18:49:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 18:43:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ import {
 	Paper,
 	makeStyles,
 	Typography,
-	Grid,
 	Button,
 	Icon,
 	useTheme,
 	useMediaQuery,
+	CircularProgress,
 } from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
 import { Iaddress, Iprofile, IlistProfiles } from "../../types/types";
@@ -43,6 +43,7 @@ import {
 	profileHasImages,
 } from "../../services/profileUtils";
 import { actionUser_setBlackList } from "../../store/user/action";
+import { CustomLoader } from "../../component/CustomLoader";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -112,6 +113,8 @@ const VisitProfilePageComponent = (props: Props) => {
 	const ref = useRef(profile);
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+	const [isLikeLoading, setIsLikeLoading] = useState(false);
+	const [isBlockLoading, setIsBlockLoading] = useState(false);
 
 	const updateProfile = (profile: Iprofile) => {
 		ref.current = profile;
@@ -143,6 +146,7 @@ const VisitProfilePageComponent = (props: Props) => {
 		if (!isBlackListed) {
 			visitProfile();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isBlackListed]);
 
 	useEffect(() => {
@@ -154,6 +158,7 @@ const VisitProfilePageComponent = (props: Props) => {
 				)
 			);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.blackList]);
 
 	const visitProfile = () => {
@@ -191,6 +196,7 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const toggleBlackListProfile = () => {
+		setIsBlockLoading(true);
 		if (!isBlackListed) {
 			blacklistProfileAPI(
 				{ username: historyLocation.state.profile.username },
@@ -200,8 +206,10 @@ const VisitProfilePageComponent = (props: Props) => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
 							props.dispatch(actionUser_setBlackList({ blackList: json }));
+							setIsBlockLoading(false);
 						})
 						.catch((error) => {
+							setIsBlockLoading(false);
 							console.log(error);
 							props.dispatch(
 								actionUi_showSnackbar({
@@ -213,6 +221,7 @@ const VisitProfilePageComponent = (props: Props) => {
 						});
 				})
 				.catch((error) => {
+					setIsBlockLoading(false);
 					props.dispatch(
 						actionUi_showSnackbar({
 							message: error.message,
@@ -229,9 +238,11 @@ const VisitProfilePageComponent = (props: Props) => {
 				.then(() => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
+							setIsBlockLoading(false);
 							props.dispatch(actionUser_setBlackList({ blackList: json }));
 						})
 						.catch((error) => {
+							setIsBlockLoading(false);
 							console.log(error);
 							props.dispatch(
 								actionUi_showSnackbar({
@@ -243,6 +254,7 @@ const VisitProfilePageComponent = (props: Props) => {
 						});
 				})
 				.catch((error) => {
+					setIsBlockLoading(false);
 					props.dispatch(
 						actionUi_showSnackbar({
 							message: error.message,
@@ -255,6 +267,7 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const toggleLikeProfile = () => {
+		setIsLikeLoading(true);
 		if (likeStatus !== undefined && likeStatus.iLike === false) {
 			likeProfileAPI(
 				{ username: historyLocation.state.profile.username },
@@ -262,8 +275,10 @@ const VisitProfilePageComponent = (props: Props) => {
 			)
 				.then(() => {
 					setLikeStatus({ ...likeStatus, iLike: true });
+					setIsLikeLoading(false);
 				})
 				.catch((error) => {
+					setIsLikeLoading(false);
 					props.dispatch(
 						actionUi_showSnackbar({
 							message: error.message,
@@ -278,9 +293,11 @@ const VisitProfilePageComponent = (props: Props) => {
 				props.loggedIn
 			)
 				.then(() => {
+					setIsLikeLoading(false);
 					setLikeStatus({ ...likeStatus, iLike: false });
 				})
 				.catch((error) => {
+					setIsLikeLoading(false);
 					props.dispatch(
 						actionUi_showSnackbar({
 							message: error.message,
@@ -313,7 +330,6 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const getLikeButtonText = () => {
 		if (likeStatus) {
-			console.log(likeStatus);
 			if (likeStatus.iLike === true) {
 				return "UNLIKE";
 			} else if (likeStatus.heLike === true) {
@@ -340,7 +356,6 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const getOrientationIcon = () => {
-		console.log(profile?.sexualOrientation);
 		switch (profile?.sexualOrientation) {
 			case "lesbian":
 				return "fa fa-venus";
@@ -431,11 +446,12 @@ const VisitProfilePageComponent = (props: Props) => {
 						<div>
 							{likeStatus !== undefined && props.hasImages && (
 								<Button
+									disabled={isLikeLoading || isBlackListed}
+									startIcon={isLikeLoading ? <CircularProgress /> : null}
 									color="primary"
 									variant="contained"
 									onClick={toggleLikeProfile}
 									style={{ justifySelf: "center", marginTop: "30px" }}
-									disabled={isBlackListed}
 								>
 									{getLikeButtonText()}
 								</Button>
@@ -454,6 +470,8 @@ const VisitProfilePageComponent = (props: Props) => {
 								Pop. score {" " + profile.popularityScore}
 							</Typography>
 							<Button
+								disabled={isBlockLoading}
+								startIcon={isBlockLoading ? <CircularProgress /> : null}
 								style={{ display: "flex", justifySelf: "flex-end" }}
 								variant="outlined"
 								onClick={toggleBlackListProfile}

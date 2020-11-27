@@ -6,12 +6,19 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 13:38:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 18:51:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
-import { Button, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+	Button,
+	CircularProgress,
+	Grid,
+	makeStyles,
+	Paper,
+	Typography,
+} from "@material-ui/core";
 import { ProfileCardsScroll } from "../../component/ProfileCardsScroll";
 import {
 	getProfileAPI,
@@ -74,7 +81,6 @@ const UserProfilePageComponent = (props: Props) => {
 	const [usageLocation, setUsageLocation] = useState<Iaddress | null>({
 		...props.usageLocation,
 	});
-	const [disabled, setDisabled] = useState(false);
 	const [profileVisits, setProfileVisits] = useState<Iprofile[]>();
 	const [profileLikes, setProfileLikes] = useState<Iprofile[]>();
 	const [imgs, setImgs] = useState<(string | null)[]>([
@@ -84,6 +90,8 @@ const UserProfilePageComponent = (props: Props) => {
 		null,
 		null,
 	]);
+	const [disabled, setDisabled] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const geolocation = useGeolocation();
 
@@ -108,28 +116,70 @@ const UserProfilePageComponent = (props: Props) => {
 	}, [geolocation]);
 
 	useEffect(() => {
-		getProfile();
-		getProfileVisitsList();
-		getProfileLikesList();
+		setTagList([...props.tagList]);
+		setUsageLocation({ ...props.usageLocation });
+	}, [props.usageLocation, props.tagList]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setDisabled(false);
+		}, 2000);
+		let isMounted = true;
+		getProfile().then((response: any) => {
+			if (response && isMounted) {
+				setProfile({ ...profile, online: profile.online });
+			}
+		});
+		getProfileVisitsList().then((json: Iprofile[] | void) => {
+			if (json && isMounted) {
+				setProfileVisits(json);
+			}
+		});
+		getProfileLikesList().then((json: Iprofile[] | void) => {
+			if (json && isMounted) {
+				setProfileLikes(json);
+			}
+		});
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const getProfile = () => {
-		return getProfileAPI(props.loggedIn)
-			.then((response: any) => {
-				if (response) {
-					setProfile({ ...profile, online: profile.online });
-				}
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+		return getProfileAPI(props.loggedIn).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
+	};
+
+	const getProfileVisitsList = () => {
+		return getProfileVisitsAPI(props.loggedIn).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
+	};
+
+	const getProfileLikesList = () => {
+		return getProfileLikesAPI(props.loggedIn).catch((error) => {
+			props.dispatch(
+				actionUi_showSnackbar({
+					message: error.message,
+					type: "error",
+				})
+			);
+			console.log(error.message);
+		});
 	};
 
 	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,6 +188,8 @@ const UserProfilePageComponent = (props: Props) => {
 	};
 
 	const handleSubmit = async () => {
+		setLoading(true);
+		setDisabled(true);
 		await Promise.all([
 			updateProfile(
 				profile,
@@ -150,38 +202,8 @@ const UserProfilePageComponent = (props: Props) => {
 			usageLocation &&
 				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
-	};
-
-	const getProfileVisitsList = () => {
-		getProfileVisitsAPI(props.loggedIn)
-			.then((json) => {
-				setProfileVisits(json);
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
-	};
-
-	const getProfileLikesList = () => {
-		getProfileLikesAPI(props.loggedIn)
-			.then((json) => {
-				setProfileLikes(json);
-			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+		setLoading(false);
+		setDisabled(false);
 	};
 
 	return (
@@ -212,7 +234,8 @@ const UserProfilePageComponent = (props: Props) => {
 							<BaseProfileFormContent
 								profile={profile}
 								setProfile={setProfile}
-								setDisabled={setDisabled}
+								dynamicUsername={false}
+								dynamicDob={false}
 							/>
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
@@ -234,6 +257,7 @@ const UserProfilePageComponent = (props: Props) => {
 								onClick={handleSubmit}
 								fullWidth
 								disabled={disabled}
+								startIcon={loading ? <CircularProgress /> : null}
 							>
 								Update Profile
 							</Button>
@@ -259,7 +283,7 @@ const UserProfilePageComponent = (props: Props) => {
 						<Typography align="center" variant="h6">
 							Likes you have received
 						</Typography>
-						{profileLikes?.length ?? 0 > 0 ? (
+						{profileLikes?.length ?? false ? (
 							<ProfileCardsScroll list={profileLikes} />
 						) : (
 							<Typography align="center">
@@ -273,7 +297,7 @@ const UserProfilePageComponent = (props: Props) => {
 						<Typography align="center" variant="h6">
 							Visits you have received
 						</Typography>
-						{profileVisits?.length ?? 0 > 0 ? (
+						{profileVisits?.length ?? false ? (
 							<ProfileCardsScroll list={profileVisits} />
 						) : (
 							<Typography align="center">

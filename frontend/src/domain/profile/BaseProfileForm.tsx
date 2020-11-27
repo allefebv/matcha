@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/07 16:29:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:20:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ function BaseProfileFormComponent(props: Props) {
 					setProfile={setProfile}
 					profile={profile}
 					setDisabled={setDisabled}
+					dynamicUsername
+					dynamicDob
 				/>
 			</Grid>
 			<Grid item xs={12} md={6}>

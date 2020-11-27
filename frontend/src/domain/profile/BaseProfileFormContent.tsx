@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:51:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:19:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useState } from "react";
 
-import { TextField } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 import { DatePicker } from "@material-ui/pickers";
 import { Iprofile } from "../../types/types";
 
@@ -22,6 +22,8 @@ type Props = {
 		| React.Dispatch<React.SetStateAction<Iprofile>>
 		| React.Dispatch<React.SetStateAction<Iprofile>>;
 	setDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
+	dynamicUsername: boolean;
+	dynamicDob: boolean;
 };
 
 export function BaseProfileFormContent(props: Props) {
@@ -67,6 +69,22 @@ export function BaseProfileFormContent(props: Props) {
 
 	return (
 		<React.Fragment>
+			{props.dynamicUsername ? (
+				<TextField
+					label="Username"
+					variant="filled"
+					margin="dense"
+					fullWidth
+					name="username"
+					value={props.profile && props.profile.username}
+					onChange={handleChangeUsername}
+					required
+					error={errorUsername}
+				/>
+			) : (
+				<Typography>{"Username: " + props.profile.username}</Typography>
+			)}
+
 			<TextField
 				label="First Name"
 				variant="filled"
@@ -89,18 +107,8 @@ export function BaseProfileFormContent(props: Props) {
 				required
 				error={errorLastname}
 			/>
-			<TextField
-				label="Username"
-				variant="filled"
-				margin="dense"
-				fullWidth
-				name="username"
-				value={props.profile && props.profile.username}
-				onChange={handleChangeUsername}
-				required
-				error={errorUsername}
-			/>
 			<DatePicker
+				disabled={!props.dynamicDob}
 				views={["year", "month", "date"]}
 				margin="normal"
 				label="Date of birth"

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 16:33:42 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/26 11:44:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,17 +381,8 @@ const MainPageComponent = (props: Props) => {
 			props.tagList.filter((x) => a.tag.includes(x)).length <
 				props.tagList.filter((x) => b.tag.includes(x)).length
 		) {
-			console.log(
-				props.tagList.filter((x) => a.tag.includes(x)).length,
-				props.tagList.filter((x) => b.tag.includes(x)).length
-			);
 			return sortAsc ? -1 : 1;
 		} else {
-			props.tagList &&
-				console.log(
-					props.tagList.filter((x) => a.tag.includes(x)).length,
-					props.tagList.filter((x) => b.tag.includes(x)).length
-				);
 			return sortAsc ? 1 : -1;
 		}
 	};
@@ -477,7 +468,7 @@ const MainPageComponent = (props: Props) => {
 					<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
 						SORT AND FILTER
 					</Button>
-					{filteredProfilesList?.length ?? 0 > 0 ? (
+					{filteredProfilesList?.length ?? false ? (
 						<Grid
 							container
 							className={classes.cards}
