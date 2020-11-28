@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   DeleteAccountDialog.tsx                            :+:      :+:    :+:   */
+/*   ReportProfileDialog.tsx                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:22:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:21:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,24 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import * as constants from "../../services/constants";
-import { deleteAPI } from "../../services/apiCalls";
-import { actionUser_logout } from "../../store/user/action";
-import { useHistory } from "react-router-dom";
+import { reportProfileAPI } from "../../services/apiCalls";
+import { actionUi_showSnackbar } from "../../store/ui/action";
+import { CircularProgress } from "@material-ui/core";
 import { errorHandling } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	user: state.user.user,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
-type Props = {} & ReduxProps;
+type Props = {
+	username: string;
+} & ReduxProps;
 
-function DeleteAccountDialogComponent(props: Props) {
+function ReportProfileDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [password, setPassword] = useState<string | null>("");
-	const history = useHistory();
+	const [message, setMessage] = useState("");
+	const [messageError, setMessageError] = useState(false);
+	const [isReportLoading, setIsReportLoading] = useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -44,34 +46,43 @@ function DeleteAccountDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
+		setMessageError(false);
 	};
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
+	}
+
+	async function handleReport() {
+		const body = {
+			username: props.username,
+			message: message,
+		};
+		setIsReportLoading(true);
+		await reportProfileAPI(body, props.loggedIn)
+			.then(() => {
+				props.dispatch(
+					actionUi_showSnackbar({
+						message: "Your report has been sent successfully",
+						type: "success",
+					})
+				);
+			})
+			.catch((error) => errorHandling(error, props.dispatch));
+		setIsReportLoading(false);
+		setMessage("");
 		handleClose();
 	}
 
-	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
-		setPassword(e.currentTarget.value);
+	function handleMessage(e: React.ChangeEvent<HTMLInputElement>) {
+		setMessage(e.currentTarget.value);
+		setMessageError(e.currentTarget.value === "");
 	}
 
-	const handleDeleteAccount = () => {
-		let details = {
-			password: password,
-		};
-
-		deleteAPI(details, props.loggedIn)
-			.then(() => {
-				props.dispatch(actionUser_logout());
-				history.push(constants.LANDING_ROUTE);
-			})
-			.catch((error) => errorHandling(error, props.dispatch));
-	};
-
 	return (
-		<React.Fragment>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Delete Account
+		<div>
+			<Button fullWidth variant="outlined" onClick={handleClickOpen}>
+				REPORT
 			</Button>
 			<Dialog
 				open={open}
@@ -79,17 +90,18 @@ function DeleteAccountDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
+					<DialogTitle id="form-dialog-title">Report user</DialogTitle>
 					<DialogContent>
 						<TextField
-							autoFocus
 							margin="dense"
-							label="Password"
-							type="password"
+							label="Report Reason"
 							variant="filled"
 							fullWidth
-							value={password}
-							onChange={handlePassword}
+							multiline
+							value={message}
+							onChange={handleMessage}
+							error={messageError}
+							helperText={messageError && constants.EMPTY_ERROR}
 						/>
 					</DialogContent>
 					<DialogActions>
@@ -97,18 +109,19 @@ function DeleteAccountDialogComponent(props: Props) {
 							Cancel
 						</Button>
 						<Button
-							onClick={handleDeleteAccount}
+							onClick={handleReport}
 							type="submit"
 							color="primary"
-							disabled={password === ""}
+							disabled={message === "" || isReportLoading}
+							startIcon={isReportLoading ? <CircularProgress /> : null}
 						>
-							DELETE MY ACCOUNT
+							Report
 						</Button>
 					</DialogActions>
 				</form>
 			</Dialog>
-		</React.Fragment>
+		</div>
 	);
 }
 
-export const DeleteAccountDialog = withReduxProps(DeleteAccountDialogComponent);
+export const ReportProfileDialog = withReduxProps(ReportProfileDialogComponent);

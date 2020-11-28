@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 17:53:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:22:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { autocompleteLocationAPI } from "../../services/apiCalls";
 import { Iaddress, Iprofile } from "../../types/types";
 import { throttle } from "lodash";
-import { actionUi_showSnackbar } from "../../store/ui/action";
+import { errorHandling } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	currentGeolocation: state.user.currentGeolocation,
@@ -109,15 +109,7 @@ function ProfileOptional3Component(props: Props) {
 					updateOptions(address);
 				}
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 	};
 	const throttledAutocomplete = throttle(autocomplete, 1100);
 	const MemoizedThrottledAutocomplete = useCallback(throttledAutocomplete, []);

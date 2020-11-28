@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 18:09:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:27:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,15 +120,7 @@ export const submitPictures = async (
 			.then(() => {
 				dispatch(actionUser_setImages({ images: imgs }));
 			})
-			.catch((error) => {
-				dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, dispatch));
 	}
 };
 
@@ -150,15 +142,7 @@ export const updateProfile = async (
 				})
 			);
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const createProfile = async (
@@ -183,15 +167,7 @@ export const createProfile = async (
 				})
 			);
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const submitTags = async (
@@ -203,15 +179,7 @@ export const submitTags = async (
 		.then((tagList) => {
 			dispatch(actionUser_setTagList({ tagList: tagList }));
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const submitUsageLocation = async (
@@ -225,15 +193,7 @@ export const submitUsageLocation = async (
 			getSearchList(token, dispatch);
 			getRecommendationList(token, dispatch);
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const getProfileHydrateRedux = async (
@@ -255,15 +215,7 @@ export const getProfileHydrateRedux = async (
 				);
 			}
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const profileHasImages = (imgs: (null | string)[]) => {
@@ -283,15 +235,7 @@ export const getSearchList = (token: string, dispatch: Dispatch<AnyAction>) => {
 				dispatch(actionProfilesList_getSearch({ profiles: withAge }));
 			}
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const getRecommendationList = (
@@ -312,15 +256,7 @@ export const getRecommendationList = (
 				dispatch(actionProfilesList_getRecco({ profiles: withAge }));
 			}
 		})
-		.catch((error) => {
-			dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		.catch((error) => errorHandling(error, dispatch));
 };
 
 export const isProfileBlacklisted = (
@@ -330,4 +266,16 @@ export const isProfileBlacklisted = (
 	return blacklistUsernames.some(
 		(blacklistUsername) => blacklistUsername === username
 	);
+};
+
+export const errorHandling = (error: Error, dispatch: Dispatch<AnyAction>) => {
+	if (error.message !== "timeout") {
+		dispatch(
+			actionUi_showSnackbar({
+				message: error.message,
+				type: "error",
+			})
+		);
+		console.log(error.message);
+	}
 };

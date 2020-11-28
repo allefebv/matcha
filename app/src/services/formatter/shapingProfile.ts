@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:07:01 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/25 19:27:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 16:15:07 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ export function shapingProfile(profile) {
 				country: profile.country,
 				lat: profile.lat,
 				lng: profile.lng,
+				distanceInKm: profile.distance ?? null,
 			},
 			tag: profile.tag ? profile.tag.split(",") : null,
 			imgs: getProfileImagesPath(profile.username),

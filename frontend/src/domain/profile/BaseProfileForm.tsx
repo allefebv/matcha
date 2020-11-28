@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 17:20:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:22:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ import { handleGeoLocationAPI } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_geolocation } from "../../store/user/action";
 import { useGeolocation } from "../../services/useGeolocation";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { BaseProfileFormContent } from "./BaseProfileFormContent";
 import { Iprofile } from "../../types/types";
-import { createProfile } from "../../services/profileUtils";
+import { createProfile, errorHandling } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -55,15 +54,9 @@ function BaseProfileFormComponent(props: Props) {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) =>
+				errorHandling(error, props.dispatch)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);

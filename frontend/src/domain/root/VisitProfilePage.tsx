@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 18:43:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:29:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ import {
 	CircularProgress,
 } from "@material-ui/core";
 import { ProfilePictures } from "../profile/ProfilePictures";
-import { Iaddress, Iprofile, IlistProfiles } from "../../types/types";
+import { Iaddress, IlistProfiles } from "../../types/types";
 import {
 	visitProfileAPI,
 	blacklistProfileAPI,
@@ -32,18 +32,20 @@ import {
 	getLikeStatusAPI,
 	getBlackListAPI,
 	deleteBlacklistProfileAPI,
+	getProfileByUsernameAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
 import { getTimeElapsed } from "../../services/timeUtils";
 import {
+	errorHandling,
 	getAge,
 	isProfileBlacklisted,
 	profileHasImages,
 } from "../../services/profileUtils";
 import { actionUser_setBlackList } from "../../store/user/action";
-import { CustomLoader } from "../../component/CustomLoader";
+import { ReportProfileDialog } from "../user/ReportProfileDialog";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -103,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
 
 const VisitProfilePageComponent = (props: Props) => {
 	const historyLocation = useLocation<IlistProfiles>();
-	const [profile, setProfile] = useState<Iprofile>();
+	const [profile, setProfile] = useState<IlistProfiles>();
 	const [location, setLocation] = useState<Iaddress | null>(null);
 	const [tags, setTags] = useState<string[] | null>(null);
 	const [likeStatus, setLikeStatus] = useState<{
@@ -116,7 +118,7 @@ const VisitProfilePageComponent = (props: Props) => {
 	const [isLikeLoading, setIsLikeLoading] = useState(false);
 	const [isBlockLoading, setIsBlockLoading] = useState(false);
 
-	const updateProfile = (profile: Iprofile) => {
+	const updateProfile = (profile: IlistProfiles) => {
 		ref.current = profile;
 		setProfile(profile);
 	};
@@ -132,10 +134,14 @@ const VisitProfilePageComponent = (props: Props) => {
 				)
 			);
 			getLikeStatus();
-			const tmp = { ...historyLocation.state.profile };
-			updateProfile(tmp);
-			setLocation(historyLocation.state.location);
-			setTags(historyLocation.state.tag);
+			getProfileByUsernameAPI(
+				props.loggedIn,
+				historyLocation.state.profile.username
+			).then((profile) => {
+				updateProfile(profile);
+				setLocation(profile.location);
+				setTags(historyLocation.state.tag);
+			});
 			socket.on("online", updateConnectionStatus);
 			socket.on("offline", updateConnectionStatus);
 		}
@@ -165,15 +171,7 @@ const VisitProfilePageComponent = (props: Props) => {
 		visitProfileAPI(
 			{ username: historyLocation.state.profile.username },
 			props.loggedIn
-		).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		).catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const getLikeStatus = () => {
@@ -184,15 +182,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			.then((json) => {
 				setLikeStatus(json);
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const toggleBlackListProfile = () => {
@@ -210,25 +200,12 @@ const VisitProfilePageComponent = (props: Props) => {
 						})
 						.catch((error) => {
 							setIsBlockLoading(false);
-							console.log(error);
-							props.dispatch(
-								actionUi_showSnackbar({
-									message: error.message,
-									type: "error",
-								})
-							);
-							console.log(error.message);
+							errorHandling(error, props.dispatch);
 						});
 				})
 				.catch((error) => {
 					setIsBlockLoading(false);
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
+					errorHandling(error, props.dispatch);
 				});
 		} else {
 			deleteBlacklistProfileAPI(
@@ -255,13 +232,7 @@ const VisitProfilePageComponent = (props: Props) => {
 				})
 				.catch((error) => {
 					setIsBlockLoading(false);
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
+					errorHandling(error, props.dispatch);
 				});
 		}
 	};
@@ -279,13 +250,7 @@ const VisitProfilePageComponent = (props: Props) => {
 				})
 				.catch((error) => {
 					setIsLikeLoading(false);
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
+					errorHandling(error, props.dispatch);
 				});
 		} else if (likeStatus !== undefined && likeStatus.iLike === true) {
 			unlikeProfileAPI(
@@ -298,25 +263,21 @@ const VisitProfilePageComponent = (props: Props) => {
 				})
 				.catch((error) => {
 					setIsLikeLoading(false);
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
+					errorHandling(error, props.dispatch);
 				});
 		}
 	};
 
 	const updateConnectionStatus = (userId: number) => {
 		if (ref.current !== undefined) {
-			const newStatus = ref.current.online === 1 ? 0 : 1;
+			const newStatus = ref.current.profile.online === 1 ? 0 : 1;
+			const tmp = { ...ref.current };
+			tmp.profile.online = newStatus;
 			userId &&
 				ref.current &&
-				ref.current.userId &&
-				ref.current.userId === userId &&
-				updateProfile({ ...ref.current, online: newStatus });
+				ref.current.profile.userId &&
+				ref.current.profile.userId === userId &&
+				updateProfile(tmp);
 		}
 	};
 
@@ -342,12 +303,12 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const getConnectionStatusText = () => {
 		if (profile) {
-			if (profile.online) {
+			if (profile.profile.online) {
 				return "Online";
-			} else if (profile.lastConnection) {
+			} else if (profile.profile.lastConnection) {
 				return (
 					"Offline - last connection " +
-					getTimeElapsed(parseInt(profile.lastConnection))
+					getTimeElapsed(parseInt(profile.profile.lastConnection))
 				);
 			} else {
 				return "Offline";
@@ -356,7 +317,7 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const getOrientationIcon = () => {
-		switch (profile?.sexualOrientation) {
+		switch (profile?.profile.sexualOrientation) {
 			case "lesbian":
 				return "fa fa-venus";
 			case "gay":
@@ -364,7 +325,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			case "bisexual":
 				return "fa fa-venus-mars";
 		}
-		if (profile?.gender === "male") {
+		if (profile?.profile.gender === "male") {
 			return "fa fa-venus";
 		}
 		return "fa fa-mars";
@@ -379,32 +340,34 @@ const VisitProfilePageComponent = (props: Props) => {
 							<ProfilePictures
 								imgs={[null, null, null, null, null]}
 								modifiable={false}
-								username={profile.username}
+								username={profile.profile.username}
 							/>
 						</div>
 						<div>
 							{!isMobile ? (
 								<Typography variant="h5" align="center">
-									{profile.username +
+									{profile.profile.username +
 										" - " +
-										profile.firstname +
+										profile.profile.firstname +
 										" " +
-										profile.lastname +
+										profile.profile.lastname +
 										(location &&
-											", " + location.distanceInKm?.toFixed(1) + " km")}
+											location.distanceInKm &&
+											", " + Math.ceil(location.distanceInKm) + " km")}
 								</Typography>
 							) : (
 								<React.Fragment>
 									<Typography variant="h5" align="center">
-										{profile.username +
+										{profile.profile.username +
 											(location &&
-												", " + location.distanceInKm?.toFixed(1) + " km")}
+												location.distanceInKm &&
+												", " + Math.ceil(location.distanceInKm) + " km")}
 									</Typography>
 									<Typography variant="h5" align="center">
 										-
 									</Typography>
 									<Typography variant="h5" align="center">
-										{profile.firstname + " " + profile.lastname}
+										{profile.profile.firstname + " " + profile.profile.lastname}
 									</Typography>
 								</React.Fragment>
 							)}
@@ -425,10 +388,12 @@ const VisitProfilePageComponent = (props: Props) => {
 									color="primary"
 									display="inline"
 								>
-									{profile.dob && getAge(profile.dob) + " y/o"}
+									{profile.profile.dob && getAge(profile.profile.dob) + " y/o"}
 									<Icon
 										className={
-											profile.gender === "female" ? "fa fa-venus" : "fa fa-mars"
+											profile.profile.gender === "female"
+												? "fa fa-venus"
+												: "fa fa-mars"
 										}
 									></Icon>
 									{"looking for  "}
@@ -441,7 +406,7 @@ const VisitProfilePageComponent = (props: Props) => {
 						</div>
 						<div style={{ marginTop: "40px" }}>{tags && formatTags(tags)}</div>
 						<div className={classes.bio}>
-							<Typography align="center">{profile.bio}</Typography>
+							<Typography align="center">{profile.profile.bio}</Typography>
 						</div>
 						<div>
 							{likeStatus !== undefined && props.hasImages && (
@@ -467,7 +432,7 @@ const VisitProfilePageComponent = (props: Props) => {
 									marginRight: "auto",
 								}}
 							>
-								Pop. score {" " + profile.popularityScore}
+								Pop. score {" " + profile.profile.popularityScore}
 							</Typography>
 							<Button
 								disabled={isBlockLoading}
@@ -478,7 +443,7 @@ const VisitProfilePageComponent = (props: Props) => {
 							>
 								{isBlackListed ? "UNBLOCK" : "BLOCK"}
 							</Button>
-							<Button variant="outlined">REPORT</Button>
+							<ReportProfileDialog username={profile.profile.username} />
 						</div>
 					</div>
 				)}

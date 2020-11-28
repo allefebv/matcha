@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 11:37:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:37:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ import { ChatBox } from "../../component/chat/chatBox";
 import { ChatListProfile } from "../../component/chat/chatListProfile";
 import { socket } from "../../domain/root/App";
 import { getMatchesAPI } from "../../services/apiCalls";
+import { errorHandling } from "../../services/profileUtils";
 import { IlistProfiles } from "../../types/types";
 
 const withReduxProps = connect((state: any) => ({
@@ -51,14 +52,18 @@ const ChatPageComponent = (props: Props) => {
 	} | null>(null);
 
 	useEffect(() => {
+		let isMounted = true;
 		getMatchesAPI(props.token)
 			.then((profiles) => {
-				if (profiles && profiles.length) {
+				if (profiles && profiles.length && isMounted) {
 					setProfiles(profiles);
 					setUserSelect(profiles[0]);
 				}
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => errorHandling(error, props.dispatch));
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -80,7 +85,11 @@ const ChatPageComponent = (props: Props) => {
 	}, []);
 
 	useEffect(() => {
-		setMessage(null);
+		let isMounted = true;
+		isMounted && setMessage(null);
+		return () => {
+			isMounted = false;
+		};
 	}, [userSelect]);
 
 	return (

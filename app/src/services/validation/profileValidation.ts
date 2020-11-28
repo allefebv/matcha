@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   profileValidation.ts                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/15 13:56:59 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/28 11:14:56 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/28 17:05:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { profile } from '../../../types/types';
+import { profile } from "../../../types/types";
 
 export function addProfileValidation(body: profile) {
 	return new Promise((resolve, reject) => {

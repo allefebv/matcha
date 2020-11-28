@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 18:22:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:40:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ import { connect, ConnectedProps } from "react-redux";
 
 import { socket } from "../../domain/root/App";
 import { getMessageAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
+import { errorHandling } from "../../services/profileUtils";
 import { IlistProfiles, Iprofile } from "../../types/types";
 import { ChatLine } from "./chatLine";
 
@@ -71,7 +71,9 @@ const ChatBoxComponent = (props: Props) => {
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
 	useEffect(() => {
+		let isMounted = true;
 		if (
+			isMounted &&
 			props.userSelect &&
 			props.message &&
 			props.userSelect.profile.username === props.message.sender
@@ -84,11 +86,15 @@ const ChatBoxComponent = (props: Props) => {
 			});
 			setListMessage(tmpList);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.message]);
 
 	useEffect(() => {
-		setListMessage([]);
+		let isMounted = true;
+		isMounted && setListMessage([]);
 		const details = {
 			username1: props.profile.username,
 			username2: props.userSelect?.profile.username,
@@ -102,17 +108,12 @@ const ChatBoxComponent = (props: Props) => {
 						message: item.message,
 					};
 				});
-				setListMessage(listResult);
+				isMounted && setListMessage(listResult);
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.userSelect]);
 

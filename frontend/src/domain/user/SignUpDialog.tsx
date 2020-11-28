@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 18:26:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:21:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { actionUser_signup } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
 import { makeStyles } from "@material-ui/core";
+import { errorHandling } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({}));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
@@ -119,15 +120,7 @@ function SignUpDialogComponent(props: Props) {
 					})
 				);
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 		handleClose();
 	};
 

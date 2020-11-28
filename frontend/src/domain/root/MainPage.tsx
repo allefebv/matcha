@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 11:44:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:23:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ import {
 	getRecommendationList,
 	isProfileComplete,
 	getAge,
+	errorHandling,
 } from "../../services/profileUtils";
 import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
 import { IlistProfiles } from "../../types/types";
@@ -36,7 +37,6 @@ import { TagSearch } from "../../component/TagSearch";
 import { SortingGroup } from "../../component/SortingGroup";
 import { getMatchesAPI } from "../../services/apiCalls";
 import { actionProfilesList_getMatches } from "../../store/profilesLists/action";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { CustomLoader } from "../../component/CustomLoader";
 
 const useStyles = makeStyles((theme) => ({
@@ -175,15 +175,7 @@ const MainPageComponent = (props: Props) => {
 					props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
 				}
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	useEffect(() => {
@@ -204,7 +196,7 @@ const MainPageComponent = (props: Props) => {
 			props.profilesRecco.length > 0
 		) {
 			setToggleList("Preselection");
-		} else {
+		} else if (props.profilesSearch && props.profilesSearch.length > 0) {
 			setToggleList("Search");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   locationAlgorithm.ts                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:49 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/27 15:14:38 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/11/28 16:38:16 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { location } from '../../../types/types';
+import { location } from "../../../types/types";
 
 function radianConversion(degree: number) {
 	const result = degree * (Math.PI / 180);
@@ -29,14 +29,14 @@ function distanceConversion(a: number, b: number, c: number, d: number) {
 	return result;
 }
 
-function calculateLocation(a: number, b: number, c: number, d: number) {
+export function calculateDistance(a: number, b: number, c: number, d: number) {
 	const radianA = radianConversion(a);
 	const radianB = radianConversion(b);
 	const radianC = radianConversion(c);
 	const radianD = radianConversion(d);
 
 	const result = distanceConversion(radianA, radianB, radianC, radianD);
-	return result;
+	return result / 1000;
 }
 
 export async function locationAlgorithm(
@@ -48,13 +48,12 @@ export async function locationAlgorithm(
 		return await Promise.all(
 			profileRecoList.filter((profileReco) => {
 				if (profileReco.lat && profileReco.lng) {
-					const result =
-						calculateLocation(
-							profileLocation.lat,
-							profileReco.lat,
-							profileLocation.lng,
-							profileReco.lng
-						) / 1000;
+					const result = calculateDistance(
+						profileLocation.lat,
+						profileReco.lat,
+						profileLocation.lng,
+						profileReco.lng
+					);
 					profileReco.distance = result;
 					return result < distanceInKm;
 				}

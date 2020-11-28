@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:27 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 20:10:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:06:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ export const PASSWORD_CONFIRM_HELPER_ERROR = "Passwords do not match";
 export const DELETE_HELPER_TEXT =
 	"type DELETE to be able to proceed with your account deletion";
 export const AGE_HELPER_ERROR = "You must be at least 18 to use our platform";
+export const EMPTY_ERROR = "This field cannot be empty";
 
 export const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const REGEX_PASSWORD = /(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}/;

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 16:18:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:23:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ import {
 	submitTags,
 	submitUsageLocation,
 	isProfileComplete,
+	errorHandling,
 } from "../../services/profileUtils";
 import { useGeolocation } from "../../services/useGeolocation";
 import { handleGeoLocationAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Iprofile } from "../../types/types";
 import { CustomLoader } from "../../component/CustomLoader";
 import { useHistory } from "react-router-dom";
@@ -80,15 +80,9 @@ function ExtendedProfileStepperComponent(props: Props) {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) =>
+				errorHandling(error, props.dispatch)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);

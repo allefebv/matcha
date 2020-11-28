@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 17:53:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:04:12 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,6 +349,18 @@ export const unlikeProfileAPI = (details: Object, token: string) => {
 
 export const blacklistProfileAPI = (details: Object, token: string) => {
 	return fetchApi(constants.URL + constants.URI_BLACKLIST_PROFILE, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+			token: token,
+		},
+		credentials: "include",
+		body: details,
+	});
+};
+
+export const reportProfileAPI = (details: Object, token: string) => {
+	return fetchApi(constants.URL + constants.URI_REPORT_PROFILE, {
 		method: constants.POST_METHOD,
 		headers: {
 			"Content-Type": "application/json",

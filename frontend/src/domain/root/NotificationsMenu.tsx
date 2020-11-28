@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 18:47:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:23:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ import {
 	readNotificationAPI,
 	deleteNotificationAPI,
 } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import CloseIcon from "@material-ui/icons/Close";
 import { getTimeElapsed } from "../../services/timeUtils";
+import { errorHandling } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -132,15 +132,7 @@ const NotificationsMenuComponent = (props: Props) => {
 				tmp[index].notification.isRead = true;
 				props.setNotifications(tmp);
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const handleDeleteNotification = async (notification: Inotification) => {
@@ -155,15 +147,7 @@ const NotificationsMenuComponent = (props: Props) => {
 					)
 				);
 			})
-			.catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			.catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const getNotificationCard = () => {

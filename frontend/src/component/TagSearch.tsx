@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 12:51:49 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:38:09 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { connect, ConnectedProps } from "react-redux";
 import { getTagAutocompleteAPI } from "../services/apiCalls";
-import { actionUi_showSnackbar } from "../store/ui/action";
+import { errorHandling } from "../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	isLoggedIn: state.user.isLoggedIn,
@@ -47,15 +47,7 @@ const TagSearchComponent = (props: Props) => {
 						setOptions(tagList);
 					}
 				})
-				.catch((error) => {
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
-				});
+				.catch((error) => errorHandling(error, props.dispatch));
 		}
 	}
 

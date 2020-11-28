@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 11:35:12 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:37:59 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ import { SignUpDialog } from "../user/SignUpDialog";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { socket } from "./App";
 import { getNotificationsAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { Inotification } from "../../types/types";
+import { errorHandling } from "../../services/profileUtils";
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -82,15 +82,7 @@ const HeaderComponent = (props: Props) => {
 				.then((json) => {
 					json && json.length && updateNotifications(json);
 				})
-				.catch((error) => {
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
-				});
+				.catch((error) => errorHandling(error, props.dispatch));
 			socket.on("notification" + props.username, pushNotification);
 			setUsername(props.username);
 		} else {

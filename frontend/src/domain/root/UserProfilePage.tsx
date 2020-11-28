@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 18:51:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:45:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ import { ProfileOptional2 } from "../profile/ProfileOptional2";
 import { ProfileOptional3 } from "../profile/ProfileOptional3";
 import { Iprofile, Iaddress } from "../../types/types";
 import {
+	errorHandling,
 	isProfileComplete,
 	submitPictures,
 	submitTags,
@@ -102,15 +103,9 @@ const UserProfilePageComponent = (props: Props) => {
 					geolocation: geolocation,
 				})
 			);
-			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) => {
-				props.dispatch(
-					actionUi_showSnackbar({
-						message: error.message,
-						type: "error",
-					})
-				);
-				console.log(error.message);
-			});
+			handleGeoLocationAPI(geolocation, props.loggedIn).catch((error) =>
+				errorHandling(error, props.dispatch)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
@@ -121,8 +116,8 @@ const UserProfilePageComponent = (props: Props) => {
 	}, [props.usageLocation, props.tagList]);
 
 	useEffect(() => {
-		setTimeout(() => {
-			setDisabled(false);
+		let timeout = setTimeout(() => {
+			isMounted && setDisabled(false);
 		}, 2000);
 		let isMounted = true;
 		getProfile().then((response: any) => {
@@ -142,6 +137,7 @@ const UserProfilePageComponent = (props: Props) => {
 		});
 		return () => {
 			isMounted = false;
+			clearTimeout(timeout);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

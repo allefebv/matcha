@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/16 14:06:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 17:30:01 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import { Grid } from "@material-ui/core";
 import { activateAccountAPI } from "../../services/apiCalls";
 import { actionUser_activate } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
+import { errorHandling } from "../../services/profileUtils";
 
 const styleLanding: React.CSSProperties = {
 	position: "absolute",
@@ -89,15 +90,7 @@ const LandingPageComponent = (props: Props) => {
 						})
 					);
 				})
-				.catch((error) => {
-					props.dispatch(
-						actionUi_showSnackbar({
-							message: error.message,
-							type: "error",
-						})
-					);
-					console.log(error.message);
-				});
+				.catch((error) => errorHandling(error, props.dispatch));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
