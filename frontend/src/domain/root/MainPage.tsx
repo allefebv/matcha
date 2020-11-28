@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:23:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:39:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,6 +418,7 @@ const MainPageComponent = (props: Props) => {
 	const handleCloseDrawer = () => {
 		setOpen(false);
 		filterList();
+		setPageIndex(0);
 	};
 
 	const getCards = () => {

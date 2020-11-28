@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:27:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:26:22 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,9 @@ export const submitPictures = async (
 	if (imgs.some((img) => img !== null)) {
 		return postPicturesAPI(data, token)
 			.then(() => {
-				dispatch(actionUser_setImages({ images: imgs }));
+				getProfileAPI(token).then((profile) => {
+					dispatch(actionUser_setImages({ imgs: profile.imgs }));
+				});
 			})
 			.catch((error) => errorHandling(error, dispatch));
 	}
@@ -207,7 +209,7 @@ export const getProfileHydrateRedux = async (
 				response.tag &&
 					dispatch(actionUser_setTagList({ tagList: response.tag }));
 				response.imgs &&
-					dispatch(actionUser_setImages({ images: response.imgs }));
+					dispatch(actionUser_setImages({ imgs: response.imgs }));
 				dispatch(
 					actionUser_usagelocation({
 						usagelocation: response.location,

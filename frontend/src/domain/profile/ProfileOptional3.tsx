@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:22:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:32:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ type Props = {
 } & ReduxProps;
 
 function ProfileOptional3Component(props: Props) {
-	const [value, setValue] = useState<Iaddress | null>(props.usageLocation);
+	const [value, setValue] = useState<Iaddress | null>(null);
 	const [options, setOptions] = useState<Iaddress[]>([]);
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
@@ -49,7 +49,7 @@ function ProfileOptional3Component(props: Props) {
 
 	useEffect(() => {
 		let isMounted = true;
-		if (isMounted && props.usageLocation) {
+		if (isMounted && props.usageLocation && props.usageLocation.city !== null) {
 			let tmp = [...ref.current];
 			tmp = tmp.filter(
 				(address) => address.postCode !== props.usageLocation?.postCode
@@ -60,15 +60,16 @@ function ProfileOptional3Component(props: Props) {
 		let timeout = setTimeout(() => {
 			setWait(false);
 		}, 1000);
-		setValue(props.usageLocation);
+		if (props.usageLocation && props.usageLocation.city !== null) {
+			setValue(props.usageLocation);
+			props.setDisabled && props.setDisabled(false);
+		}
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.usageLocation]);
-
-	useEffect(() => {}, [props.usageLocation]);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -92,9 +93,13 @@ function ProfileOptional3Component(props: Props) {
 	}, [props.currentGeolocation]);
 
 	useEffect(() => {
-		if (input !== "" && !wait) {
+		let isMounted = true;
+		if (input !== "" && !wait && isMounted) {
 			MemoizedThrottledAutocomplete(input);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [input]);
 
@@ -140,7 +145,7 @@ function ProfileOptional3Component(props: Props) {
 	}
 
 	function getOptionLabel(option: Iaddress) {
-		if (option !== null) {
+		if (option !== null && option.city !== null) {
 			return option.postCode + ", " + option.city + ", " + option.country;
 		}
 		return "";
@@ -197,9 +202,11 @@ function ProfileOptional3Component(props: Props) {
 						value={value}
 						onChange={handleValueChange}
 						onInputChange={handleInputChange}
-						getOptionSelected={(option, value) =>
-							option && option.city === value.city
-						}
+						getOptionSelected={(option, value) => {
+							if (option && option.city === value.city) return true;
+							if (value === null) return true;
+							return false;
+						}}
 						getOptionLabel={getOptionLabel}
 						renderOption={renderOption}
 						renderInput={renderInput}

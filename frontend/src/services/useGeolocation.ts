@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:35:59 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 14:53:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:33:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ export const useGeolocation = () => {
 
 	const getLocation = useCallback(
 		throttle(() => {
-			console.log("WARNING");
 			fetch("https://ipinfo.io/geo?token=11e860581699f1")
 				.then(responseError)
 				.then((json) => {

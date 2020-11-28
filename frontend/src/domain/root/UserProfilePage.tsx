@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:45:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:14:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,21 @@ const UserProfilePageComponent = (props: Props) => {
 	}, [geolocation]);
 
 	useEffect(() => {
-		setTagList([...props.tagList]);
-		setUsageLocation({ ...props.usageLocation });
+		let isMounted = true;
+		if (isMounted) {
+			setTagList([...props.tagList]);
+			setUsageLocation({ ...props.usageLocation });
+		}
+		return () => {
+			isMounted = false;
+		};
 	}, [props.usageLocation, props.tagList]);
 
 	useEffect(() => {
+		let isMounted = true;
 		let timeout = setTimeout(() => {
 			isMounted && setDisabled(false);
 		}, 2000);
-		let isMounted = true;
 		getProfile().then((response: any) => {
 			if (response && isMounted) {
 				setProfile({ ...profile, online: profile.online });

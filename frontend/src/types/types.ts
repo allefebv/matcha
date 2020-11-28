@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:24:37 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/07 18:34:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:27:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ export interface IlistProfiles {
 	profile: Iprofile;
 	tag: string[];
 	location: Iaddress;
+	imgs: string[];
 }
 
 export interface Iprofile {

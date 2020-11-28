@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 12:18:15 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/08 19:22:31 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 18:41:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ const initialState = {
 	usagelocation: null,
 	tagList: [],
 	blackList: [],
-	images: [],
+	imgs: [null, null, null, null, null],
 };
 
 export function userReducer(state = initialState, action: AnyAction) {
@@ -86,7 +86,7 @@ export function userReducer(state = initialState, action: AnyAction) {
 		case getType(actionUser_setImages):
 			return {
 				...state,
-				imgs: action.payload.images,
+				imgs: action.payload.imgs,
 			};
 		default:
 			return state;

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:23:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/11/28 19:29:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ function ExtendedProfileStepperComponent(props: Props) {
 	const steps = getSteps();
 	const [loading, setLoading] = useState(false);
 	const [disabled, setDisabled] = useState(true);
-	const [imgs, setImgs] = useState<(string | null)[]>([...props.imgs]);
 	const history = useHistory();
+	const [imgs, setImgs] = useState<(string | null)[]>([...props.imgs]);
 
 	const geolocation = useGeolocation();
 
