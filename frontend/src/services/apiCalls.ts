@@ -6,12 +6,12 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:04:12 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/03 17:38:07 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import * as constants from "../services/constants";
-import { Iaddress, Iprofile, IlistProfiles, user } from "../types/types";
+import { Iprofile, IlistProfiles, user } from "../types/types";
 import { fetchApi } from "./fetchApi";
 
 export const signupAPI = (details: Object) => {
@@ -409,7 +409,7 @@ export const getTagAutocompleteAPI = (details: Object, token: string) => {
 	);
 };
 
-const createAddressFromBody = (body: any): Iaddress[] | null => {
+const createAddressFromBody = (body: any): any[] | null => {
 	if (body && body.results.length) {
 		let filtered: any[] = body.results.filter(
 			(entry: any) => entry && entry.address

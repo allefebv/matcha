@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 19:14:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/03 17:37:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ const UserProfilePageComponent = (props: Props) => {
 	const classes = useStyles();
 	const [profile, setProfile] = useState<Iprofile>({ ...props.profile });
 	const [tagList, setTagList] = useState<string[]>([...props.tagList]);
-	const [usageLocation, setUsageLocation] = useState<Iaddress | null>({
+	const [usageLocation, setUsageLocation] = useState<Iaddress>({
 		...props.usageLocation,
 	});
 	const [profileVisits, setProfileVisits] = useState<Iprofile[]>();
@@ -204,8 +204,6 @@ const UserProfilePageComponent = (props: Props) => {
 			usageLocation &&
 				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
-		setLoading(false);
-		setDisabled(false);
 	};
 
 	return (

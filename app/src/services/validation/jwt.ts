@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   jwt.ts                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:46 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/15 13:58:42 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/12/05 17:49:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { Response } from "express";
+import jwt from "jsonwebtoken";
 
-import { user } from '../../../types/types';
+import { user } from "../../../types/types";
 
 export const JWT_SIGN_SECRET = "p4msh40n39f7nf037rhg0sa24gt90374gohdgwh3i8";
 
@@ -25,7 +25,7 @@ export function generateTokenForUser(user: user) {
 		},
 		JWT_SIGN_SECRET,
 		{
-			expiresIn: "1h",
+			expiresIn: "1d",
 		}
 	);
 }

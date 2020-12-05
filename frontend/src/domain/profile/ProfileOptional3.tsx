@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 19:32:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/05 17:45:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ import { Iaddress, Iprofile } from "../../types/types";
 import { throttle } from "lodash";
 import { errorHandling } from "../../services/profileUtils";
 
+function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+	obj: X,
+	prop: Y
+): obj is X & Record<Y, unknown> {
+	return obj.hasOwnProperty(prop);
+}
+
 const withReduxProps = connect((state: any) => ({
 	currentGeolocation: state.user.currentGeolocation,
 }));
@@ -29,41 +36,46 @@ type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	setDisabled?: (value: React.SetStateAction<boolean>) => void;
-	usageLocation: Iaddress | null;
-	setUsageLocation: React.Dispatch<React.SetStateAction<Iaddress | null>>;
+	usageLocation: Iaddress;
+	setUsageLocation: React.Dispatch<React.SetStateAction<Iaddress>>;
 	profile: Iprofile;
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
 } & ReduxProps;
 
 function ProfileOptional3Component(props: Props) {
-	const [value, setValue] = useState<Iaddress | null>(null);
-	const [options, setOptions] = useState<Iaddress[]>([]);
+	const [value, setValue] = useState<Iaddress | {}>({});
+	const [options, setOptions] = useState<(Iaddress | Object)[]>([{}]);
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
+	const [first, setFirst] = useState(true);
 
-	const updateOptions = (options: Iaddress[]) => {
+	const updateOptions = (options: (Iaddress | {})[]) => {
 		ref.current = options;
 		setOptions(options);
 	};
 
 	useEffect(() => {
 		let isMounted = true;
-		if (isMounted && props.usageLocation && props.usageLocation.city !== null) {
+		if (
+			isMounted &&
+			Object.keys(props.usageLocation).length !== 0 &&
+			props.usageLocation.city !== null
+		) {
 			let tmp = [...ref.current];
-			tmp = tmp.filter(
-				(address) => address.postCode !== props.usageLocation?.postCode
-			);
+			tmp = tmp.filter((address) => {
+				if (hasOwnProperty(address, "postCode")) {
+					return address.postCode !== props.usageLocation?.postCode;
+				}
+				return true;
+			});
 			tmp.push(props.usageLocation);
 			updateOptions(tmp);
+			setValue(props.usageLocation);
 		}
 		let timeout = setTimeout(() => {
 			setWait(false);
 		}, 1000);
-		if (props.usageLocation && props.usageLocation.city !== null) {
-			setValue(props.usageLocation);
-			props.setDisabled && props.setDisabled(false);
-		}
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
@@ -79,12 +91,14 @@ function ProfileOptional3Component(props: Props) {
 			props.currentGeolocation.postCode !== props.usageLocation?.postCode
 		) {
 			let tmp = [...ref.current];
-			tmp = tmp.filter((address) => address.isFromGeolocation === false);
+			tmp = tmp.filter((address) => {
+				if (hasOwnProperty(address, "postCode")) {
+					return address.isFromGeolocation === false;
+				}
+				return true;
+			});
 			tmp.unshift(props.currentGeolocation);
 			updateOptions(tmp);
-		}
-		if (value && props.setDisabled && isMounted) {
-			props.setDisabled(false);
 		}
 		return () => {
 			isMounted = false;
@@ -103,6 +117,31 @@ function ProfileOptional3Component(props: Props) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [input]);
 
+	useEffect(() => {
+		let isMounted = true;
+		if (Object.keys(value).length !== 0 && isMounted) {
+			props.setDisabled && props.setDisabled(false);
+			if (first) {
+				setFirst(false);
+			} else {
+				const tmpProfile = { ...props.profile };
+				tmpProfile.geoLocationAuthorization =
+					hasOwnProperty(value, "isFromGeolocation") && value.isFromGeolocation
+						? true
+						: false;
+				props.setProfile(tmpProfile);
+				hasOwnProperty(value, "isFromGeolocation") &&
+					props.setUsageLocation(value);
+			}
+		} else {
+			props.setDisabled && props.setDisabled(true);
+		}
+		return () => {
+			isMounted = false;
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value]);
+
 	const autocomplete = async (input: string) => {
 		autocompleteLocationAPI(input)
 			.then((address) => {
@@ -111,6 +150,7 @@ function ProfileOptional3Component(props: Props) {
 						(memberAddress) => memberAddress.isFromGeolocation === false
 					);
 					address.unshift(props.currentGeolocation);
+					address.unshift({});
 					updateOptions(address);
 				}
 			})
@@ -128,24 +168,17 @@ function ProfileOptional3Component(props: Props) {
 
 	function handleValueChange(
 		e: React.ChangeEvent<{}>,
-		newValue: Iaddress | null
+		newValue: Iaddress | {}
 	) {
-		setValue(newValue);
-		if (newValue) {
-			const tmpProfile = { ...props.profile };
-			tmpProfile.geoLocationAuthorization = newValue.isFromGeolocation
-				? true
-				: false;
-			props.setProfile(tmpProfile);
-			props.setUsageLocation(newValue);
-			props.setDisabled && props.setDisabled(false);
-		} else {
-			props.setDisabled && props.setDisabled(true);
-		}
+		Object.keys(newValue).length !== 0 && setValue(newValue);
 	}
 
-	function getOptionLabel(option: Iaddress) {
-		if (option !== null && option.city !== null) {
+	function getOptionLabel(option: Iaddress | {}) {
+		if (
+			option !== {} &&
+			hasOwnProperty(option, "city") &&
+			option.city !== null
+		) {
 			return option.postCode + ", " + option.city + ", " + option.country;
 		}
 		return "";
@@ -162,18 +195,23 @@ function ProfileOptional3Component(props: Props) {
 		return null;
 	}
 
-	function renderOption(option: Iaddress) {
+	function renderOption(option: Iaddress | {}) {
+		if (Object.keys(option).length === 0) {
+			return <div style={{ display: "none" }}></div>;
+		}
 		return (
 			<Grid container justify="center" alignItems="center" wrap="nowrap">
 				<Grid item container xs={2}>
-					{getOptionIcon(option)}
+					{getOptionIcon(option as Iaddress)}
 				</Grid>
 				<Grid item xs={10}>
 					<Typography noWrap>
-						{option !== null
-							? option.isFromGeolocation
+						{option !== {}
+							? hasOwnProperty(option, "isFromGeolocation") &&
+							  option.isFromGeolocation
 								? "Use my location"
-								: option.postCode + ", " + option.city + ", " + option.country
+								: hasOwnProperty(option, "postCode") &&
+								  option.postCode + ", " + option.city + ", " + option.country
 							: null}
 					</Typography>
 				</Grid>
@@ -193,6 +231,7 @@ function ProfileOptional3Component(props: Props) {
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>
 					<Autocomplete
+						// filterOptions={(x) => x.filter((y) => Object.keys(y).length > 0)}
 						filterOptions={(x) => x}
 						blurOnSelect
 						autoComplete
@@ -200,16 +239,13 @@ function ProfileOptional3Component(props: Props) {
 						fullWidth
 						options={options}
 						value={value}
-						onChange={handleValueChange}
+						onChange={handleValueChange as any}
 						onInputChange={handleInputChange}
-						getOptionSelected={(option, value) => {
-							if (option && option.city === value.city) return true;
-							if (value === null) return true;
-							return false;
-						}}
+						getOptionSelected={(option, value) => true}
 						getOptionLabel={getOptionLabel}
 						renderOption={renderOption}
 						renderInput={renderInput}
+						disableClearable
 					></Autocomplete>
 				</Grid>
 			</Grid>

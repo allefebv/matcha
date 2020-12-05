@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   userRepositories.ts                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/31 08:25:49 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/12/03 11:58:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { user } from '../../types/types';
-import { dataBase } from '../app';
-import { generateActivationKey } from '../services/generateString';
+import { user } from "../../types/types";
+import { dataBase } from "../app";
+import { generateActivationKey } from "../services/generateString";
 
 export function getUserById(id: number): Promise<user> {
 	return new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ export function getUserByEmail(email: string): Promise<user> {
 				return;
 			}
 			if (!result || result.length !== 1) {
-				reject({ code: 200, message: "Error: user does not exist" });
+				reject({ code: 401, message: "Error: user does not exist" });
 				return;
 			}
 			resolve(result[0]);
