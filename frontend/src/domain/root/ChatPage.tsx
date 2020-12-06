@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:37:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 18:19:27 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,11 @@ const ChatPageComponent = (props: Props) => {
 				userSelect={userSelect}
 				setUserSelect={setUserSelect}
 			/>
-			<ChatBox
+			{userSelect ? <ChatBox
 				userProfile={props.profile}
 				userSelect={userSelect}
 				message={message}
-			/>
+			/> : <div style={{position: "absolute",  display: "flex", width: "100vw", height: "100vh", justifyContent: "center",  alignContent: "center", alignItems: "center", backgroundColor: "white"}}><text style={{fontSize: "2em"}}>Oops you have no one to talk to</text></div>}
 		</div>
 	);
 };

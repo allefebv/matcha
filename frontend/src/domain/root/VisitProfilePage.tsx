@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VisitProfilePage.tsx                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:29:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 19:02:51 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,17 @@ type Props = {} & ReduxProps;
 
 const useStyles = makeStyles((theme) => ({
 	main: {
-		padding: "16px",
-		height: "90vh",
 		display: "flex",
 		justifyContent: "center",
+		width: "100vw",
+		height: "90vh",
+		marginTop: 100,
 	},
 	container: {
+		marginTop: 50,
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
-		padding: "32px",
 		[theme.breakpoints.down("xs")]: {
 			padding: "16px",
 		},
@@ -75,7 +76,9 @@ const useStyles = makeStyles((theme) => ({
 	paper: {
 		display: "flex",
 		width: "80%",
-		height: "80%",
+		height: 600,
+		justifyContent: "center",
+		alignContent: "center",
 		[theme.breakpoints.down("xs")]: {
 			width: "100%",
 			height: "100%",
@@ -90,12 +93,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttons: {
 		display: "flex",
-		justifyContent: "flex-end",
-		marginTop: "auto",
-		width: "100%",
+		flexDirection: "column",
+		margin: 10,
+		marginTop: 50,
+		marginBottom: 50,
 	},
 	bio: {
 		width: "60%",
+		marginTop: 50,
+		marginBottom: 20,
 		[theme.breakpoints.down("xs")]: {
 			width: "100%",
 		},
@@ -336,7 +342,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			<Paper elevation={5} className={classes.paper}>
 				{profile && (
 					<div className={classes.container}>
-						<div>
+						<div style={{margin: 10}}>
 							<ProfilePictures
 								imgs={[null, null, null, null, null]}
 								modifiable={false}
@@ -374,6 +380,7 @@ const VisitProfilePageComponent = (props: Props) => {
 							<div
 								style={{
 									display: "flex",
+									margin: 10,
 									flexDirection: "row",
 									justifyContent: "center",
 									alignItems: "center",
@@ -427,13 +434,13 @@ const VisitProfilePageComponent = (props: Props) => {
 								variant="button"
 								color="primary"
 								style={{
-									display: "flex",
-									alignItems: "center",
-									marginRight: "auto",
+									textAlign: "center",
 								}}
 							>
 								Pop. score {" " + profile.profile.popularityScore}
 							</Typography>
+							<div style={{display: "flex", flexDirection: "row"}}>
+							<div style={{margin: 5}}>
 							<Button
 								disabled={isBlockLoading}
 								startIcon={isBlockLoading ? <CircularProgress /> : null}
@@ -443,7 +450,11 @@ const VisitProfilePageComponent = (props: Props) => {
 							>
 								{isBlackListed ? "UNBLOCK" : "BLOCK"}
 							</Button>
+							</div>
+							<div style={{margin: 5}}>
 							<ReportProfileDialog username={profile.profile.username} />
+							</div>
+							</div>
 						</div>
 					</div>
 				)}
