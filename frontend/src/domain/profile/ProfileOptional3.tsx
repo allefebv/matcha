@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/05 17:45:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 18:48:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ function ProfileOptional3Component(props: Props) {
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
-	const [first, setFirst] = useState(true);
 
 	const updateOptions = (options: (Iaddress | {})[]) => {
 		ref.current = options;
@@ -62,6 +61,7 @@ function ProfileOptional3Component(props: Props) {
 			Object.keys(props.usageLocation).length !== 0 &&
 			props.usageLocation.city !== null
 		) {
+			props.setDisabled && props.setDisabled(false);
 			let tmp = [...ref.current];
 			tmp = tmp.filter((address) => {
 				if (hasOwnProperty(address, "postCode")) {
@@ -119,22 +119,30 @@ function ProfileOptional3Component(props: Props) {
 
 	useEffect(() => {
 		let isMounted = true;
-		if (Object.keys(value).length !== 0 && isMounted) {
-			props.setDisabled && props.setDisabled(false);
-			if (first) {
-				setFirst(false);
-			} else {
-				const tmpProfile = { ...props.profile };
-				tmpProfile.geoLocationAuthorization =
-					hasOwnProperty(value, "isFromGeolocation") && value.isFromGeolocation
-						? true
-						: false;
-				props.setProfile(tmpProfile);
-				hasOwnProperty(value, "isFromGeolocation") &&
-					props.setUsageLocation(value);
-			}
-		} else {
+
+		//first vide =>  update + first false
+
+		//first plein => ne pas update + first false
+
+		if (isMounted && Object.keys(value).length === 0) {
 			props.setDisabled && props.setDisabled(true);
+		}
+		if (Object.keys(value).length !== 0 && isMounted) {
+			if (
+				(!hasOwnProperty(props.usageLocation, "city") &&
+					hasOwnProperty(value, "city")) ||
+				(hasOwnProperty(value, "city") &&
+					hasOwnProperty(props.usageLocation, "city") &&
+					value.city !== props.usageLocation.city)
+			) {
+				const tmpProfile = { ...props.profile };
+				tmpProfile.geoLocationAuthorization = value.isFromGeolocation
+					? true
+					: false;
+				props.setProfile(tmpProfile);
+				console.log(value);
+				props.setUsageLocation(value);
+			}
 		}
 		return () => {
 			isMounted = false;
@@ -231,7 +239,6 @@ function ProfileOptional3Component(props: Props) {
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>
 					<Autocomplete
-						// filterOptions={(x) => x.filter((y) => Object.keys(y).length > 0)}
 						filterOptions={(x) => x}
 						blurOnSelect
 						autoComplete

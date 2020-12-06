@@ -6,16 +6,17 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:23:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 21:40:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import {
 	Badge,
+	CircularProgress,
 	Divider,
 	Grid,
 	IconButton,
@@ -51,6 +52,18 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
 	item: {
 		whiteSpace: "normal",
+		[theme.breakpoints.down("lg")]: {
+			width: "30vw",
+		},
+		[theme.breakpoints.down("md")]: {
+			width: "50vw",
+		},
+		[theme.breakpoints.down("sm")]: {
+			width: "60vw",
+		},
+		[theme.breakpoints.down("xs")]: {
+			width: "90vw",
+		},
 	},
 	textGray: {
 		color: "grey",
@@ -61,12 +74,14 @@ const useStyles = makeStyles((theme) => ({
 	button: {
 		color: theme.palette.primary.contrastText,
 	},
+	list: {},
 }));
 
 const NotificationsMenuComponent = (props: Props) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 	const classes = useStyles();
 	const history = useHistory();
+	const [isReadLoading, setIsReadLoading] = useState(false);
 
 	function handleClick(event: React.MouseEvent) {
 		setAnchorEl(event.currentTarget);
@@ -91,6 +106,19 @@ const NotificationsMenuComponent = (props: Props) => {
 		}
 	};
 
+	useEffect(() => {
+		let isMounted = true;
+		let timeout = setTimeout(() => {
+			if (isMounted) {
+				setIsReadLoading(false);
+			}
+		}, 400);
+		return () => {
+			clearTimeout(timeout);
+			isMounted = false;
+		};
+	}, [props.notifications]);
+
 	const redirectToProfile = async (notifierUsername: string) => {
 		let profile = props.searchList.filter(
 			(entry) => entry.profile.username === notifierUsername
@@ -112,42 +140,44 @@ const NotificationsMenuComponent = (props: Props) => {
 		handleClose();
 	};
 
-	const handleClickNotification = (notification: Inotification) => {
-		notification.notification.notification.split(",")[0] === "message"
-			? redirectToChat()
-			: redirectToProfile(notification.notifierProfile.username);
-	};
-
-	const handleReadNotification = async (
+	const handleClickNotification = (
 		notification: Inotification,
 		index: number
 	) => {
-		await readNotificationAPI(
+		if (!isReadLoading) {
+			setIsReadLoading(true);
+			notification.notification.notification.split(",")[0] === "message"
+				? redirectToChat()
+				: redirectToProfile(notification.notifierProfile.username);
+			handleReadNotification(notification, index);
+		}
+	};
+
+	const handleReadNotification = (
+		notification: Inotification,
+		index: number
+	) => {
+		setIsReadLoading(true);
+		readNotificationAPI(
 			{ id: notification.notification.id },
 			props.loggedIn
-		)
-			.then(() => {
-				const tmp = [...props.notifications];
-				tmp[index] = notification;
-				tmp[index].notification.isRead = true;
-				props.setNotifications(tmp);
-			})
-			.catch((error) => errorHandling(error, props.dispatch));
+		).catch((error) => errorHandling(error, props.dispatch));
+		const tmp = [...props.notifications];
+		tmp[index] = notification;
+		tmp[index].notification.isRead = true;
+		props.setNotifications(tmp);
 	};
 
 	const handleDeleteNotification = async (notification: Inotification) => {
 		await deleteNotificationAPI(
 			{ id: notification.notification.id },
 			props.loggedIn
-		)
-			.then(() => {
-				props.setNotifications(
-					props.notifications.filter(
-						(entry) => entry.notification.id !== notification.notification.id
-					)
-				);
-			})
-			.catch((error) => errorHandling(error, props.dispatch));
+		).catch((error) => errorHandling(error, props.dispatch));
+		props.setNotifications(
+			props.notifications.filter(
+				(entry) => entry.notification.id !== notification.notification.id
+			)
+		);
 	};
 
 	const getNotificationCard = () => {
@@ -159,8 +189,7 @@ const NotificationsMenuComponent = (props: Props) => {
 					key={index}
 					className={classes.item}
 					onClick={() => {
-						handleReadNotification(notification, index);
-						handleClickNotification(notification);
+						handleClickNotification(notification, index);
 					}}
 				>
 					<Grid container alignItems="center" justify="center">
@@ -195,8 +224,13 @@ const NotificationsMenuComponent = (props: Props) => {
 										handleReadNotification(notification, index);
 										event.stopPropagation();
 									}}
+									disabled={isReadLoading}
 								>
-									<FiberManualRecordIcon />
+									{isReadLoading ? (
+										<CircularProgress />
+									) : (
+										<FiberManualRecordIcon />
+									)}
 								</IconButton>
 							</Grid>
 						)}
@@ -244,6 +278,7 @@ const NotificationsMenuComponent = (props: Props) => {
 				keepMounted
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
+				className={classes.list}
 			>
 				<Typography variant="h4">Notifications</Typography>
 				<Divider />

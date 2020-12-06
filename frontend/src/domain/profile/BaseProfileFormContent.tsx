@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/27 17:19:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 21:45:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ export function BaseProfileFormContent(props: Props) {
 					onChange={handleChangeUsername}
 					required
 					error={errorUsername}
+					inputProps={{ maxLength: 16 }}
 				/>
 			) : (
 				<Typography>{"Username: " + props.profile.username}</Typography>
@@ -95,6 +96,7 @@ export function BaseProfileFormContent(props: Props) {
 				onChange={handleChangeFirstname}
 				required
 				error={errorFirstname}
+				inputProps={{ maxLength: 26 }}
 			/>
 			<TextField
 				label="Last Name"
@@ -106,6 +108,7 @@ export function BaseProfileFormContent(props: Props) {
 				onChange={handleChangeLastname}
 				required
 				error={errorLastname}
+				inputProps={{ maxLength: 26 }}
 			/>
 			<DatePicker
 				disabled={!props.dynamicDob}

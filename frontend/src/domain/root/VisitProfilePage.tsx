@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VisitProfilePage.tsx                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/06 19:02:51 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/12/06 21:47:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,25 +132,38 @@ const VisitProfilePageComponent = (props: Props) => {
 	const classes = useStyles(isBlackListed);
 
 	useEffect(() => {
-		if (historyLocation && historyLocation.state) {
+		let isMounted = true;
+		if (isMounted && historyLocation && historyLocation.state) {
 			setIsBlackListed(
 				isProfileBlacklisted(
 					props.blackList,
 					historyLocation.state.profile.username
 				)
 			);
-			getLikeStatus();
+			getLikeStatusAPI(
+				{ username: historyLocation.state.profile.username },
+				props.loggedIn
+			)
+				.then((json) => {
+					isMounted && setLikeStatus(json);
+				})
+				.catch((error) => errorHandling(error, props.dispatch));
 			getProfileByUsernameAPI(
 				props.loggedIn,
 				historyLocation.state.profile.username
 			).then((profile) => {
-				updateProfile(profile);
-				setLocation(profile.location);
-				setTags(historyLocation.state.tag);
+				if (isMounted) {
+					updateProfile(profile);
+					setLocation(profile.location);
+					setTags(historyLocation.state.tag);
+				}
 			});
 			socket.on("online", updateConnectionStatus);
 			socket.on("offline", updateConnectionStatus);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [historyLocation]);
 
@@ -162,7 +175,8 @@ const VisitProfilePageComponent = (props: Props) => {
 	}, [isBlackListed]);
 
 	useEffect(() => {
-		if (historyLocation.state.profile) {
+		let isMounted = true;
+		if (isMounted && historyLocation?.state?.profile) {
 			setIsBlackListed(
 				isProfileBlacklisted(
 					props.blackList,
@@ -170,6 +184,9 @@ const VisitProfilePageComponent = (props: Props) => {
 				)
 			);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.blackList]);
 
@@ -178,17 +195,6 @@ const VisitProfilePageComponent = (props: Props) => {
 			{ username: historyLocation.state.profile.username },
 			props.loggedIn
 		).catch((error) => errorHandling(error, props.dispatch));
-	};
-
-	const getLikeStatus = () => {
-		getLikeStatusAPI(
-			{ username: historyLocation.state.profile.username },
-			props.loggedIn
-		)
-			.then((json) => {
-				setLikeStatus(json);
-			})
-			.catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const toggleBlackListProfile = () => {
@@ -342,7 +348,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			<Paper elevation={5} className={classes.paper}>
 				{profile && (
 					<div className={classes.container}>
-						<div style={{margin: 10}}>
+						<div style={{ margin: 10 }}>
 							<ProfilePictures
 								imgs={[null, null, null, null, null]}
 								modifiable={false}
@@ -439,21 +445,21 @@ const VisitProfilePageComponent = (props: Props) => {
 							>
 								Pop. score {" " + profile.profile.popularityScore}
 							</Typography>
-							<div style={{display: "flex", flexDirection: "row"}}>
-							<div style={{margin: 5}}>
-							<Button
-								disabled={isBlockLoading}
-								startIcon={isBlockLoading ? <CircularProgress /> : null}
-								style={{ display: "flex", justifySelf: "flex-end" }}
-								variant="outlined"
-								onClick={toggleBlackListProfile}
-							>
-								{isBlackListed ? "UNBLOCK" : "BLOCK"}
-							</Button>
-							</div>
-							<div style={{margin: 5}}>
-							<ReportProfileDialog username={profile.profile.username} />
-							</div>
+							<div style={{ display: "flex", flexDirection: "row" }}>
+								<div style={{ margin: 5 }}>
+									<Button
+										disabled={isBlockLoading}
+										startIcon={isBlockLoading ? <CircularProgress /> : null}
+										style={{ display: "flex", justifySelf: "flex-end" }}
+										variant="outlined"
+										onClick={toggleBlackListProfile}
+									>
+										{isBlackListed ? "UNBLOCK" : "BLOCK"}
+									</Button>
+								</div>
+								<div style={{ margin: 5 }}>
+									<ReportProfileDialog username={profile.profile.username} />
+								</div>
 							</div>
 						</div>
 					</div>

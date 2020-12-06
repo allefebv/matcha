@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:37:59 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 19:37:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ const HeaderComponent = (props: Props) => {
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
+	function updateNotifications(notifications: Inotification[]) {
+		ref.current = notifications;
+		setNotifications(notifications);
+	}
+
 	useEffect(() => {
 		if (props.loggedIn) {
 			getNotificationsAPI(props.loggedIn)
@@ -90,11 +95,6 @@ const HeaderComponent = (props: Props) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn]);
-
-	function updateNotifications(notifications: Inotification[]) {
-		ref.current = notifications;
-		setNotifications(notifications);
-	}
 
 	function pushNotification(notification: Inotification) {
 		const tmp = [...ref.current];

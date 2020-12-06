@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 11:33:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/06 21:43:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ function ProfileOptional2Component(props: Props) {
 					onChange={props.handleChange}
 					fullWidth
 					multiline
+					inputProps={{ maxLength: 256 }}
 				/>
 			</Grid>
 			<Grid item xs={12}>
