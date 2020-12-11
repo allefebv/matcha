@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NotificationsMenu.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/11 13:28:03 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 13:32:14 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
 	item: {
 		whiteSpace: "normal",
-		width: "400px",
+		width: "500px",
 		[theme.breakpoints.down("lg")]: {
 			width: "30vw",
 		},
