@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/06 18:48:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:47:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,6 @@ function ProfileOptional3Component(props: Props) {
 					? true
 					: false;
 				props.setProfile(tmpProfile);
-				console.log(value);
 				props.setUsageLocation(value);
 			}
 		}

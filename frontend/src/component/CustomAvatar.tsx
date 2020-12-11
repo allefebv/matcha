@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 17:38:42 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 17:33:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:47:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ export const CustomAvatar = (props: Props) => {
 	const classes = useStyles(props);
 	let fileUpload: React.RefObject<HTMLInputElement> = React.createRef();
 
-	const showFileUpload = () => {
+	function showFileUpload() {
 		if (fileUpload && fileUpload.current !== null) {
 			fileUpload.current.click();
 		}
-	};
+	}
 
 	return (
 		<React.Fragment>
@@ -54,7 +54,7 @@ export const CustomAvatar = (props: Props) => {
 				<input
 					name={props.id.toString()}
 					className={classes.input}
-					accept="image/*"
+					accept="image/png, image/jpeg"
 					type="file"
 					ref={fileUpload}
 					onChange={props.handleChange}
@@ -63,7 +63,7 @@ export const CustomAvatar = (props: Props) => {
 			<Avatar
 				className={classes.avatar}
 				src={props.src}
-				onClick={showFileUpload}
+				onClick={() => showFileUpload()}
 			/>
 		</React.Fragment>
 	);

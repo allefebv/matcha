@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/06 21:45:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 15:55:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ type Props = {
 		| React.Dispatch<React.SetStateAction<Iprofile>>;
 	setDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
 	dynamicUsername: boolean;
-	dynamicDob: boolean;
 };
 
 export function BaseProfileFormContent(props: Props) {
@@ -111,7 +110,6 @@ export function BaseProfileFormContent(props: Props) {
 				inputProps={{ maxLength: 26 }}
 			/>
 			<DatePicker
-				disabled={!props.dynamicDob}
 				views={["year", "month", "date"]}
 				margin="normal"
 				label="Date of birth"
