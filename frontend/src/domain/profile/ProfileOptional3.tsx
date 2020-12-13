@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/11 17:47:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/12 18:14:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ function ProfileOptional3Component(props: Props) {
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
 
-	const updateOptions = (options: (Iaddress | {})[]) => {
-		ref.current = options;
-		setOptions(options);
+	const updateOptions = (newOptions: (Iaddress | {})[]) => {
+		ref.current = newOptions;
+		setOptions(newOptions);
 	};
 
 	useEffect(() => {
@@ -120,10 +120,6 @@ function ProfileOptional3Component(props: Props) {
 	useEffect(() => {
 		let isMounted = true;
 
-		//first vide =>  update + first false
-
-		//first plein => ne pas update + first false
-
 		if (isMounted && Object.keys(value).length === 0) {
 			props.setDisabled && props.setDisabled(true);
 		}
@@ -186,7 +182,7 @@ function ProfileOptional3Component(props: Props) {
 			hasOwnProperty(option, "city") &&
 			option.city !== null
 		) {
-			return option.postCode + ", " + option.city + ", " + option.country;
+			return option.city + ", " + option.country;
 		}
 		return "";
 	}
@@ -218,7 +214,7 @@ function ProfileOptional3Component(props: Props) {
 							  option.isFromGeolocation
 								? "Use my location"
 								: hasOwnProperty(option, "postCode") &&
-								  option.postCode + ", " + option.city + ", " + option.country
+								  option.city + ", " + option.country
 							: null}
 					</Typography>
 				</Grid>

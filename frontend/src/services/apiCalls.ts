@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/03 17:38:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/12 18:14:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,7 +415,11 @@ const createAddressFromBody = (body: any): any[] | null => {
 			(entry: any) => entry && entry.address
 		);
 		filtered = filtered
-			.filter((entry) => entry.entityType === "PostalCodeArea")
+			.filter(
+				(entry) =>
+					entry.entityType === "PostalCodeArea" ||
+					entry.entityType === "Municipality"
+			)
 			.map((entry: any) => {
 				const { address, position } = entry;
 				return {
@@ -439,7 +443,7 @@ export const autocompleteLocationAPI = async (input: string) => {
 			encodeURIComponent(input) +
 			".json?key=" +
 			constants.TOMTOM_API_KEY +
-			"&language=fr-FR&typeahead=true&countrySet=FR&idxSet=Geo%2CAddr%2CPAD&limit=5",
+			"&language=fr-FR&typeahead=true&countrySet=FR&idxSet=Geo%2CAddr%2CPAD&limit=3&extendedPostalCodesFor=Geo%2CAddr%2CPAD",
 		{
 			method: constants.GET_METHOD,
 		}
