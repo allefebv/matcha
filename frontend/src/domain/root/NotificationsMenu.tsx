@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NotificationsMenu.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/11 13:32:14 by jfleury          ###   ########.fr       */
+/*   Updated: 2020/12/13 18:50:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,16 +121,16 @@ const NotificationsMenuComponent = (props: Props) => {
 	}, [props.notifications]);
 
 	const redirectToProfile = async (notifierUsername: string) => {
-		let profile = props.searchList.filter(
-			(entry) => entry.profile.username === notifierUsername
-		)[0];
-		if (!profile) {
-			profile = await getProfileByUsernameAPI(props.loggedIn, notifierUsername);
+		let profile = await getProfileByUsernameAPI(
+			props.loggedIn,
+			notifierUsername
+		);
+		if (profile) {
+			history.push({
+				pathname: constants.VISIT_PROFILE,
+				state: profile,
+			});
 		}
-		history.push({
-			pathname: constants.VISIT_PROFILE,
-			state: profile,
-		});
 		handleClose();
 	};
 

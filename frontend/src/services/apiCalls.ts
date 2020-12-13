@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/12 18:14:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 18:23:54 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,16 @@ export const modifyPasswordAPI = (details: Object, token: string) => {
 			body: details,
 		}
 	);
+};
+
+export const resetPasswordAPI = (details: Object) => {
+	return fetchApi<string>(constants.URL + constants.URI_RESET_PASSWORD, {
+		method: constants.POST_METHOD,
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: details,
+	});
 };
 
 export const postPicturesAPI = (details: Object, token: string) => {

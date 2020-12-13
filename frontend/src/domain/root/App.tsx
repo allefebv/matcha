@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/25 16:53:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 19:01:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ const AppComponent = (props: Props) => {
 	const classes = useStyles();
 
 	useEffect(() => {
+		debugger;
 		if (props.loggedIn) {
 			socket.connect();
 			socket.on("connect", () => {
+				debugger;
 				socket.emit("online", {
 					id: props.profile.userId,
 				});

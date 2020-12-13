@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:19 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/28 18:22:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 19:04:49 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,9 @@ export function updateProfile(
 			gender = ${escape(profile.gender)},
 			geoLocationAuthorization = ${escape(profile.geoLocationAuthorization)},
 			sexualOrientation = ${escape(profile.sexualOrientation)},
-			bio = ${escape(profile.bio)}
+			bio = ${escape(profile.bio)},
+			lastConnection = ${escape(profile.lastConnection)},
+			online = ${escape(profile.online)}
 		WHERE
 			userId = ${escape(userId)}`;
 

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 09:44:14 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/05 17:40:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 19:00:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ import { handleNotifications } from "./handleNotifications";
 export function socketRouter() {
 	io.on("connection", (socket) => {
 		socket.on("online", async (payload: any) => {
+			console.log(payload);
 			if (payload.id) {
 				try {
 					io.emit("online", payload.id);
@@ -51,6 +52,7 @@ export function socketRouter() {
 			}
 		});
 		socket.on("disconnect", async () => {
+			console.log("disconnect", socket["userId"]);
 			try {
 				io.emit("offline", socket["userId"]);
 				const profile = await getProfileByUserId(socket["userId"]);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/05 15:54:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 18:14:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,9 @@ export async function resetPasswordController(req: Request, res: Response) {
 		const newPassword = generatePassword();
 		await changePassword(user.id, hashPassword(newPassword));
 		newPasswordMailer(user, newPassword);
-		res.status(200).send("New password send in email");
+		res
+			.status(200)
+			.send("Check your emails to retrieve your temporary password");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
