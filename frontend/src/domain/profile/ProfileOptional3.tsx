@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ProfileOptional3.tsx                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 17:05:53 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 17:26:51 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ type Props = {
 
 function ProfileOptional3Component(props: Props) {
 	const [value, setValue] = useState<Iaddress | {}>({});
-	const [options, setOptions] = useState<(Iaddress | Object)[] | null>([{}]);
+	const [options, setOptions] = useState<(Iaddress | Object | null)[] | null>([{}]);
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
 
-	const updateOptions = (newOptions: (Iaddress | {})[]) => {
+	const updateOptions = (newOptions: (Iaddress | {} | null)[]) => {
 		if (typeof newOptions === "object" && newOptions !== null) {
 			ref.current = newOptions;
 			setOptions(newOptions);
@@ -64,10 +64,10 @@ function ProfileOptional3Component(props: Props) {
 			props.usageLocation.city !== null
 		) {
 			props.setDisabled && props.setDisabled(false);
-			let tmp = [...ref.current];
+			let tmp = ref && ref.current && [...ref.current];
 			if (tmp !== null) {
 				tmp = tmp.filter((address) => {
-					if (hasOwnProperty(address, "postCode")) {
+					if (address && hasOwnProperty(address, "postCode")) {
 						return address.postCode !== props.usageLocation?.postCode;
 					}
 					return true;
@@ -94,9 +94,12 @@ function ProfileOptional3Component(props: Props) {
 			isMounted &&
 			props.currentGeolocation.postCode !== props.usageLocation?.postCode
 		) {
-			let tmp = [...ref.current];
+			let tmp = ref && ref.current && [...ref.current];
+			if (tmp === null) return () => {
+				isMounted = false;
+			};
 			tmp = tmp.filter((address) => {
-				if (hasOwnProperty(address, "postCode")) {
+				if (address && hasOwnProperty(address, "postCode")) {
 					return address.isFromGeolocation === false;
 				}
 				return true;
@@ -241,14 +244,14 @@ function ProfileOptional3Component(props: Props) {
 			</Grid>
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>
-					{options && (
+					{options &&  (
 						<Autocomplete
 							filterOptions={(x) => x}
 							blurOnSelect
 							autoComplete
 							autoHighlight
 							fullWidth
-							options={options}
+							options={options.filter((item: any) => item != null) as any}
 							value={value}
 							onChange={handleValueChange as any}
 							onInputChange={handleInputChange}
