@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/12 18:14:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/13 17:05:53 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,16 @@ type Props = {
 
 function ProfileOptional3Component(props: Props) {
 	const [value, setValue] = useState<Iaddress | {}>({});
-	const [options, setOptions] = useState<(Iaddress | Object)[]>([{}]);
+	const [options, setOptions] = useState<(Iaddress | Object)[] | null>([{}]);
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
 
 	const updateOptions = (newOptions: (Iaddress | {})[]) => {
-		ref.current = newOptions;
-		setOptions(newOptions);
+		if (typeof newOptions === "object" && newOptions !== null) {
+			ref.current = newOptions;
+			setOptions(newOptions);
+		}
 	};
 
 	useEffect(() => {
@@ -63,14 +65,16 @@ function ProfileOptional3Component(props: Props) {
 		) {
 			props.setDisabled && props.setDisabled(false);
 			let tmp = [...ref.current];
-			tmp = tmp.filter((address) => {
-				if (hasOwnProperty(address, "postCode")) {
-					return address.postCode !== props.usageLocation?.postCode;
-				}
-				return true;
-			});
-			tmp.push(props.usageLocation);
-			updateOptions(tmp);
+			if (tmp !== null) {
+				tmp = tmp.filter((address) => {
+					if (hasOwnProperty(address, "postCode")) {
+						return address.postCode !== props.usageLocation?.postCode;
+					}
+					return true;
+				});
+				tmp.push(props.usageLocation);
+				updateOptions(tmp);
+			}
 			setValue(props.usageLocation);
 		}
 		let timeout = setTimeout(() => {
@@ -199,7 +203,11 @@ function ProfileOptional3Component(props: Props) {
 	}
 
 	function renderOption(option: Iaddress | {}) {
-		if (Object.keys(option).length === 0) {
+		if (
+			option === null ||
+			option === undefined ||
+			Object.keys(option).length === 0
+		) {
 			return <div style={{ display: "none" }}></div>;
 		}
 		return (
@@ -233,22 +241,24 @@ function ProfileOptional3Component(props: Props) {
 			</Grid>
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>
-					<Autocomplete
-						filterOptions={(x) => x}
-						blurOnSelect
-						autoComplete
-						autoHighlight
-						fullWidth
-						options={options}
-						value={value}
-						onChange={handleValueChange as any}
-						onInputChange={handleInputChange}
-						getOptionSelected={(option, value) => true}
-						getOptionLabel={getOptionLabel}
-						renderOption={renderOption}
-						renderInput={renderInput}
-						disableClearable
-					></Autocomplete>
+					{options && (
+						<Autocomplete
+							filterOptions={(x) => x}
+							blurOnSelect
+							autoComplete
+							autoHighlight
+							fullWidth
+							options={options}
+							value={value}
+							onChange={handleValueChange as any}
+							onInputChange={handleInputChange}
+							getOptionSelected={(option, value) => true}
+							getOptionLabel={getOptionLabel}
+							renderOption={renderOption}
+							renderInput={renderInput}
+							disableClearable
+						></Autocomplete>
+					)}
 				</Grid>
 			</Grid>
 		</React.Fragment>
