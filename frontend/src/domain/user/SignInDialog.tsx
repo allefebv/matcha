@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:15:12 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 18:38:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,9 @@ function SignInDialogComponent(props: Props) {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
 				props.dispatch(
 					actionUi_showSnackbar({
-						message: error.message,
+						message: "Bad credentials",
 						type: "error",
 					})
 				);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/03 17:37:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2020/12/11 15:56:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,6 @@ const UserProfilePageComponent = (props: Props) => {
 								profile={profile}
 								setProfile={setProfile}
 								dynamicUsername={false}
-								dynamicDob={false}
 							/>
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
