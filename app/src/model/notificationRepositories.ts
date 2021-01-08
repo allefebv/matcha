@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 17:05:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:58:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,36 @@ export function deleteNotification(
 			id = ${escape(id)} 
 		AND
 			profileNotifedId = ${escape(profileNotifedId)}`;
+
+		dataBase.query(sql, (error, result) => {
+			if (error) {
+				reject({ code: 500, message: error });
+			}
+			if (result && result.affectedRows) {
+				resolve(true);
+			}
+			reject({ code: 400, message: "Error: an error occured" });
+		});
+	});
+}
+
+export function deleteMessageNotifications(
+	notifierProfileId: number,
+	profileNotifedId: number
+): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const sql = `
+		DELETE FROM
+			notificationProfile
+		WHERE
+			((notifierProfileId = ${escape(
+				notifierProfileId
+			)} AND profileNotifedId = ${escape(profileNotifedId)})
+		OR  (notifierProfileId = ${escape(
+			profileNotifedId
+		)} AND profileNotifedId = ${escape(notifierProfileId)}))
+		AND
+			notification LIKE 'message%'`;
 
 		dataBase.query(sql, (error, result) => {
 			if (error) {

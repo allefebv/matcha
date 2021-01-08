@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/12 11:49:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:57:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,14 @@ import {
 import { jwtVerify } from "../services/validation/jwt";
 import { matchStatus } from "../services/likeStatus";
 import { shapingProfile } from "../services/formatter/shapingProfile";
+import { deleteMessageNotifications } from "../model/notificationRepositories";
 
 export async function addlikedProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
+		const profileHasBeenLiked = await getProfileByUsername(
+			req.body.username
+		);
 		const profileLikes = await getProfileByUserId(jwt.decoded.id);
 		await addLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
 		const isMatch = await matchStatus(profileLikes, profileHasBeenLiked);
@@ -53,9 +56,14 @@ export async function deletelikedProfileController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileHasBeenUnliked = await getProfileByUsername(req.body.username);
+		const profileHasBeenUnliked = await getProfileByUsername(
+			req.body.username
+		);
 		const notifierProfile = await getProfileByUserId(jwt.decoded.id);
-		const isMatch = await matchStatus(notifierProfile, profileHasBeenUnliked);
+		const isMatch = await matchStatus(
+			notifierProfile,
+			profileHasBeenUnliked
+		);
 		if (isMatch) {
 			await handleNotifications(
 				"unlike",
@@ -64,6 +72,10 @@ export async function deletelikedProfileController(
 			);
 		}
 		await deleteLikedProfile(jwt.decoded.id, profileHasBeenUnliked.userId);
+		await deleteMessageNotifications(
+			jwt.decoded.id,
+			profileHasBeenUnliked.userId
+		);
 		res.status(200).json("Delete like successful");
 	} catch (error) {
 		res.status(error.code).send(error.message);
@@ -129,7 +141,9 @@ export async function getProfileMatchController(req: Request, res: Response) {
 		if (listMatch && listMatch.length) {
 			await Promise.all(
 				listMatch.map(async (item) => {
-					const profile = await getCompleteProfileByUserId(item.userId);
+					const profile = await getCompleteProfileByUserId(
+						item.userId
+					);
 					resultList.push(shapingProfile(profile));
 				})
 			);

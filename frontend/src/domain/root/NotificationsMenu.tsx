@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 18:50:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 17:05:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,15 +170,16 @@ const NotificationsMenuComponent = (props: Props) => {
 	};
 
 	const handleDeleteNotification = async (notification: Inotification) => {
+		props.setNotifications(
+			props.notifications.filter(
+				(entry) =>
+					entry.notification.id !== notification.notification.id
+			)
+		);
 		await deleteNotificationAPI(
 			{ id: notification.notification.id },
 			props.loggedIn
 		).catch((error) => errorHandling(error, props.dispatch));
-		props.setNotifications(
-			props.notifications.filter(
-				(entry) => entry.notification.id !== notification.notification.id
-			)
-		);
 	};
 
 	const getNotificationCard = () => {
@@ -206,23 +207,38 @@ const NotificationsMenuComponent = (props: Props) => {
 							/>
 						</Grid>
 						<Grid item xs={isRead ? 8 : 7}>
-							<Typography className={isRead ? classes.textGray : undefined}>
+							<Typography
+								className={
+									isRead ? classes.textGray : undefined
+								}
+							>
 								{notification.notifierProfile.username}
 								{getNotificationText(type)}
 							</Typography>
 							<Typography
-								className={isRead ? classes.textGray : classes.textPop}
+								className={
+									isRead ? classes.textGray : classes.textPop
+								}
 							>
-								{" " + getTimeElapsed(notification.notification.date)}
+								{" " +
+									getTimeElapsed(
+										notification.notification.date
+									)}
 							</Typography>
 						</Grid>
 						{!isRead && (
 							<Grid item xs={1}>
 								<IconButton
 									onClick={(
-										event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+										event: React.MouseEvent<
+											HTMLButtonElement,
+											MouseEvent
+										>
 									) => {
-										handleReadNotification(notification, index);
+										handleReadNotification(
+											notification,
+											index
+										);
 										event.stopPropagation();
 									}}
 									disabled={isReadLoading}
@@ -238,7 +254,10 @@ const NotificationsMenuComponent = (props: Props) => {
 						<Grid item xs={1}>
 							<IconButton
 								onClick={(
-									event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+									event: React.MouseEvent<
+										HTMLButtonElement,
+										MouseEvent
+									>
 								) => {
 									handleDeleteNotification(notification);
 									event.stopPropagation();
@@ -271,7 +290,10 @@ const NotificationsMenuComponent = (props: Props) => {
 					}}
 					onClick={handleClick}
 				>
-					<NotificationsIcon aria-controls="simple-menu" aria-haspopup="true" />
+					<NotificationsIcon
+						aria-controls="simple-menu"
+						aria-haspopup="true"
+					/>
 				</IconButton>
 			</Badge>
 			<Menu

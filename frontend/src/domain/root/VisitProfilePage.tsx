@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 19:10:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:43:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ import { getTimeElapsed } from "../../services/timeUtils";
 import {
 	errorHandling,
 	getAge,
+	hydrateReduxWithMatches,
 	isProfileBlacklisted,
 	profileHasImages,
 } from "../../services/profileUtils";
@@ -207,7 +208,9 @@ const VisitProfilePageComponent = (props: Props) => {
 				.then(() => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
-							props.dispatch(actionUser_setBlackList({ blackList: json }));
+							props.dispatch(
+								actionUser_setBlackList({ blackList: json })
+							);
 							setIsBlockLoading(false);
 						})
 						.catch((error) => {
@@ -228,7 +231,9 @@ const VisitProfilePageComponent = (props: Props) => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
 							setIsBlockLoading(false);
-							props.dispatch(actionUser_setBlackList({ blackList: json }));
+							props.dispatch(
+								actionUser_setBlackList({ blackList: json })
+							);
 						})
 						.catch((error) => {
 							setIsBlockLoading(false);
@@ -258,6 +263,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			)
 				.then(() => {
 					setLikeStatus({ ...likeStatus, iLike: true });
+					hydrateReduxWithMatches(props.loggedIn, props.dispatch);
 					setIsLikeLoading(false);
 				})
 				.catch((error) => {
@@ -271,6 +277,7 @@ const VisitProfilePageComponent = (props: Props) => {
 			)
 				.then(() => {
 					setIsLikeLoading(false);
+					hydrateReduxWithMatches(props.loggedIn, props.dispatch);
 					setLikeStatus({ ...likeStatus, iLike: false });
 				})
 				.catch((error) => {
@@ -281,7 +288,6 @@ const VisitProfilePageComponent = (props: Props) => {
 	};
 
 	const updateConnectionStatus = async (userId: number) => {
-		debugger;
 		if (
 			ref.current !== undefined &&
 			userId &&
@@ -301,7 +307,12 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const formatTags = (tags: string[]) => {
 		return tags.map((tag) => (
-			<Typography variant="button" color="primary" display="inline" key={tag}>
+			<Typography
+				variant="button"
+				color="primary"
+				display="inline"
+				key={tag}
+			>
 				#{tag}{" "}
 			</Typography>
 		));
@@ -371,7 +382,11 @@ const VisitProfilePageComponent = (props: Props) => {
 										profile.profile.lastname +
 										(location &&
 											location.distanceInKm &&
-											", " + Math.ceil(location.distanceInKm) + " km")}
+											", " +
+												Math.ceil(
+													location.distanceInKm
+												) +
+												" km")}
 								</Typography>
 							) : (
 								<React.Fragment>
@@ -379,13 +394,19 @@ const VisitProfilePageComponent = (props: Props) => {
 										{profile.profile.username +
 											(location &&
 												location.distanceInKm &&
-												", " + Math.ceil(location.distanceInKm) + " km")}
+												", " +
+													Math.ceil(
+														location.distanceInKm
+													) +
+													" km")}
 									</Typography>
 									<Typography variant="h5" align="center">
 										-
 									</Typography>
 									<Typography variant="h5" align="center">
-										{profile.profile.firstname + " " + profile.profile.lastname}
+										{profile.profile.firstname +
+											" " +
+											profile.profile.lastname}
 									</Typography>
 								</React.Fragment>
 							)}
@@ -407,7 +428,8 @@ const VisitProfilePageComponent = (props: Props) => {
 									color="primary"
 									display="inline"
 								>
-									{profile.profile.dob && getAge(profile.profile.dob) + " y/o"}
+									{profile.profile.dob &&
+										getAge(profile.profile.dob) + " y/o"}
 									<Icon
 										className={
 											profile.profile.gender === "female"
@@ -416,26 +438,39 @@ const VisitProfilePageComponent = (props: Props) => {
 										}
 									></Icon>
 									{"looking for  "}
-									<Icon className={getOrientationIcon()}></Icon>
+									<Icon
+										className={getOrientationIcon()}
+									></Icon>
 								</Typography>
 							</div>
 							<Typography align="center">
 								{getConnectionStatusText()}
 							</Typography>
 						</div>
-						<div style={{ marginTop: "40px" }}>{tags && formatTags(tags)}</div>
+						<div style={{ marginTop: "40px" }}>
+							{tags && formatTags(tags)}
+						</div>
 						<div className={classes.bio}>
-							<Typography align="center">{profile.profile.bio}</Typography>
+							<Typography align="center">
+								{profile.profile.bio}
+							</Typography>
 						</div>
 						<div>
 							{likeStatus !== undefined && props.hasImages && (
 								<Button
 									disabled={isLikeLoading || isBlackListed}
-									startIcon={isLikeLoading ? <CircularProgress /> : null}
+									startIcon={
+										isLikeLoading ? (
+											<CircularProgress />
+										) : null
+									}
 									color="primary"
 									variant="contained"
 									onClick={toggleLikeProfile}
-									style={{ justifySelf: "center", marginTop: "30px" }}
+									style={{
+										justifySelf: "center",
+										marginTop: "30px",
+									}}
 								>
 									{getLikeButtonText()}
 								</Button>
@@ -449,14 +484,27 @@ const VisitProfilePageComponent = (props: Props) => {
 									textAlign: "center",
 								}}
 							>
-								Pop. score {" " + profile.profile.popularityScore}
+								Pop. score{" "}
+								{" " + profile.profile.popularityScore}
 							</Typography>
-							<div style={{ display: "flex", flexDirection: "row" }}>
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "row",
+								}}
+							>
 								<div style={{ margin: 5 }}>
 									<Button
 										disabled={isBlockLoading}
-										startIcon={isBlockLoading ? <CircularProgress /> : null}
-										style={{ display: "flex", justifySelf: "flex-end" }}
+										startIcon={
+											isBlockLoading ? (
+												<CircularProgress />
+											) : null
+										}
+										style={{
+											display: "flex",
+											justifySelf: "flex-end",
+										}}
 										variant="outlined"
 										onClick={toggleBlackListProfile}
 									>
@@ -464,7 +512,9 @@ const VisitProfilePageComponent = (props: Props) => {
 									</Button>
 								</div>
 								<div style={{ margin: 5 }}>
-									<ReportProfileDialog username={profile.profile.username} />
+									<ReportProfileDialog
+										username={profile.profile.username}
+									/>
 								</div>
 							</div>
 						</div>

@@ -6,13 +6,14 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 19:26:22 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:09:27 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import {
+	actionProfilesList_getMatches,
 	actionProfilesList_getRecco,
 	actionProfilesList_getSearch,
 } from "../store/profilesLists/action";
@@ -27,6 +28,7 @@ import { Iaddress, Iprofile } from "../types/types";
 import {
 	createProfileAPI,
 	getAllProfilesAPI,
+	getMatchesAPI,
 	getProfileAPI,
 	getRecommendationAPI,
 	handleUsageLocationAPI,
@@ -280,4 +282,29 @@ export const errorHandling = (error: Error, dispatch: Dispatch<AnyAction>) => {
 		);
 		console.log(error.message);
 	}
+};
+
+export const hydrateReduxWithMatches = (
+	token: string,
+	dispatch: Dispatch<AnyAction>
+) => {
+	getMatchesAPI(token)
+		.then((json) => {
+			if (json) {
+				const withAge = json.length
+					? json.map((entry) => {
+							entry.profile.age = entry.profile.dob
+								? getAge(entry.profile.dob)
+								: null;
+							return entry;
+					  })
+					: null;
+				dispatch(
+					actionProfilesList_getMatches({
+						profiles: withAge,
+					})
+				);
+			}
+		})
+		.catch((error) => errorHandling(error, dispatch));
 };

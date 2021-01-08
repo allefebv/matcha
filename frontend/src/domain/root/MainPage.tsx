@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 19:39:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:10:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,12 @@ import {
 	getSearchList,
 	getRecommendationList,
 	isProfileComplete,
-	getAge,
-	errorHandling,
+	hydrateReduxWithMatches,
 } from "../../services/profileUtils";
 import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
 import { IlistProfiles } from "../../types/types";
 import { TagSearch } from "../../component/TagSearch";
 import { SortingGroup } from "../../component/SortingGroup";
-import { getMatchesAPI } from "../../services/apiCalls";
-import { actionProfilesList_getMatches } from "../../store/profilesLists/action";
 import { CustomLoader } from "../../component/CustomLoader";
 
 const useStyles = makeStyles((theme) => ({
@@ -162,30 +159,14 @@ const MainPageComponent = (props: Props) => {
 	const [sortAsc, setSortAsc] = useState(true);
 	const ITEMS_PER_PAGES = 20;
 
-	const getMatchesList = () => {
-		getMatchesAPI(props.loggedIn)
-			.then((json) => {
-				if (json && json.length) {
-					const withAge = json.map((entry) => {
-						entry.profile.age = entry.profile.dob
-							? getAge(entry.profile.dob)
-							: null;
-						return entry;
-					});
-					props.dispatch(actionProfilesList_getMatches({ profiles: withAge }));
-				}
-			})
-			.catch((error) => errorHandling(error, props.dispatch));
-	};
-
 	useEffect(() => {
 		if (!props.profilesRecco) {
 			setLoading(true);
 			props.isProfileComplete &&
 				getRecommendationList(props.loggedIn, props.dispatch);
 			getSearchList(props.loggedIn, props.dispatch);
-			getMatchesList();
 		}
+		hydrateReduxWithMatches(props.loggedIn, props.dispatch);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -224,7 +205,9 @@ const MainPageComponent = (props: Props) => {
 	useEffect(() => {
 		if (filteredProfilesList) {
 			loading && setLoading(false);
-			setTotalPages(Math.ceil(filteredProfilesList.length / ITEMS_PER_PAGES));
+			setTotalPages(
+				Math.ceil(filteredProfilesList.length / ITEMS_PER_PAGES)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filteredProfilesList]);
@@ -241,9 +224,13 @@ const MainPageComponent = (props: Props) => {
 					}
 					if (popularityScore) {
 						acc[2] =
-							!acc[2] || acc[2] > popularityScore ? popularityScore : acc[2];
+							!acc[2] || acc[2] > popularityScore
+								? popularityScore
+								: acc[2];
 						acc[3] =
-							!acc[3] || acc[3] < popularityScore ? popularityScore : acc[3];
+							!acc[3] || acc[3] < popularityScore
+								? popularityScore
+								: acc[3];
 					}
 					if (distanceInKm) {
 						acc[4] =
@@ -424,7 +411,10 @@ const MainPageComponent = (props: Props) => {
 	const getCards = () => {
 		if (filteredProfilesList) {
 			return filteredProfilesList
-				.slice(pageIndex * ITEMS_PER_PAGES, (pageIndex + 1) * ITEMS_PER_PAGES)
+				.slice(
+					pageIndex * ITEMS_PER_PAGES,
+					(pageIndex + 1) * ITEMS_PER_PAGES
+				)
 				.map((entry: IlistProfiles, index: number) => (
 					<Grid item xs={12} sm={6} lg={4} key={index}>
 						<ProfileCard entry={entry} />
@@ -458,7 +448,10 @@ const MainPageComponent = (props: Props) => {
 						flexGrow: 1,
 					}}
 				>
-					<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
+					<Button
+						startIcon={<KeyboardArrowRight />}
+						onClick={handleOpenDrawer}
+					>
 						SORT AND FILTER
 					</Button>
 					{filteredProfilesList?.length ?? false ? (
@@ -471,7 +464,10 @@ const MainPageComponent = (props: Props) => {
 							{getCards()}
 							<Grid item xs={12}>
 								<Pagination
-									style={{ display: "flex", alignSelf: "center" }}
+									style={{
+										display: "flex",
+										alignSelf: "center",
+									}}
 									color="primary"
 									variant="outlined"
 									count={totalPages}
@@ -557,12 +553,16 @@ const MainPageComponent = (props: Props) => {
 								<MaterialDoubleSlider
 									min={filterLimits.minAge}
 									max={filterLimits.maxAge}
-									value={[filterValues.minAge, filterValues.maxAge]}
+									value={[
+										filterValues.minAge,
+										filterValues.maxAge,
+									]}
 									handleChange={handleAgeFilter}
 								/>
 							</div>
 						)}
-						{filterLimits.minPopularity !== filterLimits.maxPopularity && (
+						{filterLimits.minPopularity !==
+							filterLimits.maxPopularity && (
 							<div className={classes.slider}>
 								<Typography variant="button" color="secondary">
 									POPULARITY
@@ -595,7 +595,11 @@ const MainPageComponent = (props: Props) => {
 							</div>
 						)}
 						<div
-							style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								flexGrow: 1,
+							}}
 						>
 							<Typography
 								variant="button"

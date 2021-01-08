@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 18:23:54 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/08 15:56:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,14 +95,17 @@ export const getRecommendationAPI = (token: string) => {
 };
 
 export const getMatchesAPI = (token: string) => {
-	return fetchApi<IlistProfiles[]>(constants.URL + constants.URI_GET_MATCHES, {
-		method: constants.GET_METHOD,
-		headers: {
-			"Content-Type": "application/json",
-			token: token,
-		},
-		credentials: "include",
-	});
+	return fetchApi<IlistProfiles[]>(
+		constants.URL + constants.URI_GET_MATCHES,
+		{
+			method: constants.GET_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
 };
 
 export const getAllProfilesAPI = (token: string) => {
@@ -308,14 +311,17 @@ export const getProfileVisitsAPI = (token: string) => {
 };
 
 export const getProfileLikesAPI = (token: string) => {
-	return fetchApi<Iprofile[]>(constants.URL + constants.URI_GET_PROFILE_LIKES, {
-		method: constants.GET_METHOD,
-		headers: {
-			"Content-Type": "application/json",
-			token: token,
-		},
-		credentials: "include",
-	});
+	return fetchApi<Iprofile[]>(
+		constants.URL + constants.URI_GET_PROFILE_LIKES,
+		{
+			method: constants.GET_METHOD,
+			headers: {
+				"Content-Type": "application/json",
+				token: token,
+			},
+			credentials: "include",
+		}
+	);
 };
 
 export const getLikeStatusAPI = (details: Object, token: string) => {
