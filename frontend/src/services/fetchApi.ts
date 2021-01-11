@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/20 14:41:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 14:49:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,12 @@ export function fetchApi<T>(url: string, args: fetchArgs): Promise<T> {
 		}
 
 		fetch(url, args as RequestInit)
-			.then((response) => {
+			.then(async (response) => {
 				if (!response.ok) {
+					let text = await response.text();
+					if (text.length > 0) {
+						reject(new Error(text));
+					}
 					reject(new Error(response.statusText));
 				}
 				return response;

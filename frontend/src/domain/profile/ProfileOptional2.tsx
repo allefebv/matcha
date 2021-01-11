@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/06 21:43:21 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:14:11 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ function ProfileOptional2Component(props: Props) {
 	}
 
 	useEffect(() => {
-		if (props.setDisabled) {
+		let isMounted = true;
+		if (isMounted && props.setDisabled) {
 			if (
 				profileHasTags() &&
 				props.profile.bio &&
@@ -60,6 +61,9 @@ function ProfileOptional2Component(props: Props) {
 				props.setDisabled(true);
 			}
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.tagList, props.profile.bio, props.imgs]);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ProfileOptional3.tsx                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 17:26:51 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/11 15:28:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ type Props = {
 
 function ProfileOptional3Component(props: Props) {
 	const [value, setValue] = useState<Iaddress | {}>({});
-	const [options, setOptions] = useState<(Iaddress | Object | null)[] | null>([{}]);
+	const [options, setOptions] = useState<(Iaddress | Object | null)[] | null>([
+		{},
+	]);
 	const [input, setInput] = useState("");
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
 
-	const updateOptions = (newOptions: (Iaddress | {} | null)[]) => {
+	const updateOptions = (newOptions: (Iaddress | {} | null)[]) => {
 		if (typeof newOptions === "object" && newOptions !== null) {
 			ref.current = newOptions;
 			setOptions(newOptions);
@@ -73,12 +75,18 @@ function ProfileOptional3Component(props: Props) {
 					return true;
 				});
 				tmp.push(props.usageLocation);
-				updateOptions(tmp);
+				if (isMounted) {
+					updateOptions(tmp);
+				}
 			}
-			setValue(props.usageLocation);
+			if (isMounted) {
+				setValue(props.usageLocation);
+			}
 		}
 		let timeout = setTimeout(() => {
-			setWait(false);
+			if (isMounted) {
+				setWait(false);
+			}
 		}, 1000);
 		return () => {
 			isMounted = false;
@@ -95,9 +103,10 @@ function ProfileOptional3Component(props: Props) {
 			props.currentGeolocation.postCode !== props.usageLocation?.postCode
 		) {
 			let tmp = ref && ref.current && [...ref.current];
-			if (tmp === null) return () => {
-				isMounted = false;
-			};
+			if (tmp === null)
+				return () => {
+					isMounted = false;
+				};
 			tmp = tmp.filter((address) => {
 				if (address && hasOwnProperty(address, "postCode")) {
 					return address.isFromGeolocation === false;
@@ -105,7 +114,9 @@ function ProfileOptional3Component(props: Props) {
 				return true;
 			});
 			tmp.unshift(props.currentGeolocation);
-			updateOptions(tmp);
+			if (isMounted) {
+				updateOptions(tmp);
+			}
 		}
 		return () => {
 			isMounted = false;
@@ -114,12 +125,12 @@ function ProfileOptional3Component(props: Props) {
 	}, [props.currentGeolocation]);
 
 	useEffect(() => {
-		let isMounted = true;
-		if (input !== "" && !wait && isMounted) {
-			MemoizedThrottledAutocomplete(input);
+		let obj = { isMounted: true };
+		if (input !== "" && !wait && obj.isMounted) {
+			MemoizedThrottledAutocomplete(input, obj);
 		}
 		return () => {
-			isMounted = false;
+			obj.isMounted = false;
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [input]);
@@ -127,9 +138,6 @@ function ProfileOptional3Component(props: Props) {
 	useEffect(() => {
 		let isMounted = true;
 
-		if (isMounted && Object.keys(value).length === 0) {
-			props.setDisabled && props.setDisabled(true);
-		}
 		if (Object.keys(value).length !== 0 && isMounted) {
 			if (
 				(!hasOwnProperty(props.usageLocation, "city") &&
@@ -142,8 +150,10 @@ function ProfileOptional3Component(props: Props) {
 				tmpProfile.geoLocationAuthorization = value.isFromGeolocation
 					? true
 					: false;
-				props.setProfile(tmpProfile);
-				props.setUsageLocation(value);
+				if (isMounted) {
+					props.setProfile(tmpProfile);
+					props.setUsageLocation(value);
+				}
 			}
 		}
 		return () => {
@@ -152,7 +162,7 @@ function ProfileOptional3Component(props: Props) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
-	const autocomplete = async (input: string) => {
+	const autocomplete = async (input: string, obj: { isMounted: boolean }) => {
 		autocompleteLocationAPI(input)
 			.then((address) => {
 				if (address) {
@@ -161,7 +171,9 @@ function ProfileOptional3Component(props: Props) {
 					);
 					address.unshift(props.currentGeolocation);
 					address.unshift({});
-					updateOptions(address);
+					if (obj.isMounted) {
+						updateOptions(address);
+					}
 				}
 			})
 			.catch((error) => errorHandling(error, props.dispatch));
@@ -244,7 +256,7 @@ function ProfileOptional3Component(props: Props) {
 			</Grid>
 			<Grid item xs={12} container direction="row" alignItems="center">
 				<Grid item xs={12}>
-					{options &&  (
+					{options && (
 						<Autocomplete
 							filterOptions={(x) => x}
 							blurOnSelect

@@ -6,18 +6,23 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:43:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:52:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faVenus,
+	faMars,
+	faVenusMars,
+} from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import {
 	Paper,
 	makeStyles,
 	Typography,
 	Button,
-	Icon,
 	useTheme,
 	useMediaQuery,
 	CircularProgress,
@@ -107,6 +112,9 @@ const useStyles = makeStyles((theme) => ({
 			width: "100%",
 		},
 		alignSelf: "center",
+	},
+	icon: {
+		margin: 5,
 	},
 }));
 
@@ -208,9 +216,7 @@ const VisitProfilePageComponent = (props: Props) => {
 				.then(() => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
-							props.dispatch(
-								actionUser_setBlackList({ blackList: json })
-							);
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
 							setIsBlockLoading(false);
 						})
 						.catch((error) => {
@@ -231,9 +237,7 @@ const VisitProfilePageComponent = (props: Props) => {
 					getBlackListAPI(props.loggedIn)
 						.then((json) => {
 							setIsBlockLoading(false);
-							props.dispatch(
-								actionUser_setBlackList({ blackList: json })
-							);
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
 						})
 						.catch((error) => {
 							setIsBlockLoading(false);
@@ -307,12 +311,7 @@ const VisitProfilePageComponent = (props: Props) => {
 
 	const formatTags = (tags: string[]) => {
 		return tags.map((tag) => (
-			<Typography
-				variant="button"
-				color="primary"
-				display="inline"
-				key={tag}
-			>
+			<Typography variant="button" color="primary" display="inline" key={tag}>
 				#{tag}{" "}
 			</Typography>
 		));
@@ -348,16 +347,16 @@ const VisitProfilePageComponent = (props: Props) => {
 	const getOrientationIcon = () => {
 		switch (profile?.profile.sexualOrientation) {
 			case "lesbian":
-				return "fa fa-venus";
+				return faVenus;
 			case "gay":
-				return "fa fa-mars";
+				return faMars;
 			case "bisexual":
-				return "fa fa-venus-mars";
+				return faVenusMars;
 		}
 		if (profile?.profile.gender === "male") {
-			return "fa fa-venus";
+			return faVenus;
 		}
-		return "fa fa-mars";
+		return faMars;
 	};
 
 	return (
@@ -382,11 +381,7 @@ const VisitProfilePageComponent = (props: Props) => {
 										profile.profile.lastname +
 										(location &&
 											location.distanceInKm &&
-											", " +
-												Math.ceil(
-													location.distanceInKm
-												) +
-												" km")}
+											", " + Math.ceil(location.distanceInKm) + " km")}
 								</Typography>
 							) : (
 								<React.Fragment>
@@ -394,19 +389,13 @@ const VisitProfilePageComponent = (props: Props) => {
 										{profile.profile.username +
 											(location &&
 												location.distanceInKm &&
-												", " +
-													Math.ceil(
-														location.distanceInKm
-													) +
-													" km")}
+												", " + Math.ceil(location.distanceInKm) + " km")}
 									</Typography>
 									<Typography variant="h5" align="center">
 										-
 									</Typography>
 									<Typography variant="h5" align="center">
-										{profile.profile.firstname +
-											" " +
-											profile.profile.lastname}
+										{profile.profile.firstname + " " + profile.profile.lastname}
 									</Typography>
 								</React.Fragment>
 							)}
@@ -428,42 +417,33 @@ const VisitProfilePageComponent = (props: Props) => {
 									color="primary"
 									display="inline"
 								>
-									{profile.profile.dob &&
-										getAge(profile.profile.dob) + " y/o"}
-									<Icon
-										className={
-											profile.profile.gender === "female"
-												? "fa fa-venus"
-												: "fa fa-mars"
+									{profile.profile.dob && getAge(profile.profile.dob) + " y/o "}
+									<FontAwesomeIcon
+										className={classes.icon}
+										icon={
+											profile.profile.gender === "female" ? faVenus : faMars
 										}
-									></Icon>
+									/>
 									{"looking for  "}
-									<Icon
-										className={getOrientationIcon()}
-									></Icon>
+									<FontAwesomeIcon
+										className={classes.icon}
+										icon={getOrientationIcon()}
+									/>
 								</Typography>
 							</div>
 							<Typography align="center">
 								{getConnectionStatusText()}
 							</Typography>
 						</div>
-						<div style={{ marginTop: "40px" }}>
-							{tags && formatTags(tags)}
-						</div>
+						<div style={{ marginTop: "40px" }}>{tags && formatTags(tags)}</div>
 						<div className={classes.bio}>
-							<Typography align="center">
-								{profile.profile.bio}
-							</Typography>
+							<Typography align="center">{profile.profile.bio}</Typography>
 						</div>
 						<div>
 							{likeStatus !== undefined && props.hasImages && (
 								<Button
 									disabled={isLikeLoading || isBlackListed}
-									startIcon={
-										isLikeLoading ? (
-											<CircularProgress />
-										) : null
-									}
+									startIcon={isLikeLoading ? <CircularProgress /> : null}
 									color="primary"
 									variant="contained"
 									onClick={toggleLikeProfile}
@@ -484,8 +464,7 @@ const VisitProfilePageComponent = (props: Props) => {
 									textAlign: "center",
 								}}
 							>
-								Pop. score{" "}
-								{" " + profile.profile.popularityScore}
+								Pop. score {" " + profile.profile.popularityScore}
 							</Typography>
 							<div
 								style={{
@@ -496,11 +475,7 @@ const VisitProfilePageComponent = (props: Props) => {
 								<div style={{ margin: 5 }}>
 									<Button
 										disabled={isBlockLoading}
-										startIcon={
-											isBlockLoading ? (
-												<CircularProgress />
-											) : null
-										}
+										startIcon={isBlockLoading ? <CircularProgress /> : null}
 										style={{
 											display: "flex",
 											justifySelf: "flex-end",
@@ -512,9 +487,7 @@ const VisitProfilePageComponent = (props: Props) => {
 									</Button>
 								</div>
 								<div style={{ margin: 5 }}>
-									<ReportProfileDialog
-										username={profile.profile.username}
-									/>
+									<ReportProfileDialog username={profile.profile.username} />
 								</div>
 							</div>
 						</div>

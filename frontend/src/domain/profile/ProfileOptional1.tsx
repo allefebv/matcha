@@ -6,16 +6,23 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:50:00 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/06 13:04:55 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:46:04 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import React, { useState, useEffect } from "react";
 
-import { Grid, Icon, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 import { Iprofile } from "../../types/types";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faVenus,
+	faMars,
+	faVenusMars,
+} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
 	setProfile: React.Dispatch<React.SetStateAction<Iprofile>>;
@@ -78,16 +85,20 @@ export function ProfileOptional1(props: Props) {
 	}
 
 	useEffect(() => {
-		if (props.profile.gender !== null) {
+		let isMounted = true;
+		if (props.profile.gender !== null && isMounted) {
 			setOrientationFieldInactive(false);
 		}
-		if (props.setDisabled) {
+		if (isMounted && props.setDisabled) {
 			if (props.profile.gender && props.profile.sexualOrientation) {
 				props.setDisabled(false);
 			} else {
 				props.setDisabled(true);
 			}
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.profile]);
 
@@ -137,10 +148,10 @@ export function ProfileOptional1(props: Props) {
 						value={props.profile.gender || ""}
 					>
 						<ToggleButton value="male">
-							<Icon className="fa fa-mars" />
+							<FontAwesomeIcon icon={faMars} />
 						</ToggleButton>
 						<ToggleButton value="female">
-							<Icon className="fa fa-venus" />
+							<FontAwesomeIcon icon={faVenus} />
 						</ToggleButton>
 					</ToggleButtonGroup>
 				</Grid>
@@ -152,13 +163,13 @@ export function ProfileOptional1(props: Props) {
 						value={localSexualOrientation || ""}
 					>
 						<ToggleButton value="male" disabled={orientationFieldInactive}>
-							<Icon className="fa fa-mars" />
+							<FontAwesomeIcon icon={faMars} />
 						</ToggleButton>
 						<ToggleButton value="female" disabled={orientationFieldInactive}>
-							<Icon className="fa fa-venus" />
+							<FontAwesomeIcon icon={faVenus} />
 						</ToggleButton>
 						<ToggleButton value="bisexual" disabled={orientationFieldInactive}>
-							<Icon className="fa fa-venus-mars" />
+							<FontAwesomeIcon icon={faVenusMars} />
 						</ToggleButton>
 					</ToggleButtonGroup>
 				</Grid>
