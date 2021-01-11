@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/11 15:28:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 17:37:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ type Props = {
 } & ReduxProps;
 
 function ProfileOptional3Component(props: Props) {
-	const [value, setValue] = useState<Iaddress | {}>({});
 	const [options, setOptions] = useState<(Iaddress | Object | null)[] | null>([
 		{},
 	]);
@@ -60,6 +59,7 @@ function ProfileOptional3Component(props: Props) {
 
 	useEffect(() => {
 		let isMounted = true;
+
 		if (
 			isMounted &&
 			Object.keys(props.usageLocation).length !== 0 &&
@@ -79,9 +79,6 @@ function ProfileOptional3Component(props: Props) {
 					updateOptions(tmp);
 				}
 			}
-			if (isMounted) {
-				setValue(props.usageLocation);
-			}
 		}
 		let timeout = setTimeout(() => {
 			if (isMounted) {
@@ -97,16 +94,18 @@ function ProfileOptional3Component(props: Props) {
 
 	useEffect(() => {
 		let isMounted = true;
+
 		if (
 			props.currentGeolocation &&
 			isMounted &&
 			props.currentGeolocation.postCode !== props.usageLocation?.postCode
 		) {
 			let tmp = ref && ref.current && [...ref.current];
-			if (tmp === null)
+			if (tmp === null) {
 				return () => {
 					isMounted = false;
 				};
+			}
 			tmp = tmp.filter((address) => {
 				if (address && hasOwnProperty(address, "postCode")) {
 					return address.isFromGeolocation === false;
@@ -135,33 +134,6 @@ function ProfileOptional3Component(props: Props) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [input]);
 
-	useEffect(() => {
-		let isMounted = true;
-
-		if (Object.keys(value).length !== 0 && isMounted) {
-			if (
-				(!hasOwnProperty(props.usageLocation, "city") &&
-					hasOwnProperty(value, "city")) ||
-				(hasOwnProperty(value, "city") &&
-					hasOwnProperty(props.usageLocation, "city") &&
-					value.city !== props.usageLocation.city)
-			) {
-				const tmpProfile = { ...props.profile };
-				tmpProfile.geoLocationAuthorization = value.isFromGeolocation
-					? true
-					: false;
-				if (isMounted) {
-					props.setProfile(tmpProfile);
-					props.setUsageLocation(value);
-				}
-			}
-		}
-		return () => {
-			isMounted = false;
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
-
 	const autocomplete = async (input: string, obj: { isMounted: boolean }) => {
 		autocompleteLocationAPI(input)
 			.then((address) => {
@@ -188,11 +160,8 @@ function ProfileOptional3Component(props: Props) {
 		setInput(newInputValue);
 	};
 
-	function handleValueChange(
-		e: React.ChangeEvent<{}>,
-		newValue: Iaddress | {}
-	) {
-		Object.keys(newValue).length !== 0 && setValue(newValue);
+	function handleValueChange(e: React.ChangeEvent<{}>, newValue: Iaddress) {
+		Object.keys(newValue).length !== 0 && props.setUsageLocation(newValue);
 	}
 
 	function getOptionLabel(option: Iaddress | {}) {
@@ -264,7 +233,7 @@ function ProfileOptional3Component(props: Props) {
 							autoHighlight
 							fullWidth
 							options={options.filter((item: any) => item != null) as any}
-							value={value}
+							value={props.usageLocation}
 							onChange={handleValueChange as any}
 							onInputChange={handleInputChange}
 							getOptionSelected={(option, value) => true}
