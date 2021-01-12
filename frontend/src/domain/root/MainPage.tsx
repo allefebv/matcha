@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:10:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/12 17:46:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ const MainPageComponent = (props: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [toggleList, setToggleList] = useState<string | null>(null);
 	const [pageIndex, setPageIndex] = useState(0);
+	const [page, setPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [tagList, setTagList] = useState<string[]>();
 	const [sortMethod, setSortMethod] = useState("");
@@ -196,6 +197,8 @@ const MainPageComponent = (props: Props) => {
 
 	useEffect(() => {
 		if (currentProfilesList) {
+			setPageIndex(0);
+			setPage(1);
 			computeFilterLimits(currentProfilesList);
 			setFilteredProfilesList(currentProfilesList);
 		}
@@ -426,6 +429,7 @@ const MainPageComponent = (props: Props) => {
 
 	const changePage = (event: React.ChangeEvent<unknown>, page: number) => {
 		setPageIndex(page - 1);
+		setPage(page);
 	};
 
 	function handleChangeTags(
@@ -475,6 +479,7 @@ const MainPageComponent = (props: Props) => {
 									showLastButton
 									className={classes.paginator}
 									onChange={changePage}
+									page={page}
 								/>
 							</Grid>
 						</Grid>
