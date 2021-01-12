@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:30 by jfleury           #+#    #+#             */
-/*   Updated: 2020/12/03 11:58:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/12 17:05:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,9 @@ export function changeEmail(id: number, email: string): Promise<string> {
 				return;
 			}
 			if (result && result.affectedRows) {
-				resolve("Email has been change");
+				resolve(
+					"Email modification has been performed, please login with your new email"
+				);
 				return;
 			}
 			reject({ code: 400, message: "Error: an error occured" });

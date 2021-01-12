@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/08 16:58:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/12 16:54:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,11 @@ export function deleteMessageNotifications(
 		AND
 			notification LIKE 'message%'`;
 
-		dataBase.query(sql, (error, result) => {
+		dataBase.query(sql, (error) => {
 			if (error) {
 				reject({ code: 500, message: error });
 			}
-			if (result && result.affectedRows) {
-				resolve(true);
-			}
-			reject({ code: 400, message: "Error: an error occured" });
+			resolve(true);
 		});
 	});
 }
