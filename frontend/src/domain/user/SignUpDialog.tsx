@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:21:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/11 17:49:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ function SignUpDialogComponent(props: Props) {
 	}
 
 	function isEmailValid(email: string | null) {
-		return typeof email === "string" && email.match(constants.REGEX_EMAIL)
+		return typeof email === "string" &&
+			email.length < 50 &&
+			email.match(constants.REGEX_EMAIL)
 			? true
 			: false;
 	}
@@ -94,6 +96,7 @@ function SignUpDialogComponent(props: Props) {
 
 	function isPasswordValid(password: string | null) {
 		return typeof password === "string" &&
+			password.length < 40 &&
 			password.match(constants.REGEX_PASSWORD)
 			? true
 			: false;
