@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:16 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/12 16:54:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/13 17:07:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ export function deleteAllNotification(
 		WHERE
 			notifierProfileId = ${escape(notifierProfield)}
 		AND
-			profileNotifiedId = ${escape(profileNotifiedId)}`;
+			profileNotifedId = ${escape(profileNotifiedId)}`;
 
 		dataBase.query(sql, (error, result) => {
 			if (error) {

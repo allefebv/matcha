@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/12 17:12:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/13 17:49:13 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,13 +160,15 @@ const VisitProfilePageComponent = (props: Props) => {
 			getProfileByUsernameAPI(
 				props.loggedIn,
 				historyLocation.state.profile.username
-			).then((profile) => {
-				if (isMounted) {
-					updateProfile(profile);
-					setLocation(profile.location);
-					setTags(historyLocation.state.tag);
-				}
-			});
+			)
+				.then((profile) => {
+					if (isMounted) {
+						updateProfile(profile);
+						setLocation(profile.location);
+						setTags(historyLocation.state.tag);
+					}
+				})
+				.catch((error) => errorHandling(error, props.dispatch));
 			socket.on("online", updateConnectionStatus);
 			socket.on("offline", updateConnectionStatus);
 		}

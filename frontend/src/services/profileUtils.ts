@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:09:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/13 17:51:12 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,11 @@ export const submitPictures = async (
 	if (imgs.some((img) => img !== null)) {
 		return postPicturesAPI(data, token)
 			.then(() => {
-				getProfileAPI(token).then((profile) => {
-					dispatch(actionUser_setImages({ imgs: profile.imgs }));
-				});
+				getProfileAPI(token)
+					.then((profile) => {
+						dispatch(actionUser_setImages({ imgs: profile.imgs }));
+					})
+					.catch((error) => errorHandling(error, dispatch));
 			})
 			.catch((error) => errorHandling(error, dispatch));
 	}

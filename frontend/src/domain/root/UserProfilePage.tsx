@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 18:34:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/13 17:48:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,21 +126,27 @@ const UserProfilePageComponent = (props: Props) => {
 		let timeout = setTimeout(() => {
 			isMounted && setDisabled(false);
 		}, 2000);
-		getProfile().then((response: any) => {
-			if (response && isMounted) {
-				setProfile({ ...profile, online: profile.online });
-			}
-		});
-		getProfileVisitsList().then((json: Iprofile[] | void) => {
-			if (json && isMounted) {
-				setProfileVisits(json);
-			}
-		});
-		getProfileLikesList().then((json: Iprofile[] | void) => {
-			if (json && isMounted) {
-				setProfileLikes(json);
-			}
-		});
+		getProfile()
+			.then((response: any) => {
+				if (response && isMounted) {
+					setProfile({ ...profile, online: profile.online });
+				}
+			})
+			.catch();
+		getProfileVisitsList()
+			.then((json: Iprofile[] | void) => {
+				if (json && isMounted) {
+					setProfileVisits(json);
+				}
+			})
+			.catch();
+		getProfileLikesList()
+			.then((json: Iprofile[] | void) => {
+				if (json && isMounted) {
+					setProfileLikes(json);
+				}
+			})
+			.catch();
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
@@ -202,7 +208,11 @@ const UserProfilePageComponent = (props: Props) => {
 			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			usageLocation &&
-				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
+				submitUsageLocation(
+					usageLocation,
+					props.loggedIn,
+					props.dispatch
+				),
 		]);
 	};
 
@@ -232,7 +242,8 @@ const UserProfilePageComponent = (props: Props) => {
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
 							<Typography>
-								{"Popularity score: " + props.profile.popularityScore}
+								{"Popularity score: " +
+									props.profile.popularityScore}
 							</Typography>
 							<BaseProfileFormContent
 								profile={profile}
@@ -241,7 +252,10 @@ const UserProfilePageComponent = (props: Props) => {
 							/>
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
-							<ProfileOptional1 setProfile={setProfile} profile={profile} />
+							<ProfileOptional1
+								setProfile={setProfile}
+								profile={profile}
+							/>
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
 							<ProfileOptional3
@@ -259,7 +273,9 @@ const UserProfilePageComponent = (props: Props) => {
 								onClick={handleSubmit}
 								fullWidth
 								disabled={disabled}
-								startIcon={loading ? <CircularProgress /> : null}
+								startIcon={
+									loading ? <CircularProgress /> : null
+								}
 							>
 								Update Profile
 							</Button>

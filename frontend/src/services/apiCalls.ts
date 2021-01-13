@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 14:19:04 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 15:56:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/13 17:50:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -463,9 +463,11 @@ export const autocompleteLocationAPI = async (input: string) => {
 		{
 			method: constants.GET_METHOD,
 		}
-	).then((json: any[]) => {
-		return createAddressFromBody(json);
-	});
+	)
+		.then((json: any[]) => {
+			return createAddressFromBody(json);
+		})
+		.catch((error) => console.log(error));
 };
 
 export const getMessageAPI = async (details: Object, token: string) => {
