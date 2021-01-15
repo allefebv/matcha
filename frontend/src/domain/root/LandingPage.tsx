@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:19 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:30:01 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 16:28:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ import { SignUpDialog } from "../user/SignUpDialog";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect, ConnectedProps } from "react-redux";
 import * as constants from "../../services/constants";
-import { Grid } from "@material-ui/core";
+import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
 import { activateAccountAPI } from "../../services/apiCalls";
 import { actionUser_activate } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
@@ -60,7 +60,8 @@ type Props = {} & ReduxProps;
 
 const LandingPageComponent = (props: Props) => {
 	const bg = require("../../images/background2.jpg");
-	const isMobile = window.innerWidth < 480;
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 	const [redirect, setRedirect] = useState<string | null>(null);
 	let location = useLocation();
 

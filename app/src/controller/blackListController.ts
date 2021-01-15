@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 09:58:32 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/13 17:15:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 16:25:57 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,19 @@ export async function addProfileInBlackListController(
 			await deleteLikedProfile(profileBlock.userId, jwt.decoded.id);
 		} catch (error) {}
 		try {
+			await deleteLikedProfile(jwt.decoded.id, profileBlock.userId);
+		} catch (error) {}
+		try {
 			await deleteViewProfile(profileBlock.userId, jwt.decoded.id);
 		} catch (error) {}
 		try {
-			await deleteAllNotification(jwt.decoded.id, profileBlock.userId);
+			await deleteViewProfile(jwt.decoded.id, profileBlock.userId);
 		} catch (error) {}
 		try {
 			await deleteAllNotification(profileBlock.userId, jwt.decoded.id);
+		} catch (error) {}
+		try {
+			await deleteAllNotification(jwt.decoded.id, profileBlock.userId);
 		} catch (error) {}
 	} catch (error) {
 		res.status(error.code).send(error.message);

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:38:26 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 17:25:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,29 +124,30 @@ const UserProfilePageComponent = (props: Props) => {
 	useEffect(() => {
 		let isMounted = true;
 		let timeout = setTimeout(() => {
+			console.log(isMounted);
 			isMounted && setDisabled(false);
 		}, 2000);
-		getProfile()
+		getProfileAPI(props.loggedIn, controller.signal)
 			.then((response: any) => {
 				if (response && isMounted) {
 					setProfile({ ...profile, online: profile.online });
 				}
 			})
-			.catch();
-		getProfileVisitsList()
+			.catch((error) => errorHandling(error, props.dispatch));
+		getProfileVisitsAPI(props.loggedIn, controller.signal)
 			.then((json: Iprofile[] | void) => {
 				if (json && isMounted) {
 					setProfileVisits(json);
 				}
 			})
-			.catch();
-		getProfileLikesList()
+			.catch((error) => errorHandling(error, props.dispatch));
+		getProfileLikesAPI(props.loggedIn, controller.signal)
 			.then((json: Iprofile[] | void) => {
 				if (json && isMounted) {
 					setProfileLikes(json);
 				}
 			})
-			.catch();
+			.catch((error) => errorHandling(error, props.dispatch));
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
@@ -154,26 +155,6 @@ const UserProfilePageComponent = (props: Props) => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const getProfile = () => {
-		return getProfileAPI(props.loggedIn, controller.signal).catch((error) =>
-			errorHandling(error, props.dispatch)
-		);
-	};
-
-	const getProfileVisitsList = () => {
-		return getProfileVisitsAPI(
-			props.loggedIn,
-			controller.signal
-		).catch((error) => errorHandling(error, props.dispatch));
-	};
-
-	const getProfileLikesList = () => {
-		return getProfileLikesAPI(
-			props.loggedIn,
-			controller.signal
-		).catch((error) => errorHandling(error, props.dispatch));
-	};
 
 	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
