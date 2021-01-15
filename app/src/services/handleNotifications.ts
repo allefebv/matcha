@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:54:24 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/13 17:44:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 16:18:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,11 @@ export async function handleNotifications(
 	notifiedProfile: profile
 ) {
 	try {
-		let blackList = await getProfileBlackList(notifierProfile.id);
-		console.log(blackList, blackList.length);
+		let blackList = await getProfileBlackList(notifiedProfile.userId);
 		var isBlacklisted =
 			blackList.length &&
-			blackList.filter(
-				(username) => username === notifierProfile.username
-			).length !== 0;
-		console.log(isBlacklisted);
+			blackList.filter((username) => username === notifierProfile.username)
+				.length !== 0;
 	} catch (e) {
 		console.log(e);
 	}
@@ -43,9 +40,7 @@ export async function handleNotifications(
 				notifierProfile.userId,
 				notification
 			);
-			const notificationId = await getLastNotification(
-				notifiedProfile.userId
-			);
+			const notificationId = await getLastNotification(notifiedProfile.userId);
 			io.emit("notification" + notifiedProfile.username, {
 				notifierProfile: notifierProfile,
 				notification: {

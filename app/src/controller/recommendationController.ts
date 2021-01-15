@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   recommendationController.ts                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:04 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/14 14:54:43 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/15 16:18:10 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
-import { userProfile } from 'types/types';
+import { Request, Response } from "express";
+import { userProfile } from "types/types";
 
-import { getProfileBlackList } from '../model/blackListRepositories';
+import { getProfileBlackList } from "../model/blackListRepositories";
 import {
 	getCompleteProfileByUserId,
 	getProfileBySexualOriantation,
-} from '../model/profileRepositories';
-import { recommendationAlgorithm } from '../services/algorithm/ recommendationAlgorithm';
-import { locationAlgorithm } from '../services/algorithm/locationAlgorithm';
+} from "../model/profileRepositories";
+import { recommendationAlgorithm } from "../services/algorithm/ recommendationAlgorithm";
+import { locationAlgorithm } from "../services/algorithm/locationAlgorithm";
 import {
 	shapingProfile,
 	shapingProfileReco,
-} from '../services/formatter/shapingProfile';
-import { jwtVerify } from '../services/validation/jwt';
+} from "../services/formatter/shapingProfile";
+import { jwtVerify } from "../services/validation/jwt";
 
 export async function recommendationController(req: Request, res: Response) {
 	try {

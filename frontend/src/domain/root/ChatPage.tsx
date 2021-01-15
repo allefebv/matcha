@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/12 17:15:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:16:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,12 @@ const ChatPageComponent = (props: Props) => {
 		message: string;
 		timestamp: number;
 	} | null>(null);
+	const controller = new AbortController();
 
 	useEffect(() => {
 		let isMounted = true;
 		socket.on("message" + props.profile.username, callBack);
-		getMatchesAPI(props.token)
+		getMatchesAPI(props.token, controller.signal)
 			.then((profiles) => {
 				if (profiles && profiles.length && isMounted) {
 					setProfiles(profiles);
@@ -64,7 +65,7 @@ const ChatPageComponent = (props: Props) => {
 			.catch((error) => errorHandling(error, props.dispatch));
 		return () => {
 			socket.off("message");
-			isMounted = false;
+			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -115,9 +116,7 @@ const ChatPageComponent = (props: Props) => {
 						backgroundColor: "white",
 					}}
 				>
-					<div style={{ fontSize: "2em" }}>
-						Oops you have no one to talk to
-					</div>
+					<div style={{ fontSize: "2em" }}>Oops you have no one to talk to</div>
 				</div>
 			)}
 		</div>

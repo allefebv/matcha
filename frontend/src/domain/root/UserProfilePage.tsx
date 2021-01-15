@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/13 17:48:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:38:26 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ import {
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_geolocation } from "../../store/user/action";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";
 import { ProfileOptional2 } from "../profile/ProfileOptional2";
@@ -93,6 +92,7 @@ const UserProfilePageComponent = (props: Props) => {
 	]);
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
+	const controller = new AbortController();
 
 	const geolocation = useGeolocation();
 
@@ -150,44 +150,29 @@ const UserProfilePageComponent = (props: Props) => {
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
+			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const getProfile = () => {
-		return getProfileAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		return getProfileAPI(props.loggedIn, controller.signal).catch((error) =>
+			errorHandling(error, props.dispatch)
+		);
 	};
 
 	const getProfileVisitsList = () => {
-		return getProfileVisitsAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		return getProfileVisitsAPI(
+			props.loggedIn,
+			controller.signal
+		).catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const getProfileLikesList = () => {
-		return getProfileLikesAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
+		return getProfileLikesAPI(
+			props.loggedIn,
+			controller.signal
+		).catch((error) => errorHandling(error, props.dispatch));
 	};
 
 	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,11 +193,7 @@ const UserProfilePageComponent = (props: Props) => {
 			submitTags(tagList, props.loggedIn, props.dispatch),
 			submitPictures(imgs, props.loggedIn, props.dispatch),
 			usageLocation &&
-				submitUsageLocation(
-					usageLocation,
-					props.loggedIn,
-					props.dispatch
-				),
+				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
 		]);
 	};
 
@@ -242,8 +223,7 @@ const UserProfilePageComponent = (props: Props) => {
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
 							<Typography>
-								{"Popularity score: " +
-									props.profile.popularityScore}
+								{"Popularity score: " + props.profile.popularityScore}
 							</Typography>
 							<BaseProfileFormContent
 								profile={profile}
@@ -252,10 +232,7 @@ const UserProfilePageComponent = (props: Props) => {
 							/>
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
-							<ProfileOptional1
-								setProfile={setProfile}
-								profile={profile}
-							/>
+							<ProfileOptional1 setProfile={setProfile} profile={profile} />
 						</Grid>
 						<Grid item xs={12} md={10} lg={8}>
 							<ProfileOptional3
@@ -273,9 +250,7 @@ const UserProfilePageComponent = (props: Props) => {
 								onClick={handleSubmit}
 								fullWidth
 								disabled={disabled}
-								startIcon={
-									loading ? <CircularProgress /> : null
-								}
+								startIcon={loading ? <CircularProgress /> : null}
 							>
 								Update Profile
 							</Button>

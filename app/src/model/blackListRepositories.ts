@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   blackListRepositories.ts                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 10:04:16 by jfleury           #+#    #+#             */
-/*   Updated: 2020/10/30 10:07:35 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/15 16:18:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { escape } from 'mysql';
+import { escape } from "mysql";
 
-import { dataBase } from '../app';
+import { dataBase } from "../app";
 
 export function getOneProfileBlackList(
 	profileId: number,

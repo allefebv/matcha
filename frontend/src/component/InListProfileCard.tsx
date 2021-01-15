@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:05 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/26 12:56:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:22:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ import * as constants from "../services/constants";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { getProfileByUsernameAPI } from "../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
+import { errorHandling } from "../services/profileUtils";
 
 const styleCard: React.CSSProperties = {
 	display: "flex",
@@ -38,18 +39,19 @@ type Props = {
 function InListProfileCardComponent(props: Props) {
 	const history = useHistory();
 	const [profile, setProfile] = useState<IlistProfiles>();
-
+	const controller = new AbortController();
 	useEffect(() => {
-		let isMounted = true;
-		(async () => {
-			let profile = await getProfileByUsernameAPI(
-				props.loggedIn,
-				props.profile.username
-			);
-			isMounted && setProfile(profile);
-		})();
+		getProfileByUsernameAPI(
+			props.loggedIn,
+			props.profile.username,
+			controller.signal
+		)
+			.then((profile) => setProfile(profile))
+			.catch((error) => {
+				errorHandling(error, props.dispatch);
+			});
 		return () => {
-			isMounted = false;
+			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
