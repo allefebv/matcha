@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/14 23:48:21 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:39:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ function BaseProfileFormComponent(props: Props) {
 	const [profile, setProfile] = useState<Iprofile>(profileInit);
 	const [disabled, setDisabled] = useState(false);
 	const controller = new AbortController();
+
 	const geolocation = useGeolocation();
 
 	useEffect(() => {
