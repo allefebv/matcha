@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/11 17:37:18 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:16:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ function ProfileOptional3Component(props: Props) {
 		{},
 	]);
 	const [input, setInput] = useState("");
+	const controller = new AbortController();
 	const ref = useRef(options);
 	const [wait, setWait] = useState(true);
 
@@ -56,6 +57,13 @@ function ProfileOptional3Component(props: Props) {
 			setOptions(newOptions);
 		}
 	};
+
+	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -123,19 +131,8 @@ function ProfileOptional3Component(props: Props) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.currentGeolocation]);
 
-	useEffect(() => {
-		let obj = { isMounted: true };
-		if (input !== "" && !wait && obj.isMounted) {
-			MemoizedThrottledAutocomplete(input, obj);
-		}
-		return () => {
-			obj.isMounted = false;
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [input]);
-
 	const autocomplete = async (input: string, obj: { isMounted: boolean }) => {
-		autocompleteLocationAPI(input)
+		autocompleteLocationAPI(input, controller.signal)
 			.then((address) => {
 				if (address) {
 					address = address.filter(
@@ -150,8 +147,20 @@ function ProfileOptional3Component(props: Props) {
 			})
 			.catch((error) => errorHandling(error, props.dispatch));
 	};
+
 	const throttledAutocomplete = throttle(autocomplete, 1100);
 	const MemoizedThrottledAutocomplete = useCallback(throttledAutocomplete, []);
+
+	useEffect(() => {
+		let obj = { isMounted: true };
+		if (input !== "" && !wait && obj.isMounted) {
+			MemoizedThrottledAutocomplete(input, obj);
+		}
+		return () => {
+			obj.isMounted = false;
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [input]);
 
 	const handleInputChange = (
 		event: React.ChangeEvent<{}>,

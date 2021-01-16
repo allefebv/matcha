@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:09:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:33:36 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,13 @@ export const submitPictures = async (
 	if (imgs.some((img) => img !== null)) {
 		return postPicturesAPI(data, token)
 			.then(() => {
-				getProfileAPI(token).then((profile) => {
-					dispatch(actionUser_setImages({ imgs: profile.imgs }));
-				});
+				getProfileAPI(token)
+					.then((profile) => {
+						dispatch(actionUser_setImages({ imgs: profile.imgs }));
+					})
+					.catch();
 			})
-			.catch((error) => errorHandling(error, dispatch));
+			.catch();
 	}
 };
 
@@ -146,7 +148,7 @@ export const updateProfile = async (
 				})
 			);
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const createProfile = async (
@@ -171,7 +173,7 @@ export const createProfile = async (
 				})
 			);
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const submitTags = async (
@@ -183,7 +185,7 @@ export const submitTags = async (
 		.then((tagList) => {
 			dispatch(actionUser_setTagList({ tagList: tagList }));
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const submitUsageLocation = async (
@@ -197,7 +199,7 @@ export const submitUsageLocation = async (
 			getSearchList(token, dispatch);
 			getRecommendationList(token, dispatch);
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const getProfileHydrateRedux = async (
@@ -219,7 +221,7 @@ export const getProfileHydrateRedux = async (
 				);
 			}
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const profileHasImages = (imgs: (null | string)[]) => {
@@ -239,7 +241,7 @@ export const getSearchList = (token: string, dispatch: Dispatch<AnyAction>) => {
 				dispatch(actionProfilesList_getSearch({ profiles: withAge }));
 			}
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const getRecommendationList = (
@@ -260,7 +262,7 @@ export const getRecommendationList = (
 				dispatch(actionProfilesList_getRecco({ profiles: withAge }));
 			}
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };
 
 export const isProfileBlacklisted = (
@@ -273,7 +275,11 @@ export const isProfileBlacklisted = (
 };
 
 export const errorHandling = (error: Error, dispatch: Dispatch<AnyAction>) => {
-	if (error.message !== "timeout") {
+	if (
+		error.message !== "timeout" &&
+		error.message !== "canceled" &&
+		error.message !== "The user aborted a request."
+	) {
 		dispatch(
 			actionUi_showSnackbar({
 				message: error.message,
@@ -306,5 +312,5 @@ export const hydrateReduxWithMatches = (
 				);
 			}
 		})
-		.catch((error) => errorHandling(error, dispatch));
+		.catch();
 };

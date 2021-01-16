@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/08 14:53:14 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/11 15:56:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:39:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,16 @@ const profileInit = {
 function BaseProfileFormComponent(props: Props) {
 	const [profile, setProfile] = useState<Iprofile>(profileInit);
 	const [disabled, setDisabled] = useState(false);
+	const controller = new AbortController();
+
 	const geolocation = useGeolocation();
+
+	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (geolocation) {

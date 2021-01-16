@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/06 19:37:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:29:33 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ const HeaderComponent = (props: Props) => {
 	const classes = useStyles();
 	const [notifications, setNotifications] = useState<Inotification[]>([]);
 	const [username, setUsername] = useState("");
+	const controller = new AbortController();
+
 	const ref = useRef(notifications);
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -82,15 +84,24 @@ const HeaderComponent = (props: Props) => {
 	}
 
 	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		let isMounted = true;
 		if (props.loggedIn) {
-			getNotificationsAPI(props.loggedIn)
+			isMounted && setUsername(props.username);
+			socket.on("notification" + props.username, pushNotification);
+			getNotificationsAPI(props.loggedIn, controller.signal)
 				.then((json) => {
 					json && json.length && updateNotifications(json);
 				})
 				.catch((error) => errorHandling(error, props.dispatch));
-			socket.on("notification" + props.username, pushNotification);
-			setUsername(props.username);
 		} else {
+			isMounted = false;
 			socket.off("notification" + username);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

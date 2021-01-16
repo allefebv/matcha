@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/11 17:51:35 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:27:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -27,7 +27,10 @@ import {
 	actionUser_signin,
 } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
-import { getProfileHydrateRedux } from "../../services/profileUtils";
+import {
+	errorHandling,
+	getProfileHydrateRedux,
+} from "../../services/profileUtils";
 import { makeStyles } from "@material-ui/core";
 
 const withReduxProps = connect((state: any) => ({
@@ -48,7 +51,15 @@ function SignInDialogComponent(props: Props) {
 	let [email, setEmail] = useState<string>("");
 	let [emailError, setEmailError] = useState(false);
 	const [password, setPassword] = useState<string>("");
+	const controller = new AbortController();
 	let [passwordError, setPasswordError] = useState(false);
+
+	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleClickOpen = () => {
 		setEmailError(false);
@@ -92,21 +103,16 @@ function SignInDialogComponent(props: Props) {
 			email: email,
 			password: password,
 		};
+
 		signinAPI(details)
 			.then(async ({ user, token }) => {
 				if (user.activated) {
-					getBlackListAPI(token)
+					getBlackListAPI(token, controller.signal)
 						.then((json) => {
 							props.dispatch(actionUser_setBlackList({ blackList: json }));
 						})
 						.catch((error) => {
-							props.dispatch(
-								actionUi_showSnackbar({
-									message: error.message,
-									type: "error",
-								})
-							);
-							console.log(error.message);
+							errorHandling(error, props.dispatch);
 						});
 					await getProfileHydrateRedux(props.dispatch, token);
 					props.dispatch(actionUser_signin({ user, token }));
@@ -127,7 +133,6 @@ function SignInDialogComponent(props: Props) {
 						type: "error",
 					})
 				);
-				console.log(error.message);
 			});
 	};
 

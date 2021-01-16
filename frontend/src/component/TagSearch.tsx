@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:49:54 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:38:09 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:18:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,19 @@ type Props = {
 const TagSearchComponent = (props: Props) => {
 	const [inputValue, setInputValue] = useState("");
 	const [options, setOptions] = useState<string[]>();
+	const controller = new AbortController();
+
+	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		TagAutocomplete();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [inputValue]);
 
 	function TagAutocomplete() {
 		const details = {
@@ -41,7 +54,7 @@ const TagSearchComponent = (props: Props) => {
 			limit: 5,
 		};
 		if (!(inputValue === "")) {
-			getTagAutocompleteAPI(details, props.isLoggedIn)
+			getTagAutocompleteAPI(details, props.isLoggedIn, controller.signal)
 				.then((tagList) => {
 					if (tagList.length) {
 						setOptions(tagList);
@@ -57,11 +70,6 @@ const TagSearchComponent = (props: Props) => {
 	) => {
 		setInputValue(newInputValue);
 	};
-
-	useEffect(() => {
-		TagAutocomplete();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [inputValue]);
 
 	return (
 		<Autocomplete

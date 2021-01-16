@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/12 17:12:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:25:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ import {
 	getProfileByUsernameAPI,
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { socket } from "./App";
 import { getTimeElapsed } from "../../services/timeUtils";
 import {
@@ -127,22 +126,29 @@ const VisitProfilePageComponent = (props: Props) => {
 		iLike: boolean;
 		heLike: boolean;
 	}>();
+	const [isLikeLoading, setIsLikeLoading] = useState(false);
+	const [isBlockLoading, setIsBlockLoading] = useState(false);
+	const [isBlackListed, setIsBlackListed] = useState(true);
+	const controller = new AbortController();
+
 	const ref = useRef(profile);
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-	const [isLikeLoading, setIsLikeLoading] = useState(false);
-	const [isBlockLoading, setIsBlockLoading] = useState(false);
-
 	const updateProfile = (profile: IlistProfiles) => {
 		ref.current = profile;
 		setProfile(profile);
 	};
-	const [isBlackListed, setIsBlackListed] = useState(true);
 	const classes = useStyles(isBlackListed);
 
 	useEffect(() => {
-		let isMounted = true;
-		if (isMounted && historyLocation && historyLocation.state) {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (historyLocation && historyLocation.state) {
 			setIsBlackListed(
 				isProfileBlacklisted(
 					props.blackList,
@@ -151,29 +157,29 @@ const VisitProfilePageComponent = (props: Props) => {
 			);
 			getLikeStatusAPI(
 				{ username: historyLocation.state.profile.username },
-				props.loggedIn
+				props.loggedIn,
+				controller.signal
 			)
-				.then((json) => {
-					isMounted && setLikeStatus(json);
-				})
+				.then((json) => setLikeStatus(json))
 				.catch((error) => errorHandling(error, props.dispatch));
 			getProfileByUsernameAPI(
 				props.loggedIn,
-				historyLocation.state.profile.username
-			).then((profile) => {
-				if (isMounted) {
+				historyLocation.state.profile.username,
+				controller.signal
+			)
+				.then((profile) => {
 					updateProfile(profile);
 					setLocation(profile.location);
 					setTags(historyLocation.state.tag);
-				}
-			});
+				})
+				.catch((error) => errorHandling(error, props.dispatch));
 			socket.on("online", updateConnectionStatus);
 			socket.on("offline", updateConnectionStatus);
 		}
 		return () => {
 			socket.off("online");
 			socket.off("offline");
-			isMounted = false;
+			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [historyLocation]);
@@ -213,53 +219,52 @@ const VisitProfilePageComponent = (props: Props) => {
 		if (!isBlackListed) {
 			blacklistProfileAPI(
 				{ username: historyLocation.state.profile.username },
-				props.loggedIn
+				props.loggedIn,
+				controller.signal
 			)
 				.then(() => {
-					getBlackListAPI(props.loggedIn)
+					getBlackListAPI(props.loggedIn, controller.signal)
 						.then((json) => {
-							props.dispatch(
-								actionUser_setBlackList({ blackList: json })
-							);
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
 							setIsBlockLoading(false);
 						})
 						.catch((error) => {
-							setIsBlockLoading(false);
-							errorHandling(error, props.dispatch);
+							if (error.message !== "canceled") {
+								setIsBlockLoading(false);
+								errorHandling(error, props.dispatch);
+							}
 						});
 				})
 				.catch((error) => {
-					setIsBlockLoading(false);
-					errorHandling(error, props.dispatch);
+					if (error.message !== "canceled") {
+						setIsBlockLoading(false);
+						errorHandling(error, props.dispatch);
+					}
 				});
 		} else {
 			deleteBlacklistProfileAPI(
 				{ username: historyLocation.state.profile.username },
-				props.loggedIn
+				props.loggedIn,
+				controller.signal
 			)
 				.then(() => {
-					getBlackListAPI(props.loggedIn)
+					getBlackListAPI(props.loggedIn, controller.signal)
 						.then((json) => {
 							setIsBlockLoading(false);
-							props.dispatch(
-								actionUser_setBlackList({ blackList: json })
-							);
+							props.dispatch(actionUser_setBlackList({ blackList: json }));
 						})
 						.catch((error) => {
-							setIsBlockLoading(false);
-							console.log(error);
-							props.dispatch(
-								actionUi_showSnackbar({
-									message: error.message,
-									type: "error",
-								})
-							);
-							console.log(error.message);
+							if (error.message !== "canceled") {
+								setIsBlockLoading(false);
+								errorHandling(error, props.dispatch);
+							}
 						});
 				})
 				.catch((error) => {
-					setIsBlockLoading(false);
-					errorHandling(error, props.dispatch);
+					if (error.message !== "canceled") {
+						setIsBlockLoading(false);
+						errorHandling(error, props.dispatch);
+					}
 				});
 		}
 	};
@@ -269,7 +274,8 @@ const VisitProfilePageComponent = (props: Props) => {
 		if (likeStatus !== undefined && likeStatus.iLike === false) {
 			likeProfileAPI(
 				{ username: historyLocation.state.profile.username },
-				props.loggedIn
+				props.loggedIn,
+				controller.signal
 			)
 				.then(() => {
 					setLikeStatus({ ...likeStatus, iLike: true });
@@ -277,13 +283,16 @@ const VisitProfilePageComponent = (props: Props) => {
 					setIsLikeLoading(false);
 				})
 				.catch((error) => {
-					setIsLikeLoading(false);
-					errorHandling(error, props.dispatch);
+					if (error.message !== "canceled") {
+						setIsLikeLoading(false);
+						errorHandling(error, props.dispatch);
+					}
 				});
 		} else if (likeStatus !== undefined && likeStatus.iLike === true) {
 			unlikeProfileAPI(
 				{ username: historyLocation.state.profile.username },
-				props.loggedIn
+				props.loggedIn,
+				controller.signal
 			)
 				.then(() => {
 					setIsLikeLoading(false);
@@ -291,8 +300,10 @@ const VisitProfilePageComponent = (props: Props) => {
 					setLikeStatus({ ...likeStatus, iLike: false });
 				})
 				.catch((error) => {
-					setIsLikeLoading(false);
-					errorHandling(error, props.dispatch);
+					if (error.message !== "canceled") {
+						setIsLikeLoading(false);
+						errorHandling(error, props.dispatch);
+					}
 				});
 		}
 	};
@@ -305,24 +316,19 @@ const VisitProfilePageComponent = (props: Props) => {
 			ref.current.profile.userId &&
 			ref.current.profile.userId === userId
 		) {
-			let tmp = await getProfileByUsernameAPI(
+			getProfileByUsernameAPI(
 				props.loggedIn,
-				ref.current.profile.username
-			);
-			if (tmp) {
-				updateProfile(tmp);
-			}
+				ref.current.profile.username,
+				controller.signal
+			).then((profile) => {
+				updateProfile(profile);
+			});
 		}
 	};
 
 	const formatTags = (tags: string[]) => {
 		return tags.map((tag) => (
-			<Typography
-				variant="button"
-				color="primary"
-				display="inline"
-				key={tag}
-			>
+			<Typography variant="button" color="primary" display="inline" key={tag}>
 				#{tag}{" "}
 			</Typography>
 		));
@@ -392,11 +398,7 @@ const VisitProfilePageComponent = (props: Props) => {
 										profile.profile.lastname +
 										(location &&
 											location.distanceInKm &&
-											", " +
-												Math.ceil(
-													location.distanceInKm
-												) +
-												" km")}
+											", " + Math.ceil(location.distanceInKm) + " km")}
 								</Typography>
 							) : (
 								<React.Fragment>
@@ -404,19 +406,13 @@ const VisitProfilePageComponent = (props: Props) => {
 										{profile.profile.username +
 											(location &&
 												location.distanceInKm &&
-												", " +
-													Math.ceil(
-														location.distanceInKm
-													) +
-													" km")}
+												", " + Math.ceil(location.distanceInKm) + " km")}
 									</Typography>
 									<Typography variant="h5" align="center">
 										-
 									</Typography>
 									<Typography variant="h5" align="center">
-										{profile.profile.firstname +
-											" " +
-											profile.profile.lastname}
+										{profile.profile.firstname + " " + profile.profile.lastname}
 									</Typography>
 								</React.Fragment>
 							)}
@@ -438,14 +434,11 @@ const VisitProfilePageComponent = (props: Props) => {
 									color="primary"
 									display="inline"
 								>
-									{profile.profile.dob &&
-										getAge(profile.profile.dob) + " y/o "}
+									{profile.profile.dob && getAge(profile.profile.dob) + " y/o "}
 									<FontAwesomeIcon
 										className={classes.icon}
 										icon={
-											profile.profile.gender === "female"
-												? faVenus
-												: faMars
+											profile.profile.gender === "female" ? faVenus : faMars
 										}
 									/>
 									{"looking for  "}
@@ -459,23 +452,15 @@ const VisitProfilePageComponent = (props: Props) => {
 								{getConnectionStatusText()}
 							</Typography>
 						</div>
-						<div style={{ marginTop: "40px" }}>
-							{tags && formatTags(tags)}
-						</div>
+						<div style={{ marginTop: "40px" }}>{tags && formatTags(tags)}</div>
 						<div className={classes.bio}>
-							<Typography align="center">
-								{profile.profile.bio}
-							</Typography>
+							<Typography align="center">{profile.profile.bio}</Typography>
 						</div>
 						<div>
 							{likeStatus !== undefined && props.hasImages && (
 								<Button
 									disabled={isLikeLoading || isBlackListed}
-									startIcon={
-										isLikeLoading ? (
-											<CircularProgress />
-										) : null
-									}
+									startIcon={isLikeLoading ? <CircularProgress /> : null}
 									color="primary"
 									variant="contained"
 									onClick={toggleLikeProfile}
@@ -496,8 +481,7 @@ const VisitProfilePageComponent = (props: Props) => {
 									textAlign: "center",
 								}}
 							>
-								Pop. score{" "}
-								{" " + profile.profile.popularityScore}
+								Pop. score {" " + profile.profile.popularityScore}
 							</Typography>
 							<div
 								style={{
@@ -508,11 +492,7 @@ const VisitProfilePageComponent = (props: Props) => {
 								<div style={{ margin: 5 }}>
 									<Button
 										disabled={isBlockLoading}
-										startIcon={
-											isBlockLoading ? (
-												<CircularProgress />
-											) : null
-										}
+										startIcon={isBlockLoading ? <CircularProgress /> : null}
 										style={{
 											display: "flex",
 											justifySelf: "flex-end",
@@ -524,9 +504,7 @@ const VisitProfilePageComponent = (props: Props) => {
 									</Button>
 								</div>
 								<div style={{ margin: 5 }}>
-									<ReportProfileDialog
-										username={profile.profile.username}
-									/>
+									<ReportProfileDialog username={profile.profile.username} />
 								</div>
 							</div>
 						</div>

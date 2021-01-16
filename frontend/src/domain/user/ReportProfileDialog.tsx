@@ -6,11 +6,11 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:21:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:20:10 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 
 import Button from "@material-ui/core/Button";
@@ -39,6 +39,14 @@ function ReportProfileDialogComponent(props: Props) {
 	const [message, setMessage] = useState("");
 	const [messageError, setMessageError] = useState(false);
 	const [isReportLoading, setIsReportLoading] = useState(false);
+	const controller = new AbortController();
+
+	useEffect(() => {
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -59,7 +67,7 @@ function ReportProfileDialogComponent(props: Props) {
 			message: message,
 		};
 		setIsReportLoading(true);
-		await reportProfileAPI(body, props.loggedIn)
+		reportProfileAPI(body, props.loggedIn, controller.signal)
 			.then(() => {
 				props.dispatch(
 					actionUi_showSnackbar({
@@ -67,11 +75,16 @@ function ReportProfileDialogComponent(props: Props) {
 						type: "success",
 					})
 				);
+				setIsReportLoading(false);
+				setMessage("");
+				handleClose();
 			})
-			.catch((error) => errorHandling(error, props.dispatch));
-		setIsReportLoading(false);
-		setMessage("");
-		handleClose();
+			.catch((error) => {
+				errorHandling(error, props.dispatch);
+				if (error.message !== "canceled") {
+					setIsReportLoading(false);
+				}
+			});
 	}
 
 	function handleMessage(e: React.ChangeEvent<HTMLInputElement>) {

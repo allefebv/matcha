@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/12/13 18:34:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 17:25:05 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ import {
 } from "../../services/apiCalls";
 import { connect, ConnectedProps } from "react-redux";
 import { actionUser_geolocation } from "../../store/user/action";
-import { actionUi_showSnackbar } from "../../store/ui/action";
 import { BaseProfileFormContent } from "../profile/BaseProfileFormContent";
 import { ProfileOptional1 } from "../profile/ProfileOptional1";
 import { ProfileOptional2 } from "../profile/ProfileOptional2";
@@ -93,6 +92,7 @@ const UserProfilePageComponent = (props: Props) => {
 	]);
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
+	const controller = new AbortController();
 
 	const geolocation = useGeolocation();
 
@@ -124,65 +124,37 @@ const UserProfilePageComponent = (props: Props) => {
 	useEffect(() => {
 		let isMounted = true;
 		let timeout = setTimeout(() => {
+			console.log(isMounted);
 			isMounted && setDisabled(false);
 		}, 2000);
-		getProfile().then((response: any) => {
-			if (response && isMounted) {
-				setProfile({ ...profile, online: profile.online });
-			}
-		});
-		getProfileVisitsList().then((json: Iprofile[] | void) => {
-			if (json && isMounted) {
-				setProfileVisits(json);
-			}
-		});
-		getProfileLikesList().then((json: Iprofile[] | void) => {
-			if (json && isMounted) {
-				setProfileLikes(json);
-			}
-		});
+		getProfileAPI(props.loggedIn, controller.signal)
+			.then((response: any) => {
+				if (response && isMounted) {
+					setProfile({ ...profile, online: profile.online });
+				}
+			})
+			.catch((error) => errorHandling(error, props.dispatch));
+		getProfileVisitsAPI(props.loggedIn, controller.signal)
+			.then((json: Iprofile[] | void) => {
+				if (json && isMounted) {
+					setProfileVisits(json);
+				}
+			})
+			.catch((error) => errorHandling(error, props.dispatch));
+		getProfileLikesAPI(props.loggedIn, controller.signal)
+			.then((json: Iprofile[] | void) => {
+				if (json && isMounted) {
+					setProfileLikes(json);
+				}
+			})
+			.catch((error) => errorHandling(error, props.dispatch));
 		return () => {
 			isMounted = false;
 			clearTimeout(timeout);
+			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const getProfile = () => {
-		return getProfileAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
-	};
-
-	const getProfileVisitsList = () => {
-		return getProfileVisitsAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
-	};
-
-	const getProfileLikesList = () => {
-		return getProfileLikesAPI(props.loggedIn).catch((error) => {
-			props.dispatch(
-				actionUi_showSnackbar({
-					message: error.message,
-					type: "error",
-				})
-			);
-			console.log(error.message);
-		});
-	};
 
 	const handleChangeProfile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;

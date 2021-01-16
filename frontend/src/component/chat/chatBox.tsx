@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/28 17:40:29 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:16:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,19 @@ const ChatBoxComponent = (props: Props) => {
 			timestamp: number;
 		}[]
 	>([]);
+	const controller = new AbortController();
 	const classes = useStyles();
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+
+	useEffect(() => {
+		const chatScroll = document.getElementById("chatScroll");
+		chatScroll && chatScroll.scrollIntoView(false);
+		return () => {
+			controller.abort();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -99,7 +109,7 @@ const ChatBoxComponent = (props: Props) => {
 			username1: props.profile.username,
 			username2: props.userSelect?.profile.username,
 		};
-		getMessageAPI(details, props.token)
+		getMessageAPI(details, props.token, controller.signal)
 			.then((result) => {
 				const listResult = result.map((item) => {
 					return {
@@ -116,11 +126,6 @@ const ChatBoxComponent = (props: Props) => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.userSelect]);
-
-	useEffect(() => {
-		const chatScroll = document.getElementById("chatScroll");
-		chatScroll && chatScroll.scrollIntoView(false);
-	});
 
 	function handleInput(event: React.FormEvent<HTMLInputElement>) {
 		setInput(event.currentTarget.value);
