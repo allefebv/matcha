@@ -6,7 +6,7 @@
 /*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/12 19:59:40 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/16 16:45:31 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ export async function activateNewEmailController(req: Request, res: Response) {
 	try {
 		const userId = parseInt(req.query.id.toString());
 		const user = await getUserById(userId);
-		console.log('---> req.body', req.query.hash);
 		if (hashPassword(user.id + user.email) === req.query.hash) {
 			const result = await changeEmail(userId, req.query.email as string);
 			res.status(200).send(result);
