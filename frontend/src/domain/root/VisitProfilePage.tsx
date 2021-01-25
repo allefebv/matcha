@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:25:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 14:22:41 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ const VisitProfilePageComponent = (props: Props) => {
 					getBlackListAPI(props.loggedIn, controller.signal)
 						.then((json) => {
 							props.dispatch(actionUser_setBlackList({ blackList: json }));
+							setLikeStatus({ ...likeStatus, iLike: false, heLike: false });
 							setIsBlockLoading(false);
 						})
 						.catch((error) => {

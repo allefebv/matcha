@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/04 15:21:51 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:16:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 15:48:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { autocompleteLocationAPI } from "../../services/apiCalls";
 import { Iaddress, Iprofile } from "../../types/types";
 import { throttle } from "lodash";
-import { errorHandling } from "../../services/profileUtils";
-
-function hasOwnProperty<X extends {}, Y extends PropertyKey>(
-	obj: X,
-	prop: Y
-): obj is X & Record<Y, unknown> {
-	return obj.hasOwnProperty(prop);
-}
+import { errorHandling, hasOwnProperty } from "../../services/profileUtils";
 
 const withReduxProps = connect((state: any) => ({
 	currentGeolocation: state.user.currentGeolocation,
@@ -177,7 +170,19 @@ function ProfileOptional3Component(props: Props) {
 		if (
 			option !== {} &&
 			hasOwnProperty(option, "city") &&
-			option.city !== null
+			option.city !== null &&
+			hasOwnProperty(option, "postCode") &&
+			option.postCode !== null &&
+			hasOwnProperty(option, "country") &&
+			option.country !== null
+		) {
+			return option.city + ", " + option.postCode + ", " + option.country;
+		} else if (
+			option !== {} &&
+			hasOwnProperty(option, "city") &&
+			option.city !== null &&
+			hasOwnProperty(option, "country") &&
+			option.country !== null
 		) {
 			return option.city + ", " + option.country;
 		}
@@ -214,7 +219,9 @@ function ProfileOptional3Component(props: Props) {
 							? hasOwnProperty(option, "isFromGeolocation") &&
 							  option.isFromGeolocation
 								? "Use my location"
-								: hasOwnProperty(option, "postCode") &&
+								: hasOwnProperty(option, "postCode") && option.postCode !== null
+								? option.city + ", " + option.postCode + ", " + option.country
+								: hasOwnProperty(option, "city") &&
 								  option.city + ", " + option.country
 							: null}
 					</Typography>

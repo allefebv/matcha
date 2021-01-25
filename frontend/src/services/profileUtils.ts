@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:33:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 15:48:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,9 @@ export const submitPictures = async (
 					.then((profile) => {
 						dispatch(actionUser_setImages({ imgs: profile.imgs }));
 					})
-					.catch();
+					.catch(() => {});
 			})
-			.catch();
+			.catch(() => {});
 	}
 };
 
@@ -148,7 +148,7 @@ export const updateProfile = async (
 				})
 			);
 		})
-		.catch();
+		.catch(() => {});
 };
 
 export const createProfile = async (
@@ -173,7 +173,14 @@ export const createProfile = async (
 				})
 			);
 		})
-		.catch();
+		.catch(() => {
+			dispatch(
+				actionUi_showSnackbar({
+					message: "username already in use",
+					type: "error",
+				})
+			);
+		});
 };
 
 export const submitTags = async (
@@ -185,7 +192,7 @@ export const submitTags = async (
 		.then((tagList) => {
 			dispatch(actionUser_setTagList({ tagList: tagList }));
 		})
-		.catch();
+		.catch(() => {});
 };
 
 export const submitUsageLocation = async (
@@ -199,29 +206,7 @@ export const submitUsageLocation = async (
 			getSearchList(token, dispatch);
 			getRecommendationList(token, dispatch);
 		})
-		.catch();
-};
-
-export const getProfileHydrateRedux = async (
-	dispatch: Dispatch<AnyAction>,
-	token: string
-) => {
-	return getProfileAPI(token)
-		.then((response: any) => {
-			if (response) {
-				dispatch(actionUser_setProfile({ profile: response.profile }));
-				response.tag &&
-					dispatch(actionUser_setTagList({ tagList: response.tag }));
-				response.imgs &&
-					dispatch(actionUser_setImages({ imgs: response.imgs }));
-				dispatch(
-					actionUser_usagelocation({
-						usagelocation: response.location,
-					})
-				);
-			}
-		})
-		.catch();
+		.catch(() => {});
 };
 
 export const profileHasImages = (imgs: (null | string)[]) => {
@@ -241,7 +226,7 @@ export const getSearchList = (token: string, dispatch: Dispatch<AnyAction>) => {
 				dispatch(actionProfilesList_getSearch({ profiles: withAge }));
 			}
 		})
-		.catch();
+		.catch(() => {});
 };
 
 export const getRecommendationList = (
@@ -262,7 +247,7 @@ export const getRecommendationList = (
 				dispatch(actionProfilesList_getRecco({ profiles: withAge }));
 			}
 		})
-		.catch();
+		.catch(() => {});
 };
 
 export const isProfileBlacklisted = (
@@ -312,5 +297,12 @@ export const hydrateReduxWithMatches = (
 				);
 			}
 		})
-		.catch();
+		.catch(() => {});
 };
+
+export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+	obj: X,
+	prop: Y
+): obj is X & Record<Y, unknown> {
+	return obj.hasOwnProperty(prop);
+}

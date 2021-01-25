@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 17:25:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 14:34:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ import { ProfileOptional3 } from "../profile/ProfileOptional3";
 import { Iprofile, Iaddress } from "../../types/types";
 import {
 	errorHandling,
+	hasOwnProperty,
 	isProfileComplete,
 	submitPictures,
 	submitTags,
@@ -124,7 +125,6 @@ const UserProfilePageComponent = (props: Props) => {
 	useEffect(() => {
 		let isMounted = true;
 		let timeout = setTimeout(() => {
-			console.log(isMounted);
 			isMounted && setDisabled(false);
 		}, 2000);
 		getProfileAPI(props.loggedIn, controller.signal)
@@ -161,21 +161,20 @@ const UserProfilePageComponent = (props: Props) => {
 		setProfile({ ...profile, [name]: value });
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = () => {
 		setLoading(true);
 		setDisabled(true);
-		await Promise.all([
-			updateProfile(
-				profile,
-				props.loggedIn,
-				props.dispatch,
-				props.isProfileComplete
-			),
-			submitTags(tagList, props.loggedIn, props.dispatch),
-			submitPictures(imgs, props.loggedIn, props.dispatch),
-			usageLocation &&
-				submitUsageLocation(usageLocation, props.loggedIn, props.dispatch),
-		]);
+		updateProfile(
+			profile,
+			props.loggedIn,
+			props.dispatch,
+			props.isProfileComplete
+		);
+		submitTags(tagList, props.loggedIn, props.dispatch);
+		submitPictures(imgs, props.loggedIn, props.dispatch);
+		usageLocation &&
+			hasOwnProperty(usageLocation, "city") &&
+			submitUsageLocation(usageLocation, props.loggedIn, props.dispatch);
 	};
 
 	return (

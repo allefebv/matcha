@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:07 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:27:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 15:42:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,24 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { getBlackListAPI, signinAPI } from "../../services/apiCalls";
+import {
+	getBlackListAPI,
+	getProfileAPI,
+	signinAPI,
+} from "../../services/apiCalls";
 import * as constants from "../../services/constants";
 import { ForgotPasswordDialog } from "./ForgotPasswordDialog";
 import { connect, ConnectedProps } from "react-redux";
 import {
 	actionUser_setBlackList,
+	actionUser_setImages,
+	actionUser_setProfile,
+	actionUser_setTagList,
 	actionUser_signin,
+	actionUser_usagelocation,
 } from "../../store/user/action";
 import { actionUi_showSnackbar } from "../../store/ui/action";
-import {
-	errorHandling,
-	getProfileHydrateRedux,
-} from "../../services/profileUtils";
+import { errorHandling } from "../../services/profileUtils";
 import { makeStyles } from "@material-ui/core";
 
 const withReduxProps = connect((state: any) => ({
@@ -114,8 +119,27 @@ function SignInDialogComponent(props: Props) {
 						.catch((error) => {
 							errorHandling(error, props.dispatch);
 						});
-					await getProfileHydrateRedux(props.dispatch, token);
-					props.dispatch(actionUser_signin({ user, token }));
+					getProfileAPI(token)
+						.then((response: any) => {
+							if (response) {
+								props.dispatch(
+									actionUser_setProfile({ profile: response.profile })
+								);
+								response.tag &&
+									props.dispatch(
+										actionUser_setTagList({ tagList: response.tag })
+									);
+								response.imgs &&
+									props.dispatch(actionUser_setImages({ imgs: response.imgs }));
+								props.dispatch(
+									actionUser_usagelocation({
+										usagelocation: response.location,
+									})
+								);
+								props.dispatch(actionUser_signin({ user, token }));
+							}
+						})
+						.catch(() => {});
 				} else {
 					props.dispatch(
 						actionUi_showSnackbar({

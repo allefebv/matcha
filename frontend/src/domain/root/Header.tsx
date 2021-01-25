@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:29:33 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:22:34 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
-	username: state.user.profile.username,
+	username: state.user.profile && state.user.profile.username,
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
 type Props = {} & ReduxProps;
@@ -93,8 +93,10 @@ const HeaderComponent = (props: Props) => {
 	useEffect(() => {
 		let isMounted = true;
 		if (props.loggedIn) {
-			isMounted && setUsername(props.username);
-			socket.on("notification" + props.username, pushNotification);
+			if (props.username) {
+				isMounted && setUsername(props.username);
+				socket.on("notification" + props.username, pushNotification);
+			}
 			getNotificationsAPI(props.loggedIn, controller.signal)
 				.then((json) => {
 					json && json.length && updateNotifications(json);
@@ -102,10 +104,12 @@ const HeaderComponent = (props: Props) => {
 				.catch((error) => errorHandling(error, props.dispatch));
 		} else {
 			isMounted = false;
-			socket.off("notification" + username);
+			if (props.username) {
+				socket.off("notification" + username);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.loggedIn]);
+	}, [props.loggedIn, props.username]);
 
 	function pushNotification(notification: Inotification) {
 		const tmp = [...ref.current];

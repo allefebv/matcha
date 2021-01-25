@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:08 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:43:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:24:00 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ const AppComponent = (props: Props) => {
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.loggedIn) {
+		if (props.loggedIn && props.profile) {
 			socket.connect();
 			socket.on("connect", () => {
 				socket.emit("online", {
@@ -57,7 +57,7 @@ const AppComponent = (props: Props) => {
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.loggedIn]);
+	}, [props.loggedIn, props.profile]);
 
 	return (
 		<BrowserRouter>

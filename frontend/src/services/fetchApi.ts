@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:30 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:52:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:42:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,16 @@ export function fetchApi<T>(url: string, args: RequestInit): Promise<T> {
 						reject(new Error(text));
 					}
 					reject(new Error(response.statusText));
-				}
-				return response;
-			})
-			.then((response) => {
-				if (
-					response.headers.get("content-type")?.indexOf("application/json") !==
-					-1
-				) {
-					resolve(response.json());
+				} else {
+					if (
+						response.headers
+							.get("content-type")
+							?.indexOf("application/json") !== -1
+					) {
+						resolve(response.json());
+					} else {
+						resolve(response.text() as Promise<any>);
+					}
 				}
 			})
 			.catch(() => reject(new Error("canceled")));
