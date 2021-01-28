@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 13:31:30 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/27 11:59:15 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 14:33:35 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,12 @@ export const ProfilePictures = (props: Props) => {
 
 	const images = props.imgs.map((img, index) => {
 		const path =
-			"http://localhost:3001/images/" + props.username + "img" + index;
+			"http://localhost:3001/images/" +
+			props.username +
+			"img" +
+			index +
+			"?q=" +
+			Math.floor(Math.random() * 1000);
 		return (
 			<CustomAvatar
 				key={"img" + index}

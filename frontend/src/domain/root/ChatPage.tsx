@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:16:24 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 10:53:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ const ChatPageComponent = (props: Props) => {
 			})
 			.catch((error) => errorHandling(error, props.dispatch));
 		return () => {
-			socket.off("message");
+			socket.off("message" + props.profile.username);
 			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps

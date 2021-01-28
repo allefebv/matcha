@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/25 15:48:30 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 14:30:50 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ import {
 export const getProfileLevel = (
 	profile: Iprofile,
 	location: Iaddress | null,
-	tagList: string[]
+	tagList: string[],
+	imgs?: string[]
 ) => {
 	if (
 		!profile ||
@@ -56,7 +57,8 @@ export const getProfileLevel = (
 		!profile.bio ||
 		!location ||
 		!tagList ||
-		tagList.length === 0
+		tagList.length === 0 ||
+		(imgs && !profileHasImages(imgs))
 	) {
 		return 1;
 	} else {
@@ -83,9 +85,10 @@ export const isProfileBase = (
 export const isProfileComplete = (
 	profile: Iprofile,
 	location: Iaddress,
-	tagList: string[]
+	tagList: string[],
+	imgs: string[]
 ) => {
-	return getProfileLevel(profile, location, tagList) === 2;
+	return getProfileLevel(profile, location, tagList, imgs) === 2;
 };
 
 export const getAge = (dob: number) => {
@@ -122,6 +125,15 @@ export const submitPictures = async (
 			.then(() => {
 				getProfileAPI(token)
 					.then((profile) => {
+						if (profile.imgs.length) {
+							profile.imgs = profile.imgs.map((img) => {
+								if (img !== null) {
+									return img + "?d=" + Math.floor(Math.random() * 1000);
+								}
+								return img;
+							});
+						}
+						console.log(profile.imgs);
 						dispatch(actionUser_setImages({ imgs: profile.imgs }));
 					})
 					.catch(() => {});

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/25 14:39:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 10:45:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,8 @@ const withReduxProps = connect((state: any) => ({
 	isProfileComplete: isProfileComplete(
 		state.user.profile,
 		state.user.usagelocation,
-		state.user.tagList
+		state.user.tagList,
+		state.user.imgs
 	),
 }));
 

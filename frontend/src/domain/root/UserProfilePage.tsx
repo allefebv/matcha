@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/25 14:34:23 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 14:30:46 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@ const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile as Iprofile,
 	tagList: state.user.tagList,
 	usageLocation: state.user.usagelocation,
+	imgs: state.user.imgs,
 	isProfileComplete: isProfileComplete(
 		state.user.profile,
 		state.user.usagelocation,
-		state.user.tagList
+		state.user.tagList,
+		state.user.imgs
 	),
 }));
 type ReduxProps = ConnectedProps<typeof withReduxProps>;
@@ -84,13 +86,7 @@ const UserProfilePageComponent = (props: Props) => {
 	});
 	const [profileVisits, setProfileVisits] = useState<Iprofile[]>();
 	const [profileLikes, setProfileLikes] = useState<Iprofile[]>();
-	const [imgs, setImgs] = useState<(string | null)[]>([
-		null,
-		null,
-		null,
-		null,
-		null,
-	]);
+	const [imgs, setImgs] = useState<(string | null)[]>([...props.imgs]);
 	const [disabled, setDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const controller = new AbortController();
@@ -110,6 +106,15 @@ const UserProfilePageComponent = (props: Props) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [geolocation]);
+
+	useEffect(() => {
+		let isMounted = true;
+		isMounted && setImgs(props.imgs);
+		console.log(props.imgs);
+		return () => {
+			isMounted = false;
+		};
+	}, [props.imgs]);
 
 	useEffect(() => {
 		let isMounted = true;
