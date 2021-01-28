@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   likeController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:04:51 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/16 16:54:53 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/28 18:03:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
-import { handleNotifications } from '../services/handleNotifications';
+import { Request, Response } from "express";
+import { handleNotifications } from "../services/handleNotifications";
 
 import {
 	addLikedProfile,
@@ -19,24 +19,22 @@ import {
 	getProfileMatch,
 	getStatueOfLike,
 	getUserHasBeenLikedById,
-} from '../model/likeRepositories';
+} from "../model/likeRepositories";
 import {
 	getCompleteProfileByUserId,
 	getProfileByUserId,
 	getProfileByUsername,
 	updatePopularityScore,
-} from '../model/profileRepositories';
-import { jwtVerify } from '../services/validation/jwt';
-import { matchStatus } from '../services/likeStatus';
-import { shapingProfile } from '../services/formatter/shapingProfile';
-import { deleteMessageNotifications } from '../model/notificationRepositories';
+} from "../model/profileRepositories";
+import { jwtVerify } from "../services/validation/jwt";
+import { deleteLike, matchStatus } from "../services/likeStatus";
+import { shapingProfile } from "../services/formatter/shapingProfile";
+import { deleteMessageNotifications } from "../model/notificationRepositories";
 
 export async function addlikedProfileController(req: Request, res: Response) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileHasBeenLiked = await getProfileByUsername(
-			req.body.username
-		);
+		const profileHasBeenLiked = await getProfileByUsername(req.body.username);
 		const profileLikes = await getProfileByUserId(jwt.decoded.id);
 		await addLikedProfile(jwt.decoded.id, profileHasBeenLiked.userId);
 		await updatePopularityScore(
@@ -45,11 +43,11 @@ export async function addlikedProfileController(req: Request, res: Response) {
 		);
 		const isMatch = await matchStatus(profileLikes, profileHasBeenLiked);
 		await handleNotifications(
-			isMatch ? 'likeBack' : 'like',
+			isMatch ? "likeBack" : "like",
 			profileLikes,
 			profileHasBeenLiked
 		);
-		res.status(200).json('Liked successful');
+		res.status(200).json("Liked successful");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -61,33 +59,10 @@ export async function deletelikedProfileController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileHasBeenUnliked = await getProfileByUsername(
-			req.body.username
-		);
 		const notifierProfile = await getProfileByUserId(jwt.decoded.id);
-		const isMatch = await matchStatus(
-			notifierProfile,
-			profileHasBeenUnliked
-		);
-		if (isMatch) {
-			await handleNotifications(
-				'unlike',
-				notifierProfile,
-				profileHasBeenUnliked
-			);
-		}
-		await deleteLikedProfile(jwt.decoded.id, profileHasBeenUnliked.userId);
-		await deleteMessageNotifications(
-			jwt.decoded.id,
-			profileHasBeenUnliked.userId
-		);
-		await updatePopularityScore(
-			profileHasBeenUnliked.popularityScore - 5 < 0
-				? 0
-				: profileHasBeenUnliked.popularityScore - 5,
-			profileHasBeenUnliked.userId
-		);
-		res.status(200).json('Delete like successful');
+		const profileHasBeenUnliked = await getProfileByUsername(req.body.username);
+		await deleteLike(notifierProfile, profileHasBeenUnliked);
+		res.status(200).json("Delete like successful");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -152,9 +127,7 @@ export async function getProfileMatchController(req: Request, res: Response) {
 		if (listMatch && listMatch.length) {
 			await Promise.all(
 				listMatch.map(async (item) => {
-					const profile = await getCompleteProfileByUserId(
-						item.userId
-					);
+					const profile = await getCompleteProfileByUserId(item.userId);
 					resultList.push(shapingProfile(profile));
 				})
 			);

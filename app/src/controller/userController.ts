@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   userController.ts                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:05:11 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/16 16:45:31 by jfleury          ###   ########.fr       */
+/*   Updated: 2021/01/28 18:19:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Request, Response } from 'express';
-import fs from 'fs';
+import { Request, Response } from "express";
+import fs from "fs";
+import { getUserLikes } from "../model/likeRepositories";
+import { deleteLike } from "../services/likeStatus";
 
-import { getProfileByUserId } from '../model/profileRepositories';
+import { getProfileByUserId } from "../model/profileRepositories";
 import {
 	activateUser,
 	addUser,
@@ -22,15 +24,15 @@ import {
 	deleteUser,
 	getUserByEmail,
 	getUserById,
-} from '../model/userRepositories';
-import { generatePassword } from '../services/generateString';
+} from "../model/userRepositories";
+import { generatePassword } from "../services/generateString";
 import {
 	activatedUserMailer,
 	newEmailMailer,
 	newPasswordMailer,
-} from '../services/mailer';
-import { generateTokenForUser, jwtVerify } from '../services/validation/jwt';
-import { checkPassword, hashPassword } from '../services/validation/password';
+} from "../services/mailer";
+import { generateTokenForUser, jwtVerify } from "../services/validation/jwt";
+import { checkPassword, hashPassword } from "../services/validation/password";
 import {
 	addUserValidation,
 	changeEmailValidation,
@@ -38,9 +40,9 @@ import {
 	deleteUserValidation,
 	loginUserValidation,
 	resetPasswordValidation,
-} from '../services/validation/userValidation';
+} from "../services/validation/userValidation";
 
-const glob = require('glob');
+const glob = require("glob");
 
 export async function loginUserController(req: Request, res: Response) {
 	try {
@@ -81,7 +83,7 @@ export async function activateNewEmailController(req: Request, res: Response) {
 			const result = await changeEmail(userId, req.query.email as string);
 			res.status(200).send(result);
 		}
-		res.status(200).send('hash invalid');
+		res.status(200).send("hash invalid");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -93,7 +95,7 @@ export async function addUserController(req: Request, res: Response) {
 		const password = hashPassword(req.body.password);
 		const newUser = await addUser(req.body.email, password);
 
-		if (req.body.redirectUrl !== 'scriptOrigin') {
+		if (req.body.redirectUrl !== "scriptOrigin") {
 			await activatedUserMailer(
 				newUser,
 				`${req.body.redirectUrl}?activationKey=${newUser.activationKey}&id=${newUser.id}`
@@ -119,11 +121,8 @@ export async function changePasswordController(req: Request, res: Response) {
 		const user = await getUserById(jwt.decoded.id);
 		await changePasswordValidation(req.body, user);
 		await checkPassword(req.body.password, user.password);
-		await changePassword(
-			jwt.decoded.id,
-			hashPassword(req.body.newPassword)
-		);
-		res.status(200).send('Password change');
+		await changePassword(jwt.decoded.id, hashPassword(req.body.newPassword));
+		res.status(200).send("Password change");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -141,7 +140,7 @@ export async function changeEmailController(req: Request, res: Response) {
 				user.id + user.email
 			)}&email=${req.body.newEmail}&id=${user.id}`
 		);
-		res.status(200).send('Email send to your new email');
+		res.status(200).send("Email send to your new email");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -154,9 +153,9 @@ export async function resetPasswordController(req: Request, res: Response) {
 		const newPassword = generatePassword();
 		await changePassword(user.id, hashPassword(newPassword));
 		newPasswordMailer(user, newPassword);
-		res.status(200).send(
-			'Check your emails to retrieve your temporary password'
-		);
+		res
+			.status(200)
+			.send("Check your emails to retrieve your temporary password");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}
@@ -167,23 +166,24 @@ export async function deleteUserController(req: Request, res: Response) {
 		await deleteUserValidation(req.body);
 		const jwt = await jwtVerify(req.headers.token, res);
 		const user = await getUserById(jwt.decoded.id);
+		const profile = await getProfileByUserId(jwt.decoded.id);
 		try {
-			const profile = await getProfileByUserId(jwt.decoded.id);
-			glob(
-				'./public/images/' + profile.username + '*',
-				(error, files) => {
-					console.log(error, files);
-					files.map((file) => {
-						fs.unlinkSync(file);
-					});
-				}
-			);
+			glob("./public/images/" + profile.username + "*", (error, files) => {
+				console.log(error, files);
+				files.map((file) => {
+					fs.unlinkSync(file);
+				});
+			});
 		} catch (err) {
 			console.error(err);
 		}
 		await checkPassword(req.body.password, user.password);
+		let likedProfiles = await getUserLikes(jwt.decoded.id);
+		likedProfiles.map((likedProfile) => {
+			deleteLike(profile, likedProfile);
+		});
 		await deleteUser(parseInt(jwt.decoded.id.toString()));
-		res.status(200).send('User as deleted');
+		res.status(200).send("User as deleted");
 	} catch (error) {
 		res.status(error.code).send(error.message);
 	}

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/28 14:30:46 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 17:10:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ const UserProfilePageComponent = (props: Props) => {
 	useEffect(() => {
 		let isMounted = true;
 		isMounted && setImgs(props.imgs);
-		console.log(props.imgs);
 		return () => {
 			isMounted = false;
 		};

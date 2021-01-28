@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 09:58:32 by jfleury           #+#    #+#             */
-/*   Updated: 2021/01/15 16:25:57 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 18:05:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,14 @@ import {
 } from "../model/blackListRepositories";
 import { deleteLikedProfile } from "../model/likeRepositories";
 import { deleteAllNotification } from "../model/notificationRepositories";
-import { getProfileByUsername } from "../model/profileRepositories";
+import {
+	getProfileByUserId,
+	getProfileByUsername,
+	updatePopularityScore,
+} from "../model/profileRepositories";
 import { deleteViewProfile } from "../model/viewRepositories";
 import { jwtVerify } from "../services/validation/jwt";
+import { deleteLike, likeStatus } from "../services/likeStatus";
 
 export async function getProfileBlackListController(
 	req: Request,
@@ -44,27 +49,33 @@ export async function addProfileInBlackListController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileBlock = await getProfileByUsername(req.body.username);
-		await getOneProfileBlackList(jwt.decoded.id, profileBlock.userId);
-		await addProfileBlackList(jwt.decoded.id, profileBlock.userId);
+		const profileBlocked = await getProfileByUsername(req.body.username);
+		const profileBlocker = await getProfileByUserId(jwt.decoded.id);
+		const status = await likeStatus(profileBlocker, profileBlocked);
+		await getOneProfileBlackList(jwt.decoded.id, profileBlocked.userId);
+		await addProfileBlackList(jwt.decoded.id, profileBlocked.userId);
 		res.status(200).json("Profile add to blacklist");
+		if (status.iLike === true) {
+			try {
+				await deleteLike(profileBlocker, profileBlocked);
+			} catch (error) {}
+		}
+		if (status.heLike) {
+			try {
+				await deleteLike(profileBlocked, profileBlocker);
+			} catch (error) {}
+		}
 		try {
-			await deleteLikedProfile(profileBlock.userId, jwt.decoded.id);
+			await deleteViewProfile(profileBlocked.userId, jwt.decoded.id);
 		} catch (error) {}
 		try {
-			await deleteLikedProfile(jwt.decoded.id, profileBlock.userId);
+			await deleteViewProfile(jwt.decoded.id, profileBlocked.userId);
 		} catch (error) {}
 		try {
-			await deleteViewProfile(profileBlock.userId, jwt.decoded.id);
+			await deleteAllNotification(profileBlocked.userId, jwt.decoded.id);
 		} catch (error) {}
 		try {
-			await deleteViewProfile(jwt.decoded.id, profileBlock.userId);
-		} catch (error) {}
-		try {
-			await deleteAllNotification(profileBlock.userId, jwt.decoded.id);
-		} catch (error) {}
-		try {
-			await deleteAllNotification(jwt.decoded.id, profileBlock.userId);
+			await deleteAllNotification(jwt.decoded.id, profileBlocked.userId);
 		} catch (error) {}
 	} catch (error) {
 		res.status(error.code).send(error.message);
@@ -77,8 +88,8 @@ export async function deleteProfileInBlackListController(
 ) {
 	try {
 		const jwt = await jwtVerify(req.headers.token, res);
-		const profileBlock = await getProfileByUsername(req.body.username);
-		await deleteProfileBlackList(jwt.decoded.id, profileBlock.userId);
+		const profileBlocked = await getProfileByUsername(req.body.username);
+		await deleteProfileBlackList(jwt.decoded.id, profileBlocked.userId);
 		res.status(200).json("Profile delete to blacklist");
 	} catch (error) {
 		res.status(error.code).send(error.message);

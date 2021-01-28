@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:29:13 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/28 14:30:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/29 11:54:28 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ export const submitPictures = async (
 								return img;
 							});
 						}
-						console.log(profile.imgs);
 						dispatch(actionUser_setImages({ imgs: profile.imgs }));
 					})
 					.catch(() => {});

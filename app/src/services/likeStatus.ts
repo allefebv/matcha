@@ -6,12 +6,15 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:54:24 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/12 11:49:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/29 11:58:52 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { deleteMessageNotifications } from "../model/notificationRepositories";
+import { updatePopularityScore } from "../model/profileRepositories";
 import { profile } from "../../types/types";
-import { getStatueOfLike } from "../model/likeRepositories";
+import { deleteLikedProfile, getStatueOfLike } from "../model/likeRepositories";
+import { handleNotifications } from "./handleNotifications";
 
 export async function matchStatus(profileA: profile, profileB: profile) {
 	const result = await getStatueOfLike(profileA.userId, profileB.userId);
@@ -33,4 +36,17 @@ export async function likeStatus(profileA: profile, profileB: profile) {
 		}
 	}
 	return { iLike: false, heLike: false };
+}
+
+export async function deleteLike(hasLiked: profile, hasBeenLiked: profile) {
+	const isMatch = await matchStatus(hasLiked, hasBeenLiked);
+	if (isMatch) {
+		await handleNotifications("unlike", hasLiked, hasBeenLiked);
+	}
+	await deleteLikedProfile(hasLiked.userId, hasBeenLiked.userId);
+	await updatePopularityScore(
+		hasBeenLiked.popularityScore - 5 < 0 ? 0 : hasBeenLiked.popularityScore - 5,
+		hasBeenLiked.userId
+	);
+	await deleteMessageNotifications(hasLiked.userId, hasBeenLiked.userId);
 }

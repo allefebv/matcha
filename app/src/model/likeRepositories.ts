@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 19:06:09 by jfleury           #+#    #+#             */
-/*   Updated: 2020/11/06 18:28:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 17:52:03 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,30 @@ export function getUserHasBeenLikedById(id: number): Promise<any[] | null> {
 			profile ON profile.userId = likeProfile.profileLikesId
 		WHERE
 			likeProfile.profileHasBeenLikedId = ${escape(id)}
+		`;
+
+		dataBase.query(sql, (error: string, result: like[]) => {
+			if (error) {
+				console.log(error);
+				resolve(null);
+			}
+			resolve(result);
+		});
+	});
+}
+
+export function getUserLikes(id: number): Promise<any[] | null> {
+	return new Promise((resolve) => {
+		const sql = `
+		SELECT
+			likeProfile.*,
+			profile.*
+		FROM 
+			likeProfile
+		JOIN 
+			profile ON profile.userId = likeProfile.profileHasBeenLikedId
+		WHERE
+			likeProfile.profileLikesId = ${escape(id)}
 		`;
 
 		dataBase.query(sql, (error: string, result: like[]) => {
