@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/25 14:22:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 15:10:24 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,9 +321,11 @@ const VisitProfilePageComponent = (props: Props) => {
 				props.loggedIn,
 				ref.current.profile.username,
 				controller.signal
-			).then((profile) => {
-				updateProfile(profile);
-			});
+			)
+				.then((profile) => {
+					updateProfile(profile);
+				})
+				.catch(() => {});
 		}
 	};
 

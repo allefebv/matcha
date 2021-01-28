@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:11 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/25 12:22:34 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/28 15:43:42 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,12 @@ const HeaderComponent = (props: Props) => {
 				})
 				.catch((error) => errorHandling(error, props.dispatch));
 		} else {
-			isMounted = false;
-			if (props.username) {
-				socket.off("notification" + username);
-			}
+			socket.off("notification" + username);
+			updateNotifications([]);
 		}
+		return () => {
+			isMounted = false;
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.loggedIn, props.username]);
 
