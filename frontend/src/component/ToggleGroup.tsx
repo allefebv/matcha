@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ToggleGroup.tsx                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 18:11:34 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/28 10:49:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:39:50 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import { connect, ConnectedProps } from "react-redux";
-import { isProfileComplete } from "../services/profileUtils";
-import { ExtendedProfileDialog } from "../domain/profile/ExtendedProfileDialog";
-import { makeStyles } from "@material-ui/core";
+import React, { useState } from 'react';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { connect, ConnectedProps } from 'react-redux';
+import { isProfileComplete } from '../services/profileUtils';
+import { ExtendedProfileDialog } from '../domain/profile/ExtendedProfileDialog';
+import { makeStyles } from '@material-ui/core';
 
 const withReduxProps = connect((state: any) => ({
 	isProfileComplete: isProfileComplete(
@@ -35,7 +35,7 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
 	button: (isProfileComplete) => {
 		return {
-			color: isProfileComplete ? "default" : theme.palette.error.main,
+			color: isProfileComplete ? 'default' : theme.palette.error.main,
 		};
 	},
 	color: {
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 	},
 	toggleGroup: {
-		display: "flex",
-		justifySelf: "center",
+		display: 'flex',
+		justifySelf: 'center',
 		backgroundColor: theme.palette.primary.main,
 	},
 }));
@@ -58,7 +58,7 @@ function ToggleGroupComponent(props: Props) {
 		nextView: string
 	) {
 		if (nextView !== null) {
-			if (nextView === "Preselection" && !props.isProfileComplete) {
+			if (nextView === 'Preselection' && !props.isProfileComplete) {
 				setOpen(true);
 				return;
 			}
@@ -70,6 +70,7 @@ function ToggleGroupComponent(props: Props) {
 		<React.Fragment>
 			<ExtendedProfileDialog open={open} setOpen={setOpen} />
 			<ToggleButtonGroup
+				style={{ margin: 10 }}
 				orientation="horizontal"
 				value={props.value}
 				onChange={handleChangeToggle}

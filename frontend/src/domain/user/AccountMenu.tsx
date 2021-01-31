@@ -3,24 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   AccountMenu.tsx                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:06 by allefebv          #+#    #+#             */
-/*   Updated: 2020/11/11 18:29:52 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:57:29 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { IconButton, makeStyles, Menu, MenuItem } from "@material-ui/core";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import {
+	Divider,
+	IconButton,
+	makeStyles,
+	Menu,
+	MenuItem,
+} from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
-import { actionUser_logout } from "../../store/user/action";
-import { useHistory } from "react-router-dom";
+import { actionUser_logout } from '../../store/user/action';
+import { useHistory } from 'react-router-dom';
 
-import * as constants from "../../services/constants";
+import * as constants from '../../services/constants';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -67,6 +73,7 @@ const AccountMenuComponent = (props: Props) => {
 				/>
 			</IconButton>
 			<Menu
+				style={{ marginTop: 41 }}
 				id="simple-menu"
 				anchorEl={anchorEl}
 				keepMounted
@@ -74,13 +81,23 @@ const AccountMenuComponent = (props: Props) => {
 				onClose={handleClose}
 			>
 				<Link
-					to={"/account-settings"}
-					style={{ color: "inherit", textDecoration: "inherit" }}
+					to={'/account-settings'}
+					style={{ color: 'inherit', textDecoration: 'inherit' }}
 				>
-					<MenuItem onClick={handleClose}>Account Settings</MenuItem>
+					<MenuItem
+						onClick={handleClose}
+						style={{ width: 200, justifyContent: 'center' }}
+					>
+						Account Settings
+					</MenuItem>
 				</Link>
 
-				<MenuItem onClick={handleLogout}>Logout</MenuItem>
+				<MenuItem
+					onClick={handleLogout}
+					style={{ width: 200, justifyContent: 'center' }}
+				>
+					Logout
+				</MenuItem>
 			</Menu>
 		</div>
 	);

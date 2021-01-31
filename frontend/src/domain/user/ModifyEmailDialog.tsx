@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ModifyEmailDialog.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/16 14:07:28 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:35:55 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
-import * as constants from "../../services/constants";
-import { modifyEmailAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
+import * as constants from '../../services/constants';
+import { modifyEmailAPI } from '../../services/apiCalls';
+import { actionUi_showSnackbar } from '../../store/ui/action';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -35,7 +35,7 @@ function ModifyEmailDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
 	const [email, setEmail] = useState(props.user.email);
 	const [emailError, setEmailError] = useState(false);
-	let [password, setPassword] = useState<string | null>("");
+	let [password, setPassword] = useState<string | null>('');
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -43,7 +43,7 @@ function ModifyEmailDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
-		setPassword("");
+		setPassword('');
 	};
 
 	function handleSubmit(e: React.FormEvent) {
@@ -57,7 +57,7 @@ function ModifyEmailDialogComponent(props: Props) {
 	}
 
 	function isEmailValid(email: string | null) {
-		return typeof email === "string" && email.match(constants.REGEX_EMAIL);
+		return typeof email === 'string' && email.match(constants.REGEX_EMAIL);
 	}
 
 	function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
@@ -74,7 +74,7 @@ function ModifyEmailDialogComponent(props: Props) {
 			props.dispatch(
 				actionUi_showSnackbar({
 					message: error.message,
-					type: "error",
+					type: 'error',
 				})
 			);
 			console.log(error.message);
@@ -84,6 +84,7 @@ function ModifyEmailDialogComponent(props: Props) {
 	return (
 		<div>
 			<Button
+				style={{ width: 200, height: 50 }}
 				fullWidth
 				variant="outlined"
 				color="primary"
@@ -97,7 +98,9 @@ function ModifyEmailDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Modify Email</DialogTitle>
+					<DialogTitle id="form-dialog-title">
+						Modify Email
+					</DialogTitle>
 					<DialogContent>
 						<TextField
 							margin="dense"
@@ -108,7 +111,9 @@ function ModifyEmailDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={emailError && constants.EMAIL_HELPER_ERROR}
+							helperText={
+								emailError && constants.EMAIL_HELPER_ERROR
+							}
 						/>
 						<TextField
 							margin="dense"
@@ -131,7 +136,7 @@ function ModifyEmailDialogComponent(props: Props) {
 							disabled={
 								!isEmailValid(email) ||
 								props.user.email === email ||
-								password === ""
+								password === ''
 							}
 						>
 							Modify Email

@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ChatPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/28 10:53:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 17:41:50 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import { makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { ChatBox } from "../../component/chat/chatBox";
-import { ChatListProfile } from "../../component/chat/chatListProfile";
-import { socket } from "../../domain/root/App";
-import { getMatchesAPI } from "../../services/apiCalls";
-import { errorHandling } from "../../services/profileUtils";
-import { IlistProfiles } from "../../types/types";
+import { ChatBox } from '../../component/chat/chatBox';
+import { ChatListProfile } from '../../component/chat/chatListProfile';
+import { socket } from '../../domain/root/App';
+import { getMatchesAPI } from '../../services/apiCalls';
+import { errorHandling } from '../../services/profileUtils';
+import { IlistProfiles } from '../../types/types';
 
 const withReduxProps = connect((state: any) => ({
 	profile: state.user.profile,
@@ -30,14 +30,14 @@ type Props = {} & ReduxProps;
 
 const useStyles = makeStyles({
 	main: {
-		display: "flex",
-		flexDirection: "row",
-		position: "absolute",
+		display: 'flex',
+		flexDirection: 'row',
+		position: 'absolute',
 		top: 0,
 		left: 0,
-		width: "100vw",
-		height: "100vh",
-		overflow: "hidden",
+		width: '100vw',
+		height: '100vh',
+		overflow: 'hidden',
 	},
 });
 
@@ -54,7 +54,7 @@ const ChatPageComponent = (props: Props) => {
 
 	useEffect(() => {
 		let isMounted = true;
-		socket.on("message" + props.profile.username, callBack);
+		socket.on('message' + props.profile.username, callBack);
 		getMatchesAPI(props.token, controller.signal)
 			.then((profiles) => {
 				if (profiles && profiles.length && isMounted) {
@@ -64,7 +64,7 @@ const ChatPageComponent = (props: Props) => {
 			})
 			.catch((error) => errorHandling(error, props.dispatch));
 		return () => {
-			socket.off("message" + props.profile.username);
+			socket.off('message' + props.profile.username);
 			controller.abort();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,17 +106,19 @@ const ChatPageComponent = (props: Props) => {
 			) : (
 				<div
 					style={{
-						position: "absolute",
-						display: "flex",
-						width: "100vw",
-						height: "100vh",
-						justifyContent: "center",
-						alignContent: "center",
-						alignItems: "center",
-						backgroundColor: "white",
+						position: 'absolute',
+						display: 'flex',
+						width: '100vw',
+						height: '100vh',
+						justifyContent: 'center',
+						alignContent: 'center',
+						alignItems: 'center',
+						backgroundColor: 'white',
 					}}
 				>
-					<div style={{ fontSize: "2em" }}>Oops you have no one to talk to</div>
+					<div style={{ fontSize: '1.5em' }}>
+						Oops you have no one to talk to
+					</div>
 				</div>
 			)}
 		</div>

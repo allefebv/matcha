@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   DeleteAccountDialog.tsx                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/15 15:18:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:35:45 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
-import * as constants from "../../services/constants";
-import { deleteAPI } from "../../services/apiCalls";
-import { actionUser_logout } from "../../store/user/action";
-import { useHistory } from "react-router-dom";
-import { errorHandling } from "../../services/profileUtils";
+import * as constants from '../../services/constants';
+import { deleteAPI } from '../../services/apiCalls';
+import { actionUser_logout } from '../../store/user/action';
+import { useHistory } from 'react-router-dom';
+import { errorHandling } from '../../services/profileUtils';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -35,7 +35,7 @@ type Props = {} & ReduxProps;
 
 function DeleteAccountDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [password, setPassword] = useState<string | null>("");
+	let [password, setPassword] = useState<string | null>('');
 	const history = useHistory();
 
 	const handleClickOpen = () => {
@@ -70,7 +70,12 @@ function DeleteAccountDialogComponent(props: Props) {
 
 	return (
 		<React.Fragment>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				style={{ width: 200, height: 50 }}
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Delete Account
 			</Button>
 			<Dialog
@@ -79,7 +84,9 @@ function DeleteAccountDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
+					<DialogTitle id="form-dialog-title">
+						Delete Account
+					</DialogTitle>
 					<DialogContent>
 						<TextField
 							autoFocus
@@ -100,7 +107,7 @@ function DeleteAccountDialogComponent(props: Props) {
 							onClick={handleDeleteAccount}
 							type="submit"
 							color="primary"
-							disabled={password === ""}
+							disabled={password === ''}
 						>
 							DELETE MY ACCOUNT
 						</Button>

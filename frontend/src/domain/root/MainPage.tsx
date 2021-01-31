@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   MainPage.tsx                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:25 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/28 10:45:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 17:38:37 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
-import { Pagination } from "@material-ui/lab";
+import React, { useEffect, useState } from 'react';
+import { Pagination } from '@material-ui/lab';
 import {
 	makeStyles,
 	Grid,
@@ -19,86 +19,84 @@ import {
 	Typography,
 	Button,
 	SwipeableDrawer,
-} from "@material-ui/core";
-import { ProfileCard } from "../../component/ProfileCard";
-import { KeyboardArrowRight } from "@material-ui/icons";
-import { ToggleGroup } from "../../component/ToggleGroup";
-import { connect, ConnectedProps } from "react-redux";
+} from '@material-ui/core';
+import { ProfileCard } from '../../component/ProfileCard';
+import { KeyboardArrowRight } from '@material-ui/icons';
+import { ToggleGroup } from '../../component/ToggleGroup';
+import { connect, ConnectedProps } from 'react-redux';
 import {
 	getSearchList,
 	getRecommendationList,
 	isProfileComplete,
 	hydrateReduxWithMatches,
-} from "../../services/profileUtils";
-import { MaterialDoubleSlider } from "../../component/MaterialDoubleSlider";
-import { IlistProfiles } from "../../types/types";
-import { TagSearch } from "../../component/TagSearch";
-import { SortingGroup } from "../../component/SortingGroup";
-import { CustomLoader } from "../../component/CustomLoader";
+} from '../../services/profileUtils';
+import { MaterialDoubleSlider } from '../../component/MaterialDoubleSlider';
+import { IlistProfiles } from '../../types/types';
+import { TagSearch } from '../../component/TagSearch';
+import { SortingGroup } from '../../component/SortingGroup';
+import { CustomLoader } from '../../component/CustomLoader';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "space-around",
-		alignItems: "center",
-		height: "100vh",
-		overflow: "hidden",
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		height: '100vh',
+		overflow: 'hidden',
 		backgroundColor: theme.palette.primary.main,
 	},
 	drawerContent: {
-		display: "flex",
-		flexDirection: "column",
-		width: "60%",
-		alignItems: "space-between",
+		display: 'flex',
+		flexDirection: 'column',
+		width: '60%',
+		alignItems: 'space-between',
 	},
 	logo: {
-		display: "flex",
-		justifySelf: "flex-start",
+		display: 'flex',
+		justifySelf: 'flex-start',
 	},
 	main: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		alignSelf: "start",
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		alignSelf: 'start',
 	},
-	toggleGroup: {
-		backgroundColor: "blue",
-	},
+	toggleGroup: {},
 	cards: {
-		display: "flex",
-		overflow: "scroll",
-		overflowX: "hidden",
-		width: "100%",
-		height: "84vh",
-		[theme.breakpoints.down("xs")]: {
-			height: "76vh",
+		display: 'flex',
+		overflow: 'scroll',
+		overflowX: 'hidden',
+		width: '100%',
+		height: '81vh',
+		[theme.breakpoints.down('xs')]: {
+			height: '76vh',
 		},
-		[theme.breakpoints.up("md")]: {
-			width: "80%",
+		[theme.breakpoints.up('md')]: {
+			width: '80%',
 		},
-		justifyContent: "center",
-		alignItems: "center",
+		justifyContent: 'center',
+		alignItems: 'center',
 		borderColor: theme.palette.secondary.main,
-		border: "solid",
-		borderBottom: "none",
-		margin: "auto",
+		border: 'solid',
+		borderBottom: 'none',
+		margin: 'auto',
 	},
 	loading: {
-		alignSelf: "center",
-		justifySelf: "center",
+		alignSelf: 'center',
+		justifySelf: 'center',
 	},
 	paginator: {
-		justifyContent: "center",
-		alignItems: "center",
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	alert: {
 		color: theme.palette.primary.dark,
 	},
 	slider: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
 		flexGrow: 1,
 	},
 }));
@@ -157,7 +155,7 @@ const MainPageComponent = (props: Props) => {
 	const [page, setPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [tagList, setTagList] = useState<string[]>();
-	const [sortMethod, setSortMethod] = useState("");
+	const [sortMethod, setSortMethod] = useState('');
 	const [sortAsc, setSortAsc] = useState(true);
 	const ITEMS_PER_PAGES = 20;
 
@@ -178,19 +176,19 @@ const MainPageComponent = (props: Props) => {
 			props.profilesRecco &&
 			props.profilesRecco.length > 0
 		) {
-			setToggleList("Preselection");
+			setToggleList('Preselection');
 		} else if (props.profilesSearch && props.profilesSearch.length > 0) {
-			setToggleList("Search");
+			setToggleList('Search');
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.profilesRecco, props.profilesSearch]);
 
 	useEffect(() => {
-		if (toggleList === "Search") {
+		if (toggleList === 'Search') {
 			setCurrentProfilesList(props.profilesSearch);
-		} else if (toggleList === "Preselection") {
+		} else if (toggleList === 'Preselection') {
 			setCurrentProfilesList(props.profilesRecco);
-		} else if (toggleList === "Matches") {
+		} else if (toggleList === 'Matches') {
 			setCurrentProfilesList(props.profilesMatches);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,7 +207,9 @@ const MainPageComponent = (props: Props) => {
 	useEffect(() => {
 		if (filteredProfilesList) {
 			loading && setLoading(false);
-			setTotalPages(Math.ceil(filteredProfilesList.length / ITEMS_PER_PAGES));
+			setTotalPages(
+				Math.ceil(filteredProfilesList.length / ITEMS_PER_PAGES)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filteredProfilesList]);
@@ -226,9 +226,13 @@ const MainPageComponent = (props: Props) => {
 					}
 					if (popularityScore) {
 						acc[2] =
-							!acc[2] || acc[2] > popularityScore ? popularityScore : acc[2];
+							!acc[2] || acc[2] > popularityScore
+								? popularityScore
+								: acc[2];
 						acc[3] =
-							!acc[3] || acc[3] < popularityScore ? popularityScore : acc[3];
+							!acc[3] || acc[3] < popularityScore
+								? popularityScore
+								: acc[3];
 					}
 					if (distanceInKm) {
 						acc[4] =
@@ -285,16 +289,16 @@ const MainPageComponent = (props: Props) => {
 	const getSortFunction = () => {
 		let getFunction;
 		switch (sortMethod) {
-			case "Age":
+			case 'Age':
 				getFunction = ageSort;
 				break;
-			case "Popularity":
+			case 'Popularity':
 				getFunction = popularitySort;
 				break;
-			case "Distance":
+			case 'Distance':
 				getFunction = distanceSort;
 				break;
-			case "Shared Interests":
+			case 'Shared Interests':
 				getFunction = tagsSort;
 				break;
 		}
@@ -409,7 +413,10 @@ const MainPageComponent = (props: Props) => {
 	const getCards = () => {
 		if (filteredProfilesList) {
 			return filteredProfilesList
-				.slice(pageIndex * ITEMS_PER_PAGES, (pageIndex + 1) * ITEMS_PER_PAGES)
+				.slice(
+					pageIndex * ITEMS_PER_PAGES,
+					(pageIndex + 1) * ITEMS_PER_PAGES
+				)
 				.map((entry: IlistProfiles, index: number) => (
 					<Grid item xs={12} sm={6} lg={4} key={index}>
 						<ProfileCard entry={entry} />
@@ -429,7 +436,7 @@ const MainPageComponent = (props: Props) => {
 		value: string | string[],
 		reason: string
 	) {
-		let tags = typeof value === "string" ? [value] : value;
+		let tags = typeof value === 'string' ? [value] : value;
 		setTagList(tags);
 	}
 
@@ -438,13 +445,23 @@ const MainPageComponent = (props: Props) => {
 			<React.Fragment>
 				<div
 					style={{
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
 						flexGrow: 1,
 					}}
 				>
-					<Button startIcon={<KeyboardArrowRight />} onClick={handleOpenDrawer}>
+					<Button
+						style={{
+							width: 175,
+							marginLeft: 10,
+							border: '2px solid black',
+							marginTop: 4,
+							marginBottom: 14,
+						}}
+						startIcon={<KeyboardArrowRight />}
+						onClick={handleOpenDrawer}
+					>
 						SORT AND FILTER
 					</Button>
 					{filteredProfilesList?.length ?? false ? (
@@ -458,8 +475,8 @@ const MainPageComponent = (props: Props) => {
 							<Grid item xs={12}>
 								<Pagination
 									style={{
-										display: "flex",
-										alignSelf: "center",
+										display: 'flex',
+										alignSelf: 'center',
 									}}
 									color="primary"
 									variant="outlined"
@@ -475,9 +492,9 @@ const MainPageComponent = (props: Props) => {
 					) : (
 						<div
 							style={{
-								display: "flex",
-								alignItems: "center",
-								flexDirection: "column",
+								display: 'flex',
+								alignItems: 'center',
+								flexDirection: 'column',
 							}}
 						>
 							<Typography align="center" variant="h6">
@@ -496,7 +513,11 @@ const MainPageComponent = (props: Props) => {
 	const renderNoMatches = () => {
 		return (
 			<React.Fragment>
-				<Typography variant="h6" className={classes.alert}>
+				<Typography
+					style={{ marginTop: 50 }}
+					variant="h6"
+					className={classes.alert}
+				>
 					Oh snap, you don't have any matches at the moment
 				</Typography>
 			</React.Fragment>
@@ -511,7 +532,7 @@ const MainPageComponent = (props: Props) => {
 				</div>
 				{loading ? (
 					<CustomLoader />
-				) : toggleList === "Matches" && !currentProfilesList ? (
+				) : toggleList === 'Matches' && !currentProfilesList ? (
 					renderNoMatches()
 				) : (
 					renderList()
@@ -527,7 +548,7 @@ const MainPageComponent = (props: Props) => {
 				<div className={classes.drawer}>
 					<div className={classes.logo}>
 						<img
-							src={require("../../images/logo_white.png")}
+							src={require('../../images/logo_white.png')}
 							style={{ maxWidth: 100 }}
 							alt="logo"
 						/>
@@ -547,12 +568,16 @@ const MainPageComponent = (props: Props) => {
 								<MaterialDoubleSlider
 									min={filterLimits.minAge}
 									max={filterLimits.maxAge}
-									value={[filterValues.minAge, filterValues.maxAge]}
+									value={[
+										filterValues.minAge,
+										filterValues.maxAge,
+									]}
 									handleChange={handleAgeFilter}
 								/>
 							</div>
 						)}
-						{filterLimits.minPopularity !== filterLimits.maxPopularity && (
+						{filterLimits.minPopularity !==
+							filterLimits.maxPopularity && (
 							<div className={classes.slider}>
 								<Typography variant="button" color="secondary">
 									POPULARITY
@@ -586,15 +611,15 @@ const MainPageComponent = (props: Props) => {
 						)}
 						<div
 							style={{
-								display: "flex",
-								flexDirection: "column",
+								display: 'flex',
+								flexDirection: 'column',
 								flexGrow: 1,
 							}}
 						>
 							<Typography
 								variant="button"
 								color="secondary"
-								style={{ alignSelf: "center" }}
+								style={{ alignSelf: 'center' }}
 							>
 								TAGS
 							</Typography>
@@ -608,7 +633,7 @@ const MainPageComponent = (props: Props) => {
 						variant="contained"
 						color="secondary"
 						onClick={handleCloseDrawer}
-						style={{ justifySelf: "flex-end" }}
+						style={{ justifySelf: 'flex-end' }}
 					>
 						APPLY
 					</Button>

@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ModifyPasswordDialog.tsx                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:19:10 by allefebv          #+#    #+#             */
-/*   Updated: 2020/10/16 14:07:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:34:56 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
-import * as constants from "../../services/constants";
-import { modifyPasswordAPI } from "../../services/apiCalls";
-import { actionUi_showSnackbar } from "../../store/ui/action";
+import * as constants from '../../services/constants';
+import { modifyPasswordAPI } from '../../services/apiCalls';
+import { actionUi_showSnackbar } from '../../store/ui/action';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -33,10 +33,10 @@ type Props = {} & ReduxProps;
 
 function ModifyPasswordDialogComponent(props: Props) {
 	const [open, setOpen] = useState(false);
-	let [currentPassword, setCurrentPassword] = useState<string | null>("");
-	let [newPassword, setNewPassword] = useState<string | null>("");
+	let [currentPassword, setCurrentPassword] = useState<string | null>('');
+	let [newPassword, setNewPassword] = useState<string | null>('');
 	let [newPasswordError, setNewPasswordError] = useState(false);
-	let [passwordConfirm, setPasswordConfirm] = useState<string | null>("");
+	let [passwordConfirm, setPasswordConfirm] = useState<string | null>('');
 	let [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
 	const handleClickOpen = () => {
@@ -45,9 +45,9 @@ function ModifyPasswordDialogComponent(props: Props) {
 
 	const handleClose = () => {
 		setOpen(false);
-		setCurrentPassword("");
-		setNewPassword("");
-		setPasswordConfirm("");
+		setCurrentPassword('');
+		setNewPassword('');
+		setPasswordConfirm('');
 		setNewPasswordError(false);
 		setPasswordConfirmError(false);
 	};
@@ -72,7 +72,7 @@ function ModifyPasswordDialogComponent(props: Props) {
 	}
 
 	function isPasswordValid(password: string | null) {
-		return typeof password === "string" &&
+		return typeof password === 'string' &&
 			password.match(constants.REGEX_PASSWORD)
 			? true
 			: false;
@@ -92,7 +92,7 @@ function ModifyPasswordDialogComponent(props: Props) {
 			props.dispatch(
 				actionUi_showSnackbar({
 					message: error.message,
-					type: "error",
+					type: 'error',
 				})
 			);
 			console.log(error.message);
@@ -101,7 +101,12 @@ function ModifyPasswordDialogComponent(props: Props) {
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button
+				style={{ width: 200, height: 50 }}
+				variant="outlined"
+				color="primary"
+				onClick={handleClickOpen}
+			>
 				Modify Password
 			</Button>
 			<Dialog
@@ -110,7 +115,9 @@ function ModifyPasswordDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">Modify Password</DialogTitle>
+					<DialogTitle id="form-dialog-title">
+						Modify Password
+					</DialogTitle>
 					<DialogContent>
 						<TextField
 							margin="dense"
@@ -130,7 +137,10 @@ function ModifyPasswordDialogComponent(props: Props) {
 							value={newPassword}
 							onChange={handleNewPassword}
 							error={newPasswordError}
-							helperText={newPasswordError && constants.PASSWORD_HELPER_ERROR}
+							helperText={
+								newPasswordError &&
+								constants.PASSWORD_HELPER_ERROR
+							}
 						/>
 						<TextField
 							margin="dense"
@@ -142,7 +152,8 @@ function ModifyPasswordDialogComponent(props: Props) {
 							onChange={handlePasswordConfirm}
 							error={passwordConfirmError}
 							helperText={
-								passwordConfirmError && constants.PASSWORD_CONFIRM_HELPER_ERROR
+								passwordConfirmError &&
+								constants.PASSWORD_CONFIRM_HELPER_ERROR
 							}
 						/>
 					</DialogContent>

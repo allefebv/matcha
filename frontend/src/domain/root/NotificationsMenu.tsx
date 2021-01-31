@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   NotificationsMenu.tsx                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jfleury <jfleury@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/02 18:22:04 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/14 23:27:00 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/31 16:57:38 by jfleury          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import React, { useEffect, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import {
 	Badge,
@@ -24,20 +24,20 @@ import {
 	Menu,
 	MenuItem,
 	Typography,
-} from "@material-ui/core";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import { IlistProfiles, Inotification } from "../../types/types";
-import { CustomAvatar } from "../../component/CustomAvatar";
-import * as constants from "../../services/constants";
+} from '@material-ui/core';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { IlistProfiles, Inotification } from '../../types/types';
+import { CustomAvatar } from '../../component/CustomAvatar';
+import * as constants from '../../services/constants';
 import {
 	getProfileByUsernameAPI,
 	readNotificationAPI,
 	deleteNotificationAPI,
-} from "../../services/apiCalls";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import CloseIcon from "@material-ui/icons/Close";
-import { getTimeElapsed } from "../../services/timeUtils";
-import { errorHandling } from "../../services/profileUtils";
+} from '../../services/apiCalls';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import CloseIcon from '@material-ui/icons/Close';
+import { getTimeElapsed } from '../../services/timeUtils';
+import { errorHandling } from '../../services/profileUtils';
 
 const withReduxProps = connect((state: any) => ({
 	loggedIn: state.user.isLoggedIn,
@@ -51,23 +51,23 @@ type Props = {
 
 const useStyles = makeStyles((theme) => ({
 	item: {
-		whiteSpace: "normal",
-		width: "500px",
-		[theme.breakpoints.down("lg")]: {
-			width: "30vw",
+		whiteSpace: 'normal',
+		width: '500px',
+		[theme.breakpoints.down('lg')]: {
+			width: '30vw',
 		},
-		[theme.breakpoints.down("md")]: {
-			width: "50vw",
+		[theme.breakpoints.down('md')]: {
+			width: '50vw',
 		},
-		[theme.breakpoints.down("sm")]: {
-			width: "60vw",
+		[theme.breakpoints.down('sm')]: {
+			width: '60vw',
 		},
-		[theme.breakpoints.down("xs")]: {
-			width: "90vw",
+		[theme.breakpoints.down('xs')]: {
+			width: '90vw',
 		},
 	},
 	textGray: {
-		color: "grey",
+		color: 'grey',
 	},
 	textPop: {
 		color: theme.palette.primary.main,
@@ -94,16 +94,16 @@ const NotificationsMenuComponent = (props: Props) => {
 
 	const getNotificationText = (type: string) => {
 		switch (type) {
-			case "view":
-				return " has seen your profile";
-			case "like":
-				return " has liked your profile";
-			case "likeBack":
-				return " just matched with you";
-			case "unlike":
-				return " stopped to like your profile";
-			case "message":
-				return " sent you a message";
+			case 'view':
+				return ' has seen your profile';
+			case 'like':
+				return ' has liked your profile';
+			case 'likeBack':
+				return ' just matched with you';
+			case 'unlike':
+				return ' stopped to like your profile';
+			case 'message':
+				return ' sent you a message';
 		}
 	};
 
@@ -147,7 +147,7 @@ const NotificationsMenuComponent = (props: Props) => {
 	) => {
 		if (!isReadLoading) {
 			setIsReadLoading(true);
-			notification.notification.notification.split(",")[0] === "message"
+			notification.notification.notification.split(',')[0] === 'message'
 				? redirectToChat()
 				: redirectToProfile(notification.notifierProfile.username);
 			handleReadNotification(notification, index);
@@ -172,7 +172,8 @@ const NotificationsMenuComponent = (props: Props) => {
 	const handleDeleteNotification = async (notification: Inotification) => {
 		props.setNotifications(
 			props.notifications.filter(
-				(entry) => entry.notification.id !== notification.notification.id
+				(entry) =>
+					entry.notification.id !== notification.notification.id
 			)
 		);
 		await deleteNotificationAPI(
@@ -183,7 +184,7 @@ const NotificationsMenuComponent = (props: Props) => {
 
 	const getNotificationCard = () => {
 		return props.notifications.map((notification, index) => {
-			const type = notification.notification.notification.split(",")[0];
+			const type = notification.notification.notification.split(',')[0];
 			const isRead = notification.notification.isRead;
 			return (
 				<MenuItem
@@ -198,31 +199,46 @@ const NotificationsMenuComponent = (props: Props) => {
 							<CustomAvatar
 								id={0}
 								src={
-									"http://localhost:3001/images/" +
+									'http://localhost:3001/images/' +
 									notification.notifierProfile.username +
-									"img0"
+									'img0'
 								}
 								modifiable={false}
 							/>
 						</Grid>
 						<Grid item xs={isRead ? 8 : 7}>
-							<Typography className={isRead ? classes.textGray : undefined}>
+							<Typography
+								className={
+									isRead ? classes.textGray : undefined
+								}
+							>
 								{notification.notifierProfile.username}
 								{getNotificationText(type)}
 							</Typography>
 							<Typography
-								className={isRead ? classes.textGray : classes.textPop}
+								className={
+									isRead ? classes.textGray : classes.textPop
+								}
 							>
-								{" " + getTimeElapsed(notification.notification.date)}
+								{' ' +
+									getTimeElapsed(
+										notification.notification.date
+									)}
 							</Typography>
 						</Grid>
 						{!isRead && (
 							<Grid item xs={1}>
 								<IconButton
 									onClick={(
-										event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+										event: React.MouseEvent<
+											HTMLButtonElement,
+											MouseEvent
+										>
 									) => {
-										handleReadNotification(notification, index);
+										handleReadNotification(
+											notification,
+											index
+										);
 										event.stopPropagation();
 									}}
 									disabled={isReadLoading}
@@ -238,7 +254,10 @@ const NotificationsMenuComponent = (props: Props) => {
 						<Grid item xs={1}>
 							<IconButton
 								onClick={(
-									event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+									event: React.MouseEvent<
+										HTMLButtonElement,
+										MouseEvent
+									>
 								) => {
 									handleDeleteNotification(notification);
 									event.stopPropagation();
@@ -271,18 +290,31 @@ const NotificationsMenuComponent = (props: Props) => {
 					}}
 					onClick={handleClick}
 				>
-					<NotificationsIcon aria-controls="simple-menu" aria-haspopup="true" />
+					<NotificationsIcon
+						aria-controls="simple-menu"
+						aria-haspopup="true"
+					/>
 				</IconButton>
 			</Badge>
 			<Menu
+				style={{ marginTop: 49 }}
 				anchorEl={anchorEl}
 				keepMounted
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 				className={classes.list}
 			>
-				<Typography variant="h4">Notifications</Typography>
-				<Divider />
+				<Typography
+					style={{
+						fontSize: 16,
+						textAlign: 'center',
+						minWidth: 200,
+						margin: 5,
+					}}
+				>
+					Notifications
+				</Typography>
+
 				{getNotificationCard()}
 			</Menu>
 		</div>
