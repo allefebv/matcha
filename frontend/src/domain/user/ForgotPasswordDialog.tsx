@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/24 14:18:44 by allefebv          #+#    #+#             */
-/*   Updated: 2021/01/08 16:43:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2021/01/29 12:11:29 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ function ForgotPasswordDialogComponent(props: Props) {
 			.then(() => {
 				props.dispatch(
 					actionUi_showSnackbar({
-						message: "We just emailed you a temporary password",
+						message: "We've just emailed you a temporary password",
 						type: "success",
 					})
 				);
@@ -97,9 +97,7 @@ function ForgotPasswordDialogComponent(props: Props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit}>
-					<DialogTitle id="form-dialog-title">
-						Forgot password
-					</DialogTitle>
+					<DialogTitle id="form-dialog-title">Forgot password</DialogTitle>
 					<DialogContent>
 						<TextField
 							autoFocus
@@ -111,9 +109,7 @@ function ForgotPasswordDialogComponent(props: Props) {
 							value={email}
 							onChange={handleEmail}
 							error={emailError}
-							helperText={
-								emailError && constants.EMAIL_HELPER_ERROR
-							}
+							helperText={emailError && constants.EMAIL_HELPER_ERROR}
 							onBlur={handleBlurEmail}
 						/>
 					</DialogContent>
